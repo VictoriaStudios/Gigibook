@@ -8,13 +8,12 @@ export const pushPost = (uid, postObject, friendsOnly) => {
   const cleanDate = (postObject.date).toJSON()
   var postReferece = ""
   if (friendsOnly === true) {
-     postReferece = ref(db, `users/${uid}/posts/private/`)
+    postReferece = ref(db, `users/${uid}/posts/private/`)
   }
-  else
-  {
-     postReferece = ref(db, `users/${uid}/posts/public/`)
+  else {
+    postReferece = ref(db, `/public/posts/${uid}`)
   }
-  
+
   push(postReferece, ({
     author: postObject.author,
     avatar: postObject.avatar,
@@ -31,85 +30,60 @@ export const pushPost = (uid, postObject, friendsOnly) => {
 
 
 
-export function getAllPosts(addFeedCard) {
-  const childrenkeys = []
-  const testDataRef = ref(db, 'testData/');
-   onValue(testDataRef, (snapshot) => {
+export function getAllPosts(uid, addFeedCard) {
 
-
-     snapshot.forEach((child) => {
-      childrenkeys.push(child.key)
-    }, 
-    { onlyOnce: true });
-    showAllPosts(childrenkeys, addFeedCard)
+  //get all public posts 
+  const publicPostsRef = get(child(dbRef, '/public/posts/')).then((snapshot) => {
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+        child.forEach((post) => {
+          var card = post.val()
+          var dateRestored = new Date(card.date)
+          card.date = dateRestored
+          card.id = post.val().key
+          addFeedCard(card)
+        })
+      })
+    }
   })
 
-}
-
-export async function showAllPosts (childrenkeys, addFeedCard)
-{
-  const cards = []
-  for (let index = 0; index < childrenkeys.length; index++) {
-    const key = childrenkeys[index];
-    await get(child(dbRef, 'testData/' + key)).then((snapshot) => {
-      if (snapshot.exists()) {
-        var card = snapshot.val()
-        var dateRestored = new Date (card.date)
-        card.date = dateRestored
-        card.id = key
-        console.log ("adding feedcard no. " + index + " with the author " + card.author)
-        addFeedCard (card)
-  
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
-  }
-  
-}
-
-
-
-
-
-
-
-
-
-
-export const testFireBaseUpload = (testObject) => {
-  var cleanDate = JSON.stringify(testObject.date)
-  set(ref(db, 'testdata/' + "1"), {
-    author: testObject.author,
-    avatar: testObject.avatar,
-    date: cleanDate,
-    img: testObject.img,
-    alt: testObject.alt,
-    content: testObject.content,
-    likeCount: testObject.likeCount
-  });
-
-}
-
-
-
-export async function testFireBaseDownload(addFeedCard) {
-  
-  await get(child(dbRef, 'testdata/' + "1")).then((snapshot) => {
+  //get all friends' posts
+  //first, get all friends' uids
+  const friendUids = []
+  const privatePostRef = get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
     if (snapshot.exists()) {
-      var dateRestored = JSON.parse(snapshot.val().date)
-      snapshot.val().date = dateRestored
-      addFeedCard(snapshot.val())
-
-    } else {
-      console.log("No data available");
+      snapshot.forEach((child) => {
+        console.log(`Found a friend: ${child.key}`)
+        friendUids.push (child.key)
+      })
     }
+
   }).catch((error) => {
-    console.error(error);
-  });
+  }).then (() => {
+    console.log (`Found a total of ${friendUids.length}`)
+    console.log ("Trying to access friends' posts")
+    friendUids.forEach ((friend) => {
+      console.log (`Accessing friend ${friend}`)
+      const privatePostRef = get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          snapshot.forEach((child) => {
+          var card = child.val()
+          var dateRestored = new Date(card.date)
+          card.date = dateRestored
+          card.id = child.val().key
+          addFeedCard(card)
+    
+          })
+        }
+    
+      }).catch((error) => {
+      })
+    })
+    
+  })
+
 
 }
+
 
 

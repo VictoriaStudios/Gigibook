@@ -62,7 +62,7 @@ const UserDataManager = ({loggedIn, uid}) => {
 
     return (
         <>
-            <Button onClick={() => addFriend("RLqtMNdeYfRONuU4Oo5yd8HeJ3e2")} >Add Friend</Button>
+            <Button onClick={() => addFriend("TFnzchuStoeGtnu6fdiVCQFThWw2")} >Add Friend</Button>
             <Button variant="contained" component="label">
                 Select File
                 <input onChange={(e)=>{setImage(e.target.files[0])}}

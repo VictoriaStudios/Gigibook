@@ -31,7 +31,6 @@ const handleShare = (e) => {
 
 
 const FeedCard = ({ cardData }) => {
-    console.log (cardData.date)
     const classes = useStyles();
     const dateString = format(cardData.date, 'dd/MM/yyyy')
     const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })

@@ -53,7 +53,7 @@ const PostBar = ({ addFeedCard, loggedIn, uid}) => {
                 <div />
                 <Button onClick={() => { pushPost(uid, postOne, true) }}>Test FireBase Upload</Button>
                 <div />
-                <Button onClick={() => { getAllPosts(addFeedCard) }}>Test FireBase Download</Button>
+                <Button onClick={() => { getAllPosts(uid, addFeedCard) }}>Test FireBase Download</Button>
             </div>
 
         </>
