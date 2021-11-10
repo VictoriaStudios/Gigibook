@@ -33,8 +33,8 @@ const handleShare = (e) => {
 const FeedCard = ({ cardData }) => {
     const classes = useStyles();
     const dateString = format(cardData.date, 'dd/MM/yyyy')
-    const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })
     const now = format(Date.now(), 'dd/MM/yyyy')
+    const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })
     return (
         <div style={{ marginTop: "1rem" }}>
             <Card className= {classes.FeedCard}>
