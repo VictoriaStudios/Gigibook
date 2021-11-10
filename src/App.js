@@ -16,8 +16,8 @@ function App() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             console.log ("App: Logged in")
-            setLoggedIn(true)
             setUid (user.uid)
+            setLoggedIn(true)
         }
         else {
           console.log ("App: Logged out")

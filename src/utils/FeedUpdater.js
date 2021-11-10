@@ -53,17 +53,17 @@ export function getAllPosts(uid, addFeedCard) {
   const privatePostRef = get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
     if (snapshot.exists()) {
       snapshot.forEach((child) => {
-        console.log(`Found a friend: ${child.key}`)
         friendUids.push (child.key)
       })
     }
+    else {
+      console.log ("Friend database folder not found")
+    }
 
   }).catch((error) => {
+    console.log (error.message)
   }).then (() => {
-    console.log (`Found a total of ${friendUids.length}`)
-    console.log ("Trying to access friends' posts")
     friendUids.forEach ((friend) => {
-      console.log (`Accessing friend ${friend}`)
       const privatePostRef = get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
         if (snapshot.exists()) {
           snapshot.forEach((child) => {

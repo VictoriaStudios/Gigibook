@@ -21,13 +21,16 @@ export var postTwo = new CardData("Random User B", avatar2, date2, null, null, "
 export var postThree = new CardData("Random User C", avatar3, date3, example2, "An example vacation image", "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus dolore ullam eveniet?", 10)
 export var postFour = new CardData("Random User D", avatar4, date4, example3, "An example food image", "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus dolore ullam eveniet?", 6)
 
-const Feed = ({feedCards}) => {
+const Feed = ({feedCards, loggedIn}) => {
     return (
-        <div>
-            {feedCards.map((card) => (
+        <>
+        <p>I'm here {loggedIn}</p>
+        {loggedIn === true? (feedCards.map((card) => (
+                <>
                 <FeedCard key = {card.id} cardData = {card}/>
-            ))}
-        </div>
+                </>
+            ))) : ('')}
+        </>
     )
 }
 

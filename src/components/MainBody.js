@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Container, Modal, Typography } from '@material-ui/core'
 import useStyles from './styles'
 import PostBar from './PostBar'
 import Feed from './Feed'
 import NewPost from './NewPost'
+import { getAllPosts } from '../utils/FeedUpdater'
 
 
 
@@ -13,6 +14,16 @@ const MainBody = ({loggedIn , uid}) => {
         console.log("addFeedCard being called, newFeedCards has the author of " + newFeedCard.author)
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
+        useEffect(() => {
+            if (loggedIn === false) {
+                console.log ("Not logged in")
+                setFeedCards ([])
+            }
+            else {
+                console.log ("Logged in")
+                console.log (uid)
+                getAllPosts(uid, addFeedCards)
+            }}, [loggedIn])
 
 
 
@@ -22,7 +33,7 @@ const MainBody = ({loggedIn , uid}) => {
         <>
             <Container maxWidth="md" className={classes.container}>
                 <PostBar addFeedCard={addFeedCards} loggedIn = {loggedIn} uid = {uid}/>
-                <Feed feedCards={feedCards} />
+                <Feed feedCards={feedCards} loggedIn = {loggedIn}/>
             </Container>
         </>
     )
