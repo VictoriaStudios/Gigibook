@@ -3,11 +3,10 @@ import useStyles from "./styles"
 import { Button, TextField } from "@material-ui/core"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { db } from "../utils/Firebase";
-import { push, ref, child, get } from "firebase/database"
+import { set, push, ref, child, get } from "firebase/database"
+import { saveImage, getImageURL } from "../utils/StorageManager";
 
-export var uid = ""
-
-const SignUpNewUser = ({ onCloseHandler }) => {
+const SignUpNewUser = ({ onCloseHandler, uid }) => {
     const auth = getAuth();
     const classes = useStyles()
     const [email, setEmail] = useState("")
@@ -18,18 +17,30 @@ const SignUpNewUser = ({ onCloseHandler }) => {
     const [formVisible, setFormVisible] = useState(true)
     const [enteredWrong, setEnteredWrong] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
+    const [image, setImage] = useState("")
+    const [url, setURL] = useState("")
 
+    const uploadImage = () => {
+        if (image === "") {
+            console.log("No file selected")
+        }
+        else {
+            saveImage(image, uid)
+        }
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        createNewUser(auth, email, password)
+        createNewUser(auth, email, password).then (() => {
+            uploadImage()
+        })
     }
 
     const makeFormVisible = (bool) => {
         setFormVisible(bool)
     }
 
-    function createNewUser(auth, email, password) {
+    async function createNewUser(auth, email, password) {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
             createUserWithEmailAndPassword(auth, email, password)
@@ -96,7 +107,7 @@ const SignUpNewUser = ({ onCloseHandler }) => {
 
     function createUserData(firstName, lastName) {
         const pushReference = ref(db, 'users/' + uid)
-        push(pushReference, ({
+        set(pushReference, ({
             firstName: firstName,
             lastName: lastName,
             friends: ''
@@ -141,6 +152,12 @@ const SignUpNewUser = ({ onCloseHandler }) => {
                 />
                 <div />
                 {enteredWrong ? (<h6 style={{ color: "red", textAlign: "center" }}> {errorMessage} </h6>) : ""}
+                <Button variant="contained" component="label">
+                    Select File
+                    <input onChange={(e) => { setImage(e.target.files[0]) }}
+                        type="file"
+                        hidden />
+                </Button>
                 <div className={classes.loginForm} style={{ textAlign: "center", height: "10vh", marginTop: "1rem", marginBottom: "1rem" }}>
                     <Button type="submit" color="white" >
                         Sign Up

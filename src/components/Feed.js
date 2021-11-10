@@ -32,13 +32,7 @@ const Feed = ({ feedCards, loggedIn }) => {
             card.elapsedSeconds = elapsedSeconds
         });
 
-
         feedCardsMod.sort ((a,b) => a.elapsedSeconds - b.elapsedSeconds);
-
-
-        feedCardsMod.forEach(card => {
-            console.log(`${card.author}`)
-        })
 
     }
 

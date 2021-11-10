@@ -8,20 +8,23 @@ const storage = getStorage();
 
 
 
-export function saveImage (image, uid) {
-    const storageRef = ref(storage, `users/${uid}/images/${image.name}`);
-    uploadBytes(storageRef, image).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-      });
+export function saveImage(image, uid) {
+  var fileExt = image.name.split('.').pop();
+  console.log (`The file extension is ${fileExt}`)
+  var imageFileName = "profile." + fileExt;
+  const storageRef = ref(storage, `users/${uid}/images/${imageFileName}`);
+  uploadBytes(storageRef, image).then((snapshot) => {
+    console.log('Uploaded a blob or file!');
+  });
 }
 
-export function getImageURL (imageId, uid, callBack) {
+export function getImageURL(imageId, uid, callBack) {
   getDownloadURL(ref(storage, `users/${uid}/images/${imageId}`))
-  .then((url) => {
-    console.log ("returning url")
-    callBack (url)
-  })
-  .catch((error) => {
-    console.log (error.message)
-  });
+    .then((url) => {
+      console.log(`Returning ${url}`)
+      callBack(url)
+    })
+    .catch((error) => {
+      console.log(error.message)
+    });
 }

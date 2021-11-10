@@ -95,7 +95,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                             <Typography style={{marginTop:"2rem", marginBottom: "2rem", fontWeight:"bold"}} align="center" variant="h4" component="h2">
                                 Sign up to Gigibook
                             </Typography>
-                            <SignUpNewUser onCloseHandler={handleNewUserClose} />
+                            <SignUpNewUser onCloseHandler={handleNewUserClose} uid = {uid}/>
                         </Box>
                     </Modal>
                 </Toolbar>
