@@ -6,7 +6,7 @@ import { db } from "../utils/Firebase";
 import { set, push, ref, child, get } from "firebase/database"
 import { saveImage, getImageURL } from "../utils/StorageManager";
 
-const SignUpNewUser = ({ onCloseHandler, uid }) => {
+const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const auth = getAuth();
     const classes = useStyles()
     const [email, setEmail] = useState("")
@@ -20,36 +20,36 @@ const SignUpNewUser = ({ onCloseHandler, uid }) => {
     const [image, setImage] = useState("")
     const [url, setURL] = useState("")
 
-    const uploadImage = () => {
+    const uploadImage = (userId) => {
         if (image === "") {
             console.log("No file selected")
         }
         else {
-            saveImage(image, uid)
+            saveImage(image, userId)
         }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        createNewUser(auth, email, password).then (() => {
-            uploadImage()
-        })
+        createNewUser(auth, email, password)
     }
 
     const makeFormVisible = (bool) => {
         setFormVisible(bool)
     }
 
-    async function createNewUser(auth, email, password) {
+     function createNewUser(auth, email, password) {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
+                    var user = userCredential.user
                     setEnteredWrong(false)
-                    // Signed in 
-                    console.log("Account created")
-                    const user = userCredential.user;
-                    // ...
+                    createUserData (firstName, familyName, user.uid). then (() => {
+                        console.log ("User created, trying to upload the image")
+                        uploadImage(user.uid)
+                    })
+                    
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -73,45 +73,26 @@ const SignUpNewUser = ({ onCloseHandler, uid }) => {
     }
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in, see docs for a list of available properties
-                uid = user.uid;
-                console.log("Signed in, uid:" + uid)
-                setFormVisible(false)
-                checkIfUserData()
+        if (loggedIn === false) {
+            setFormVisible(true)
+        }
+        else {
+            setFormVisible(false)
                 onCloseHandler()
-            } else {
-                // User is signed out
-                console.log("Signed out")
-                setFormVisible(true)
-            }
-        });
-    }, [])
+        }}, [loggedIn])
 
     const dbRef = ref(db);
-    async function checkIfUserData() {
-        await get(child(dbRef, 'users/' + uid)).then((snapshot) => {
-            if (snapshot.exists()) {
-                console.log("Found user data")
-                return
 
-            } else {
-                console.log("User Data not found, creating data");
-                createUserData("John", "Doe")
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    }
-
-    function createUserData(firstName, lastName) {
-        const pushReference = ref(db, 'users/' + uid)
+    async function createUserData(firstName, lastName, userId) {
+        console.log ("Trying to create user DB data with ")
+        const pushReference = ref(db, 'users/' + userId)
         set(pushReference, ({
             firstName: firstName,
             lastName: lastName,
             friends: ''
-        }))
+        })).catch ((error) => {
+            console.log (error)
+        })
 
     }
 

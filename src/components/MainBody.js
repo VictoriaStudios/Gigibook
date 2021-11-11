@@ -16,11 +16,9 @@ const MainBody = ({loggedIn , uid}) => {
     }
         useEffect(() => {
             if (loggedIn === false) {
-                console.log ("Not logged in")
                 setFeedCards ([])
             }
             else {
-                console.log ("Logged in")
                 console.log (uid)
                 getAllPosts(uid, addFeedCards)
             }}, [loggedIn])

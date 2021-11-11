@@ -95,13 +95,13 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                             <Typography style={{marginTop:"2rem", marginBottom: "2rem", fontWeight:"bold"}} align="center" variant="h4" component="h2">
                                 Sign up to Gigibook
                             </Typography>
-                            <SignUpNewUser onCloseHandler={handleNewUserClose} uid = {uid}/>
+                            <SignUpNewUser onCloseHandler={handleNewUserClose} loggedIn = {loggedIn} uid = {uid}/>
                         </Box>
                     </Modal>
                 </Toolbar>
             </AppBar>
         </Box>
-        <UserDataManager loggedIn = {loggedIn} uid = {uid}/>
+        <UserDataManager loggedIn = {loggedIn}/>
         </>
 
     )
