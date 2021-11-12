@@ -9,11 +9,16 @@ const auth = getAuth()
 var uid = ''
 const dbRef = ref(db)
 
+export async function addProfileImageLink (uid, url) {
+    console.log ("AddProfileLink, received uid " + uid)
+    set (ref(db, `users/${uid}/profileLink/`), {
+        link: url
+    })
+}
+
 const UserDataManager = ({loggedIn, uid}) => {
 
     const addFriend = (friendId) => {
-        var friends = ''
-        var userData = ''
         get(child(dbRef, `users/${uid}/friends/${friendId}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 console.log ("Friend does exist")
@@ -27,12 +32,13 @@ const UserDataManager = ({loggedIn, uid}) => {
     }
 
     const addFriendEntry = (friendId) => {
-        console.log (`Trying to add ${friendId} to database`)
         set (ref(db, `users/${uid}/friends/${friendId}`), {
             friends: true
         })
 
     }
+
+
 
     return (
         <>

@@ -11,7 +11,6 @@ import { getAllPosts } from '../utils/FeedUpdater'
 const MainBody = ({loggedIn , uid}) => {
     const [feedCards, setFeedCards] = useState([])
     const addFeedCards = (newFeedCard) => {
-        console.log("addFeedCard being called, newFeedCards has the author of " + newFeedCard.author)
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
         useEffect(() => {
@@ -19,7 +18,6 @@ const MainBody = ({loggedIn , uid}) => {
                 setFeedCards ([])
             }
             else {
-                console.log (uid)
                 getAllPosts(uid, addFeedCards)
             }}, [loggedIn])
 

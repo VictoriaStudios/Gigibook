@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { db } from "../utils/Firebase";
 import { set, push, ref, child, get } from "firebase/database"
 import { saveImage, getImageURL } from "../utils/StorageManager";
+import { addProfileImageLink, addProfileImageName } from "./UserDataManager";
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const auth = getAuth();
@@ -18,16 +19,15 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const [enteredWrong, setEnteredWrong] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [image, setImage] = useState("")
-    const [url, setURL] = useState("")
 
-    const uploadImage = (userId) => {
-        if (image === "") {
-            console.log("No file selected")
-        }
-        else {
-            saveImage(image, userId)
-        }
+    const getProfileLink = (imageName, uid) => {
+        getImageURL (imageName, uid, setProfileLink)
     }
+
+    const setProfileLink = (url, uid) => {
+        addProfileImageLink (uid, url)
+    }
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -38,18 +38,18 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
         setFormVisible(bool)
     }
 
-     function createNewUser(auth, email, password) {
+    function createNewUser(auth, email, password) {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     var user = userCredential.user
                     setEnteredWrong(false)
-                    createUserData (firstName, familyName, user.uid). then (() => {
-                        console.log ("User created, trying to upload the image")
-                        uploadImage(user.uid)
-                    })
-                    
+                    createUserData(firstName, familyName, user.uid)
+                        .then(() => {
+                            saveImage(image, user.uid, getProfileLink)
+                        })
+
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -78,20 +78,21 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
         }
         else {
             setFormVisible(false)
-                onCloseHandler()
-        }}, [loggedIn])
+            onCloseHandler()
+        }
+    }, [loggedIn])
 
     const dbRef = ref(db);
 
     async function createUserData(firstName, lastName, userId) {
-        console.log ("Trying to create user DB data with ")
+        console.log("Trying to create user DB data with ")
         const pushReference = ref(db, 'users/' + userId)
         set(pushReference, ({
             firstName: firstName,
             lastName: lastName,
             friends: ''
-        })).catch ((error) => {
-            console.log (error)
+        })).catch((error) => {
+            console.log(error)
         })
 
     }
@@ -140,7 +141,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         hidden />
                 </Button>
                 <div className={classes.loginForm} style={{ textAlign: "center", height: "10vh", marginTop: "1rem", marginBottom: "1rem" }}>
-                    <Button type="submit" color="white" >
+                    <Button type="submit" color="default" >
                         Sign Up
                     </Button>
                 </div>
