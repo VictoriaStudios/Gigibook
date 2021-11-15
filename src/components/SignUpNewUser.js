@@ -21,11 +21,11 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const [image, setImage] = useState("")
 
     const getProfileLink = (imageName, uid) => {
-        getImageURL (imageName, uid, setProfileLink)
+        getImageURL(imageName, uid, setProfileLink)
     }
 
     const setProfileLink = (url, uid) => {
-        addProfileImageLink (uid, url)
+        addProfileImageLink(uid, url)
     }
 
 
@@ -38,6 +38,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
         setFormVisible(bool)
     }
 
+
     function createNewUser(auth, email, password) {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
@@ -47,7 +48,12 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                     setEnteredWrong(false)
                     createUserData(firstName, familyName, user.uid)
                         .then(() => {
-                            saveImage(image, user.uid, getProfileLink)
+                            if (image.size < 5 * 1024 * 1024 && image.type.match('image.*')) {
+                                saveImage(image, user.uid, getProfileLink)
+                            }
+                            else{
+                                console.log ("File is too large or not a picture")
+                            }
                         })
 
                 })

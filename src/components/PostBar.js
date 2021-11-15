@@ -23,7 +23,7 @@ const PostBar = ({ addFeedCard, loggedIn, uid}) => {
             {loggedIn ? (<Card style={{ marginTop: ".5rem" }}>
                 <CardContent className={classes.postbar}>
                     <Box style={{ display: "flex", gap: "10px" }}>
-                        <Avatar style={{}} />
+                        <Avatar />
                         <Button className={classes.postbarAddPostButton} onClick= {handleOpenNewPost}>
                             What's on your mind?
                         </Button>
@@ -53,7 +53,6 @@ const PostBar = ({ addFeedCard, loggedIn, uid}) => {
                 <div />
                 <Button onClick={() => { pushPost(uid, postOne, true) }}>Test FireBase Upload</Button>
                 <div />
-                <Button onClick={() => { getAllPosts(uid, addFeedCard) }}>Test FireBase Download</Button>
             </div>
 
         </>

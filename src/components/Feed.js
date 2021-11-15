@@ -28,7 +28,6 @@ const Feed = ({ feedCards, loggedIn }) => {
         feedCardsMod = feedCards.slice()
         feedCardsMod.forEach(card => {
             const elapsedSeconds = differenceInSeconds(Date.now(), card.date)
-            console.log(`Sorting: ${card.author} has an elapsed time of ${elapsedSeconds}`)
             card.elapsedSeconds = elapsedSeconds
         });
 
