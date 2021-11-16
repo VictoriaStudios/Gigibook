@@ -1,5 +1,5 @@
 import { db } from "./Firebase"
-import { push, ref, set, child, get, onValue } from "firebase/database"
+import { push, ref, child, get } from "firebase/database"
 
 const dbRef = ref(db);
 
@@ -22,10 +22,7 @@ export const pushPost = (uid, postObject, friendsOnly) => {
     alt: postObject.alt,
     content: postObject.content,
     likeCount: postObject.likeCount
-  })).then((snap) => {
-    const key = snap.key
-  })
-
+  }))
 }
 
 
@@ -33,7 +30,7 @@ export const pushPost = (uid, postObject, friendsOnly) => {
 export function getAllPosts(uid, addFeedCard) {
 
   //get all public posts 
-  const publicPostsRef = get(child(dbRef, '/public/posts/')).then((snapshot) => {
+  get(child(dbRef, '/public/posts/')).then((snapshot) => {
     if (snapshot.exists()) {
       snapshot.forEach((child) => {
         child.forEach((post) => {
@@ -50,7 +47,7 @@ export function getAllPosts(uid, addFeedCard) {
   //get all friends' posts
   //first, get all friends' uids
   const friendUids = []
-  const privatePostRef = get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
+  get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
     if (snapshot.exists()) {
       snapshot.forEach((child) => {
         friendUids.push (child.key)
@@ -64,7 +61,7 @@ export function getAllPosts(uid, addFeedCard) {
     console.log (error.message)
   }).then (() => {
     friendUids.forEach ((friend) => {
-      const privatePostRef = get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
+      get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
         if (snapshot.exists()) {
           snapshot.forEach((child) => {
           var card = child.val()

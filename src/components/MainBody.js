@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Box, Container, Modal, Typography } from '@material-ui/core'
+import { Container} from '@material-ui/core'
 import useStyles from './styles'
 import PostBar from './PostBar'
 import Feed from './Feed'
-import NewPost from './NewPost'
 import { getAllPosts } from '../utils/FeedUpdater'
 
 

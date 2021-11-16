@@ -11,7 +11,7 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import Typography from '@material-ui/core/Typography';
-import { format, formatDistance } from 'date-fns'
+import { formatDistance } from 'date-fns'
 
 const handleMoreButton = (e) => {
 
@@ -32,8 +32,6 @@ const handleShare = (e) => {
 
 const FeedCard = ({ cardData }) => {
     const classes = useStyles();
-    const dateString = format(cardData.date, 'dd/MM/yyyy')
-    const now = format(Date.now(), 'dd/MM/yyyy')
     const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })
     return (
         <div style={{ marginTop: "1rem" }}>

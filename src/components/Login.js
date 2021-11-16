@@ -24,23 +24,17 @@ const Login = ({onCloseHandler}) => {
         signIn(auth, email, password)
     }
 
-    const makeFormVisible = (bool) => {
-        setFormVisible(bool)
-    }
-
     
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in, see docs for a list of available properties
                 uid = user.uid;
                 console.log("Signed in, uid:" + uid)
                 setFormVisible(false)
                 checkIfUserData()
                 onCloseHandler()
             } else {
-                // User is signed out
                 console.log("Signed out")
                 setFormVisible(true)
             }
@@ -51,15 +45,10 @@ const Login = ({onCloseHandler}) => {
     function signIn(auth, email, password) {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Signed in 
                 setEnteredWrong(false)
-                const user = userCredential.user;
-
             })
             .catch((error) => {
                 setEnteredWrong(true)
-                const errorCode = error.code;
-                const errorMessage = error.message;
             });
     }
 

@@ -11,7 +11,7 @@ export async function saveImage(image, uid, callBackFunction) {
   const storageRef = ref(storage, `users/${uid}/images/${imageFileName}`)
   uploadBytes(storageRef, image).then((snapshot) => {
     console.log('Uploaded a blob or file!');
-    if (callBackFunction != null && callBackFunction != undefined) {
+    if (callBackFunction !== null && callBackFunction !== undefined) {
       callBackFunction(imageFileName, uid)
     }
   })

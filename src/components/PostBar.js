@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { pushPost, getAllPosts } from '../utils/FeedUpdater'
-import { postOne, postTwo, postThree, postFour } from './Feed'
+import { pushPost } from '../utils/FeedUpdater'
+import { postOne} from './Feed'
 import { Avatar, Box, Button, Card, CardContent, Modal } from '@material-ui/core'
 import useStyles from './styles'
 import NewPost from './NewPost'

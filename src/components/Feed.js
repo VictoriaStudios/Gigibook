@@ -24,13 +24,13 @@ export var postFour = new CardData("Random User D", avatar4, date4, example3, "A
 
 const Feed = ({ feedCards, loggedIn }) => {
     var feedCardsMod = []
+    //a function to sort all feed cards in descending time order
     const sortfeedCards = (feedCards) => {
         feedCardsMod = feedCards.slice()
         feedCardsMod.forEach(card => {
             const elapsedSeconds = differenceInSeconds(Date.now(), card.date)
             card.elapsedSeconds = elapsedSeconds
         });
-
         feedCardsMod.sort ((a,b) => a.elapsedSeconds - b.elapsedSeconds);
 
     }

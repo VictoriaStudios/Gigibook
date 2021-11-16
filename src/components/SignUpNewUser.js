@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"
 import useStyles from "./styles"
-import { Button, TextField, Typography } from "@material-ui/core"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { Button, TextField } from "@material-ui/core"
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { db } from "../utils/Firebase";
-import { set, push, ref, child, get } from "firebase/database"
+import { set, ref } from "firebase/database"
 import { saveImage, getImageURL } from "../utils/StorageManager";
-import { addProfileImageLink, addProfileImageName } from "./UserDataManager";
+import { addProfileImageLink } from "./UserDataManager";
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const auth = getAuth();
@@ -15,7 +15,6 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const [passwordRepeat, setPasswordRepeat] = useState("")
     const [firstName, setFirstName] = useState("")
     const [familyName, setFamilyName] = useState("")
-    const [formVisible, setFormVisible] = useState(true)
     const [enteredWrong, setEnteredWrong] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
@@ -36,15 +35,12 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
         createNewUser()
     }
 
-    const makeFormVisible = (bool) => {
-        setFormVisible(bool)
-    }
 
 
     function createNewUser() {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
-            if (image != "")
+            if (image !== "")
             {
                 if (image.size < 5 * 1024 * 1024 && image.type.match('image.*')) {
                     createNewUserData ()
@@ -76,7 +72,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
             setEnteredWrong(false)
             createUserData(firstName, familyName, user.uid)
                 .then(() => {
-                    if (wrongFile === false && image != "") {
+                    if (wrongFile === false && image !== "") {
                         saveImage(image, user.uid, getProfileLink)
                     }
                 })
@@ -99,15 +95,11 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
     useEffect(() => {
         if (loggedIn === false) {
-            setFormVisible(true)
         }
         else {
-            setFormVisible(false)
             onCloseHandler()
         }
     }, [loggedIn])
-
-    const dbRef = ref(db);
 
     async function createUserData(firstName, lastName, userId) {
         console.log("Trying to create user DB data with ")
@@ -166,7 +158,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         type="file"
                         hidden />
                 </Button>
-                {image != "" ? (<h6> {image.name} </h6>) : ("")}
+                {image !== "" ? (<h6> {image.name} </h6>) : ("")}
                 {wrongFile ? (<h6 style={{ color: "red", textAlign: "center" }}> {uploadErrorMessage} </h6>) : ""}
                 <div className={classes.loginForm} style={{ textAlign: "center", height: "10vh", marginTop: "1rem", marginBottom: "1rem" }}>
                     <Button type="submit" color="default" >
