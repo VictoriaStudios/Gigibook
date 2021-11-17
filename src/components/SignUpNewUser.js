@@ -40,22 +40,21 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     function createNewUser() {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
-            if (image !== "")
-            {
+            if (image !== "") {
                 if (image.size < 5 * 1024 * 1024 && image.type.match('image.*')) {
-                    createNewUserData ()
+                    createNewProfile()
                 }
-                else{
-                    setUploadErrorMessage ("Image larger than 5 MB or not an image at all")
-                    setWrongFile (true)
-                    setImage ("")
+                else {
+                    setUploadErrorMessage("Image larger than 5 MB or not an image at all")
+                    setWrongFile(true)
+                    setImage("")
                 }
             }
             else {
-                createNewUserData ()
+                createNewProfile()
             }
 
-            
+
         }
         else {
             setEnteredWrong(true)
@@ -65,32 +64,51 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     }
 
 
-    function createNewUserData () {
+    function createNewProfile() {
         createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            var user = userCredential.user
-            setEnteredWrong(false)
-            createUserData(firstName, familyName, user.uid)
-                .then(() => {
-                    if (wrongFile === false && image !== "") {
-                        saveImage(image, user.uid, getProfileLink)
-                    }
-                })
+            .then((userCredential) => {
+                var user = userCredential.user
+                setEnteredWrong(false)
+                createUserData(firstName, familyName, user.uid)
+                    .then((value) => {
+                        console.log(value)
+                        if (wrongFile === false && image !== "") {
+                            saveImage(image, user.uid, getProfileLink)
+                        }
+                    })
+                    .catch((error) => console.log(error))
 
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log(errorCode)
+                if (errorCode === "auth/email-already-in-use") {
+                    setEnteredWrong(true)
+                    setErrorMessage("Email is already in use")
+                }
+
+                if (errorCode === "auth/weak-password") {
+                    setEnteredWrong(true)
+                    setErrorMessage("Password too weak")
+                }
+            });
+    }
+
+    function createUserData(firstName, lastName, userId) {
+        console.log("Trying to create user DB data with createUserData")
+        return new Promise((resolve, reject) => {
+            const pushReference = ref(db, 'users/' + userId)
+            set(pushReference, ({
+                firstName: firstName,
+                lastName: lastName,
+                friends: ''
+            })).then(() => { resolve("Data created") })
+            .catch ((error) => {
+                reject ("Rejected " + error.message)
+            })
         })
-        .catch((error) => {
-            const errorCode = error.code;
-            console.log(errorCode)
-            if (errorCode === "auth/email-already-in-use") {
-                setEnteredWrong(true)
-                setErrorMessage("Email is already in use")
-            }
 
-            if (errorCode === "auth/weak-password") {
-                setEnteredWrong(true)
-                setErrorMessage("Password too weak")
-            }
-        });
+
     }
 
     useEffect(() => {
@@ -100,19 +118,6 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
             onCloseHandler()
         }
     }, [loggedIn])
-
-    async function createUserData(firstName, lastName, userId) {
-        console.log("Trying to create user DB data with ")
-        const pushReference = ref(db, 'users/' + userId)
-        set(pushReference, ({
-            firstName: firstName,
-            lastName: lastName,
-            friends: ''
-        })).catch((error) => {
-            console.log(error)
-        })
-
-    }
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -151,10 +156,10 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 />
                 <div />
                 {enteredWrong ? (<h6 style={{ color: "red", textAlign: "center" }}> {errorMessage} </h6>) : ""}
-               
+
                 <Button variant="contained" component="label">
                     Select File
-                    <input onChange={(e) => { setImage(e.target.files[0], setUploadErrorMessage (""), setWrongFile (false) )  }}
+                    <input onChange={(e) => { setImage(e.target.files[0], setUploadErrorMessage(""), setWrongFile(false)) }}
                         type="file"
                         hidden />
                 </Button>
