@@ -4,10 +4,16 @@ import { Button } from "@material-ui/core"
 
 const dbRef = ref(db)
 
-export async function addProfileImageLink (uid, url) {
+export function addProfileImageLink (uid, url) {
     console.log ("AddProfileLink, received uid " + uid)
     set (ref(db, `users/${uid}/profileLink/`), {
         link: url
+    })
+    .then (() => {
+        console.log ("URL link added to database")
+    })
+    .catch ((error) => {
+        console.log (error)
     })
 }
 

@@ -21,13 +21,6 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
     const [image, setImage] = useState("")
 
-    const getProfileLink = (imageName, uid) => {
-        getImageURL(imageName, uid, setProfileLink)
-    }
-
-    const setProfileLink = (url, uid) => {
-        addProfileImageLink(uid, url)
-    }
 
 
     const handleSubmit = (e) => {
@@ -73,7 +66,20 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                     .then((value) => {
                         console.log(value)
                         if (wrongFile === false && image !== "") {
-                            saveImage(image, user.uid, getProfileLink)
+                            saveImage(image, user.uid)
+                                .then((filename) => {
+                                    console.log(filename)
+                                    getImageURL(filename, user.uid)
+                                        .then((url) => {
+                                            addProfileImageLink(user.uid, url)
+                                        })
+                                        .catch((error) => {
+                                            console.log(error)
+                                        })
+                                })
+                                .catch((error) => {
+                                    console.log(error)
+                                })
                         }
                     })
                     .catch((error) => console.log(error))
@@ -103,9 +109,9 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 lastName: lastName,
                 friends: ''
             })).then(() => { resolve("Data created") })
-            .catch ((error) => {
-                reject ("Rejected " + error.message)
-            })
+                .catch((error) => {
+                    reject("Rejected " + error.message)
+                })
         })
 
 
