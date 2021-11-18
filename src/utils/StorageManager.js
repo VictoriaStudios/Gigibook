@@ -1,6 +1,5 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
-
 // Create a root reference
 const storage = getStorage();
 
@@ -24,11 +23,10 @@ export function getImageURL(filename, uid) {
   return new Promise((resolve, reject) => {
     getDownloadURL(ref(storage, `users/${uid}/images/${filename}`))
       .then((url) => {
-        resolve (url)
+        resolve(url)
       })
       .catch((error) => {
-        reject (error.mesage)
+        reject(error.mesage)
       });
   })
-
 }

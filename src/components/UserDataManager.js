@@ -5,7 +5,6 @@ import { Button } from "@material-ui/core"
 const dbRef = ref(db)
 
 export function addProfileImageLink (uid, url) {
-    console.log ("AddProfileLink, received uid " + uid)
     set (ref(db, `users/${uid}/profileLink/`), {
         link: url
     })
@@ -22,9 +21,7 @@ const UserDataManager = ({loggedIn, uid}) => {
     const addFriend = (friendId) => {
         get(child(dbRef, `users/${uid}/friends/${friendId}`)).then((snapshot) => {
             if (snapshot.exists()) {
-                console.log ("Friend does exist")
             } else {
-                console.log("Friend does not exist");
                 addFriendEntry (friendId);
             }
         }).catch((error) => {

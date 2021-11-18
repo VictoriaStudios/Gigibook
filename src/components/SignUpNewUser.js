@@ -29,21 +29,25 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     }
 
 
-
     function createNewUser() {
         console.log("Trying to create new user")
         if (password === passwordRepeat) {
             if (image !== "") {
-                if (image.size < 5 * 1024 * 1024 && image.type.match('image.*')) {
-                    createNewProfile()
-                }
-                else {
-                    setUploadErrorMessage("Image larger than 5 MB or not an image at all")
-                    setWrongFile(true)
-                    setImage("")
-                }
+                checkImage()
+                    .then((result) => {
+                        // if the user selected a valid image, continue with the signup process
+                        createNewProfile()
+                    })
+                    .catch((error) => {
+                        //if not, reset the file and prompt the user to upload a different file
+                        setUploadErrorMessage(error)
+                        setWrongFile(true)
+                        setImage("")
+                    })
+
             }
             else {
+                //if no file was selected, continue with the signup process
                 createNewProfile()
             }
 
@@ -58,19 +62,27 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
 
     function createNewProfile() {
+        //create firebase auth entry
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 var user = userCredential.user
                 setEnteredWrong(false)
+
+                //create realtime database entry
                 createUserData(firstName, familyName, user.uid)
                     .then((value) => {
                         console.log(value)
                         if (wrongFile === false && image !== "") {
+
+                            //upload image if the user selected a valid one
                             saveImage(image, user.uid)
                                 .then((filename) => {
-                                    console.log(filename)
+
+                                    //get the image URL from firebase storage
                                     getImageURL(filename, user.uid)
                                         .then((url) => {
+
+                                            //add the profile image url to the database
                                             addProfileImageLink(user.uid, url)
                                         })
                                         .catch((error) => {
@@ -95,11 +107,12 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
                 if (errorCode === "auth/weak-password") {
                     setEnteredWrong(true)
-                    setErrorMessage("Password too weak")
+                    setErrorMessage("Password is too weak")
                 }
             });
     }
 
+    //this creates the users base data in the realtime db
     function createUserData(firstName, lastName, userId) {
         console.log("Trying to create user DB data with createUserData")
         return new Promise((resolve, reject) => {
@@ -114,6 +127,31 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 })
         })
 
+
+    }
+
+    function checkImage() {
+        return new Promise((resolve, reject) => {
+            if (!image.type.match('image.*')) {
+                console.log("Not an image!")
+                reject("File is not an image")
+            }
+            var img = new Image()
+            img.src = window.URL.createObjectURL(image)
+            img.onload = function () {
+                const width = img.naturalWidth
+                const height = img.naturalHeight
+                if (width <= 128 && height <= 128) {
+                    console.log("true")
+                    resolve(true)
+                }
+                else {
+                    console.log("false")
+                    reject("Image is larger than 128x128px")
+                }
+            }
+            window.URL.revokeObjectURL(img.src)
+        })
 
     }
 
