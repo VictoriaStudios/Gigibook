@@ -62,7 +62,7 @@ const Login = ({onCloseHandler}) => {
 
     const dbRef = ref(db);
     async function checkIfUserData() {
-        await get(child(dbRef, 'users/' + uid)).then((snapshot) => {
+        get(child(dbRef, 'users/' + uid)).then((snapshot) => {
             if (snapshot.exists()) {
                 console.log("Found user data")
                 return

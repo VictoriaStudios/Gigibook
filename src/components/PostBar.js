@@ -6,7 +6,7 @@ import useStyles from './styles'
 import NewPost from './NewPost'
 
 
-const PostBar = ({ addFeedCard, loggedIn, uid, avatarURL }) => {
+const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const handleOpenNewPost = () => {
         setNewPostOpen(true)
@@ -16,10 +16,9 @@ const PostBar = ({ addFeedCard, loggedIn, uid, avatarURL }) => {
     }
 
     useEffect(() => {
-        if (avatarURL !== '') {
-            console.log("Postbar, avatarURL is " + avatarURL)
+        if (userData !== '') {
         }
-    }, [avatarURL])
+    }, [userData])
 
     const classes = useStyles()
     return (
@@ -27,7 +26,7 @@ const PostBar = ({ addFeedCard, loggedIn, uid, avatarURL }) => {
             {loggedIn ? (<Card style={{ marginTop: ".5rem" }}>
                 <CardContent className={classes.postbar}>
                     <Box style={{ display: "flex", gap: "10px" }}>
-                        <Avatar src={avatarURL} />
+                        {userData.profileLink !== undefined ? (<Avatar src={userData.profileLink.link} />) : (<Avatar />)}
                         <Button className={classes.postbarAddPostButton} onClick={handleOpenNewPost}>
                             What's on your mind?
                         </Button>
@@ -46,7 +45,7 @@ const PostBar = ({ addFeedCard, loggedIn, uid, avatarURL }) => {
                 }}
             >
                 <Box className={classes.modal}>
-                    <NewPost onCloseHandler={handleCloseNewPost} />
+                    <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} />
                 </Box>
             </Modal>
 

@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { Box, Button, Card, CardHeader, CardContent, TextField, Typography } from "@material-ui/core";
+import { Avatar, Box, Button, Card, CardHeader, CardContent, TextField, Typography } from "@material-ui/core";
 import { pushPost } from "../utils/FeedUpdater";
 
 
-const NewPost = (userData, {onCloseHandler}) => {
+const NewPost = ({uid, userData, onCloseHandler}) => {
     const [postContent, setPostContent] = useState("")
 
+    const initPost = () => {
 
+    }
 
 
     return (
         <div>
-            <Typography variant="h5" align="center" gutterbottom>
+            <Typography gutterbottom variant="h5" align="center" >
                 Write a new post
             </Typography>
             <Card>
                 <CardHeader
-                    avatar="AvatarGoesHere"
-                    subheader={userData.firstName} >
+                    avatar={<Avatar src={userData.profileLink.link}/>}
+                    title={userData.firstName} >
                 </CardHeader>
                 <CardContent>
                     <TextField
@@ -31,7 +33,7 @@ const NewPost = (userData, {onCloseHandler}) => {
                         >
                     </TextField>
                     <Box style={{textAlign:"center"}}>
-                        <Button onClick={{}}>
+                        <Button onClick={() => {initPost()}}>
                             Post
                         </Button>
                     </Box>

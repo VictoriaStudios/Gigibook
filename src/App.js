@@ -4,7 +4,7 @@ import MainBody from "./components/MainBody";
 import Header from "./components/Header";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect } from "react";
-import { getProfileImageLink } from "./components/UserDataManager";
+import { getUserData } from "./components/UserDataManager";
 
 const homeURL = "http://localhost:3000"
 const auth = getAuth()
@@ -12,7 +12,7 @@ const auth = getAuth()
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [uid, setUid] = useState('')
-  const [avatarURL, setAvatarURL] = useState('')
+  const [userData, setUserData] = useState('')
 
 
   useEffect(() => {
@@ -22,17 +22,18 @@ function App() {
         console.log ("App: uid is " + user.uid)
         setUid(user.uid)
         setLoggedIn(true)
-        console.log ("GetProfileImageLink triggered")
-            getProfileImageLink(user.uid)
-              .then((url) => {
-                setAvatarURL (url)
+            getUserData (user.uid)
+              .then((data) => {
+                setUserData(data)
               })
-              .catch((error) => console.log(error))
+              .catch((error) => {
+                console.log (error)
+              })
           }
       else {
         console.log("App: Logged out")
         setLoggedIn(false)
-        setAvatarURL('')
+        setUserData('')
       }
     })
   }, [])
@@ -42,7 +43,7 @@ function App() {
     <>
       <CssBaseline />
       <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} />
-      <MainBody loggedIn={loggedIn} uid={uid} avatarURL={avatarURL}/>
+      <MainBody loggedIn={loggedIn} uid={uid} userData={userData}/>
 
 
     </>

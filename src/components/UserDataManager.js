@@ -34,6 +34,21 @@ export function getProfileImageLink (uid) {
     })
 }
 
+export function getUserData (uid) {
+    return new Promise ((resolve,reject) => {
+        get(child(dbRef, 'users/' + uid)).then((snapshot) => {
+            if (snapshot.exists()) {
+                resolve (snapshot.val())
+            } else {
+                reject("User Data not found, creating data");
+            }
+        }).catch((error) => {
+            reject(error)
+        });
+    })
+     
+}
+
 const UserDataManager = ({loggedIn, uid}) => {
 
     const addFriend = (friendId) => {

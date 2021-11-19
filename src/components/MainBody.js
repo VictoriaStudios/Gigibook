@@ -7,7 +7,7 @@ import { getAllPosts } from '../utils/FeedUpdater'
 
 
 
-const MainBody = ({ loggedIn, uid, avatarURL }) => {
+const MainBody = ({ loggedIn, uid, userData }) => {
     const [feedCards, setFeedCards] = useState([])
     const addFeedCards = (newFeedCard) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
@@ -28,7 +28,7 @@ const MainBody = ({ loggedIn, uid, avatarURL }) => {
     return (
         <>
             <Container maxWidth="md" className={classes.container}>
-                <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} avatarURL={avatarURL} />
+                <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} userData={userData} />
                 <Feed feedCards={feedCards} loggedIn={loggedIn} />
             </Container>
         </>

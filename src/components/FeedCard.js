@@ -37,7 +37,7 @@ const FeedCard = ({ cardData }) => {
         <div style={{ marginTop: "1rem" }}>
             <Card className= {classes.FeedCard}>
                 <CardHeader
-                    avatar={<Avatar src={cardData.avatar} />}
+                    avatar={<Avatar src={cardData.avatar}/>}
                     title={cardData.author}
                     subheader={elapsedTime}
                     action={
