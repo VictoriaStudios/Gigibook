@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { pushPost } from '../utils/FeedUpdater'
-import { postOne} from './Feed'
+import { postOne } from './Feed'
 import { Avatar, Box, Button, Card, CardContent, Modal } from '@material-ui/core'
 import useStyles from './styles'
 import NewPost from './NewPost'
 
 
-const PostBar = ({ addFeedCard, loggedIn, uid}) => {
+const PostBar = ({ addFeedCard, loggedIn, uid, avatarURL }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const handleOpenNewPost = () => {
         setNewPostOpen(true)
@@ -15,7 +15,11 @@ const PostBar = ({ addFeedCard, loggedIn, uid}) => {
         setNewPostOpen(false)
     }
 
-
+    useEffect(() => {
+        if (avatarURL !== '') {
+            console.log("Postbar, avatarURL is " + avatarURL)
+        }
+    }, [avatarURL])
 
     const classes = useStyles()
     return (
@@ -23,8 +27,8 @@ const PostBar = ({ addFeedCard, loggedIn, uid}) => {
             {loggedIn ? (<Card style={{ marginTop: ".5rem" }}>
                 <CardContent className={classes.postbar}>
                     <Box style={{ display: "flex", gap: "10px" }}>
-                        <Avatar />
-                        <Button className={classes.postbarAddPostButton} onClick= {handleOpenNewPost}>
+                        <Avatar src={avatarURL} />
+                        <Button className={classes.postbarAddPostButton} onClick={handleOpenNewPost}>
                             What's on your mind?
                         </Button>
                     </Box>

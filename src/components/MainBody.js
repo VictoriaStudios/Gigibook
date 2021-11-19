@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Container} from '@material-ui/core'
+import { Container } from '@material-ui/core'
 import useStyles from './styles'
 import PostBar from './PostBar'
 import Feed from './Feed'
@@ -7,18 +7,19 @@ import { getAllPosts } from '../utils/FeedUpdater'
 
 
 
-const MainBody = ({loggedIn , uid}) => {
+const MainBody = ({ loggedIn, uid, avatarURL }) => {
     const [feedCards, setFeedCards] = useState([])
     const addFeedCards = (newFeedCard) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
-        useEffect(() => {
-            if (loggedIn === false) {
-                setFeedCards ([])
-            }
-            else {
-                getAllPosts(uid, addFeedCards)
-            }}, [loggedIn])
+    useEffect(() => {
+        if (loggedIn === false) {
+            setFeedCards([])
+        }
+        else {
+            getAllPosts(uid, addFeedCards)
+        }
+    }, [loggedIn])
 
 
 
@@ -27,8 +28,8 @@ const MainBody = ({loggedIn , uid}) => {
     return (
         <>
             <Container maxWidth="md" className={classes.container}>
-                <PostBar addFeedCard={addFeedCards} loggedIn = {loggedIn} uid = {uid}/>
-                <Feed feedCards={feedCards} loggedIn = {loggedIn} />
+                <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} avatarURL={avatarURL} />
+                <Feed feedCards={feedCards} loggedIn={loggedIn} />
             </Container>
         </>
     )

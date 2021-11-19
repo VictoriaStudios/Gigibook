@@ -16,6 +16,24 @@ export function addProfileImageLink (uid, url) {
     })
 }
 
+export function getProfileImageLink (uid) {
+    console.log ("Getting profile image, uid: " + uid)
+    return new Promise ((resolve, reject) => {
+        get(child(dbRef, `users/${uid}/profileLink/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                // found profile Link
+                resolve (snapshot.val().link)
+            } else {
+                // no profile Link found
+                reject ("No profile Link Found")
+            }
+        }).catch((error) => {
+            console.error(error);
+            reject (error)
+        })
+    })
+}
+
 const UserDataManager = ({loggedIn, uid}) => {
 
     const addFriend = (friendId) => {

@@ -16,7 +16,7 @@ const handleSubmit = (e) => {
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid }) => {
+const Header = ({ homeURL, loggedIn, uid}) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false);
     const [newUserOpen, setNewUserOpen] = useState(false);
