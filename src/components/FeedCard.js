@@ -53,7 +53,7 @@ const FeedCard = ({ cardData }) => {
                     </Typography>
 
                     {/* Show Image if available */}
-                    {cardData.img != null ? (<CardMedia
+                    {cardData.img !== null && cardData.img !== undefined && cardData.img !== "" ? (<CardMedia
                         component="img"
                         image={cardData.img}
                         alt={cardData.alt}

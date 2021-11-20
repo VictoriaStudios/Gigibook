@@ -33,8 +33,7 @@ const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
                     </Box>
                 </CardContent>
             </Card>) : ""}
-
-            <Modal
+            <Modal 
                 open={newPostOpen}
                 onClose={handleCloseNewPost}
                 aria-labelledby="modal-modal-title"
@@ -48,6 +47,7 @@ const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
                     <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} />
                 </Box>
             </Modal>
+
 
 
             <div style={{ marginTop: "1rem" }}>
