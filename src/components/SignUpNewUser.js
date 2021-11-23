@@ -93,6 +93,14 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                                     console.log(error)
                                 })
                         }
+                        //if there is no image, create a placeholder consisting of the first letters of the name
+                        else {
+                            const letters = firstName[0] + familyName[0]
+                            addProfileImageLink(user.uid, letters)
+                                .catch((error) => {
+                                    console.log(error)
+                                })
+                        }
                     })
                     .catch((error) => console.log(error))
 
@@ -120,7 +128,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
             set(pushReference, ({
                 firstName: firstName,
                 lastName: lastName,
-                friends: ''
+                friends: '',
             })).then(() => { resolve("Data created") })
                 .catch((error) => {
                     reject("Rejected " + error.message)

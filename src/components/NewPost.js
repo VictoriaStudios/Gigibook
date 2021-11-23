@@ -11,7 +11,7 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
     const [alt, setAlt] = useState("")
 
     const initPost = () => {
-        const now = new Date (Date.now())
+        const now = new Date(Date.now())
         const postData = {
             author: userData.firstName,
             avatar: userData.profileLink.link,
@@ -38,21 +38,42 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                 Write a new post
             </Typography>
             <Card>
-                <CardHeader
-                    avatar={<Avatar src={userData.profileLink.link} />}
-                    title={userData.firstName}
-                    subheader={<Select
-                        labelId="select-visibility"
-                        id="select-visibility"
-                        value={friendsOnly}
-                        label="public"
-                        onChange={handleChange}
-                        style={{ fontSize: "0.875rem" }}
-                    >
-                        <MenuItem value={false}>public</MenuItem>
-                        <MenuItem value={true}>private</MenuItem>
-                    </Select>}>
-                </CardHeader>
+                {/* if the profile link only consists of two letters, show there */}
+                {userData.profileLink.link.length === 2 ? (
+                    <CardHeader
+                        avatar={<Avatar>{userData.profileLink.link}</Avatar>}
+                        title={userData.firstName}
+                        subheader={<Select
+                            labelId="select-visibility"
+                            id="select-visibility"
+                            value={friendsOnly}
+                            label="public"
+                            onChange={handleChange}
+                            style={{ fontSize: "0.875rem" }}
+                        >
+                            <MenuItem value={false}>public</MenuItem>
+                            <MenuItem value={true}>private</MenuItem>
+                        </Select>}>
+                    </CardHeader>
+                    
+                 /* otherwise show the proper profile avatar */
+                ) :
+                    <CardHeader
+                        avatar={<Avatar src={userData.profileLink.link} />}
+                        title={userData.firstName}
+                        subheader={<Select
+                            labelId="select-visibility"
+                            id="select-visibility"
+                            value={friendsOnly}
+                            label="public"
+                            onChange={handleChange}
+                            style={{ fontSize: "0.875rem" }}
+                        >
+                            <MenuItem value={false}>public</MenuItem>
+                            <MenuItem value={true}>private</MenuItem>
+                        </Select>}>
+                    </CardHeader>}
+
                 <CardContent>
 
                     <TextField
@@ -65,7 +86,10 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                         onChange={(e) => setPostContent(e.target.value)}
                     >
                     </TextField>
-                    <Box style={{ textAlign: "center" }}>
+                    <Box style={{ display:"flex", justifyContent:"space-between"}}>
+                        <Button onClick={initPost}>
+                            Add Picture
+                        </Button>
                         <Button onClick={initPost}>
                             Post
                         </Button>
