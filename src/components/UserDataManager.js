@@ -17,7 +17,6 @@ export function addProfileImageLink (uid, url) {
 }
 
 export function getProfileImageLink (uid) {
-    console.log ("Getting profile image, uid: " + uid)
     return new Promise ((resolve, reject) => {
         get(child(dbRef, `users/${uid}/profileLink/`)).then((snapshot) => {
             if (snapshot.exists()) {

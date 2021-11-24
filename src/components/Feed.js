@@ -40,7 +40,7 @@ const Feed = ({ feedCards, loggedIn }) => {
             {sortfeedCards(feedCards)}
             {loggedIn === true ? (feedCardsMod.map((card) => (
                 <>
-                    <FeedCard key={card.id} cardData={card} />
+                    <FeedCard key={card.id} cardData={card} loggedIn={loggedIn} />
                 </>
             ))) : ('')}
         </>

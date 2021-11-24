@@ -13,8 +13,8 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
     const initPost = () => {
         const now = new Date(Date.now())
         const postData = {
+            authorUid: uid,
             author: userData.firstName,
-            avatar: userData.profileLink.link,
             date: now,
             img: image,
             alt: alt,

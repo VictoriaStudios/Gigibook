@@ -4,10 +4,21 @@ import { postOne } from './Feed'
 import { Avatar, Box, Button, Card, CardContent, Modal } from '@material-ui/core'
 import useStyles from './styles'
 import NewPost from './NewPost'
+import { getProfileImageLink } from './UserDataManager'
 
 
 const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
+    const [avatarVal, setAvatarVal] = useState("")
+    const getAvatar = (uid) => {
+        getProfileImageLink(uid)
+            .then((url) => {
+                setAvatarVal(url)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
     const handleOpenNewPost = () => {
         setNewPostOpen(true)
     }
@@ -16,9 +27,11 @@ const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
     }
 
     useEffect(() => {
-        if (userData !== '') {
+        if (loggedIn) {
+            getAvatar(uid)
         }
-    }, [userData])
+    }, [loggedIn])
+
 
     const classes = useStyles()
     return (
@@ -26,7 +39,10 @@ const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
             {loggedIn ? (<Card style={{ marginTop: ".5rem" }}>
                 <CardContent className={classes.postbar}>
                     <Box style={{ display: "flex", gap: "10px" }}>
-                        {userData.profileLink !== undefined ? (<Avatar src={userData.profileLink.link} />) : (<Avatar />)}
+                        {avatarVal.length===2 ? (
+                        <Avatar>{avatarVal}</Avatar>) : (
+                            <Avatar src= {avatarVal}/>
+                        )}
                         <Button className={classes.postbarAddPostButton} onClick={handleOpenNewPost}>
                             What's on your mind?
                         </Button>

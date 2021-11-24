@@ -6,7 +6,6 @@ const dbRef = ref(db);
 
 export const pushPost = (uid, postObject, friendsOnly) => {
   const cleanDate = postObject.date.toJSON()
-  //const cleanDate = JSON.stringify(postObject.date)
   var postReferece = ""
   if (friendsOnly === true) {
     postReferece = ref(db, `users/${uid}/posts/private/`)
@@ -14,10 +13,11 @@ export const pushPost = (uid, postObject, friendsOnly) => {
   else {
     postReferece = ref(db, `/public/posts/${uid}`)
   }
+  console.log (`Pushpost: ${postReferece}`)
 
   push(postReferece, ({
+    authorUid:uid,
     author: postObject.author,
-    avatar: postObject.avatar,
     date: cleanDate,
     img: postObject.img,
     alt: postObject.alt,

@@ -12,6 +12,11 @@ import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import Typography from '@material-ui/core/Typography';
 import { formatDistance } from 'date-fns'
+import { getProfileImageLink } from './UserDataManager';
+import { useState, useEffect } from 'react';
+
+
+
 
 const handleMoreButton = (e) => {
 
@@ -30,26 +35,57 @@ const handleShare = (e) => {
 }
 
 
-const FeedCard = ({ cardData }) => {
+const FeedCard = ({ cardData, loggedIn }) => {
+
+    const [avatarVal, setAvatarVal] = useState("")
+    const getAvatar = (uid) => {
+        getProfileImageLink(uid)
+            .then((url) => {
+                setAvatarVal(url)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    useEffect(() => {
+        if (loggedIn) {
+            getAvatar(cardData.authorUid)
+        }
+    }, [loggedIn])
+
     const classes = useStyles();
     const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })
     return (
         <div style={{ marginTop: "1rem" }}>
-            <Card className= {classes.FeedCard}>
-                <CardHeader
-                    avatar={<Avatar src={cardData.avatar}/>}
-                    title={cardData.author}
-                    subheader={elapsedTime}
-                    action={
-                        <IconButton aria-label="settings" onClick={handleMoreButton}>
-                            <MoreHorizRoundedIcon />
-                        </IconButton>
-                    }
-                />
+            <Card className={classes.FeedCard}>
+                {avatarVal.length === 2 ? (
+                    <CardHeader
+                        avatar={<Avatar> {avatarVal} </Avatar>}
+                        title={cardData.author}
+                        subheader={elapsedTime}
+                        action={
+                            <IconButton aria-label="settings" onClick={handleMoreButton}>
+                                <MoreHorizRoundedIcon />
+                            </IconButton>
+                        }
+                    />
+                ) : (
+                    <CardHeader
+                        avatar={<Avatar src={avatarVal} />}
+                        title={cardData.author}
+                        subheader={elapsedTime}
+                        action={
+                            <IconButton aria-label="settings" onClick={handleMoreButton}>
+                                <MoreHorizRoundedIcon />
+                            </IconButton>
+                        }
+                    />)}
+
 
                 <CardContent>
                     <Typography variant="body2" gutterBottom>
-                       {cardData.content}
+                        {cardData.content}
                     </Typography>
 
                     {/* Show Image if available */}
@@ -61,22 +97,22 @@ const FeedCard = ({ cardData }) => {
                     />) : ""}
 
                     {/*Show Likes if available*/}
-                    {cardData.likeCount > 0 ? (<div style={{display:"flex"}}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon}/><Typography variant="caption" style={{alignSelf:"end"}}> {cardData.likeCount}</Typography></div>)
-                    : ""}
+                    {cardData.likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {cardData.likeCount}</Typography></div>)
+                        : ""}
                 </CardContent>
 
-                <CardActions className = {classes.feedCardActionBar}>
-                    <IconButton aria-label="like" onClick={handleLike} sx={{borderRadius:"5%", flexGrow: "1"}}>
+                <CardActions className={classes.feedCardActionBar}>
+                    <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ThumbUpRoundedIcon />
-                        <Typography className={classes.feedCardActionDesc}> Like </Typography>      
+                        <Typography className={classes.feedCardActionDesc}> Like </Typography>
                     </IconButton>
-                    <IconButton aria-label="comment" onClick={handleComment} sx={{borderRadius:"5%", flexGrow: "1"}}>
+                    <IconButton aria-label="comment" onClick={handleComment} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ChatRoundedIcon />
                         <Typography className={classes.feedCardActionDesc}> Comment </Typography>
                     </IconButton>
-                    <IconButton aria-label="share" onClick={handleShare} sx={{borderRadius:"5%", flexGrow: "1"}}>
+                    <IconButton aria-label="share" onClick={handleShare} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ShareRoundedIcon />
-                    <Typography className={classes.feedCardActionDesc}> Share </Typography>
+                        <Typography className={classes.feedCardActionDesc}> Share </Typography>
                     </IconButton>
                 </CardActions>
 
