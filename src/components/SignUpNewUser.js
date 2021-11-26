@@ -4,7 +4,7 @@ import { Button, TextField } from "@material-ui/core"
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { db } from "../utils/Firebase";
 import { set, ref } from "firebase/database"
-import { saveImage, getImageURL } from "../utils/StorageManager";
+import { saveProfileImage, getImageURL } from "../utils/StorageManager";
 import { addProfileImageLink } from "./UserDataManager";
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
@@ -75,7 +75,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         if (wrongFile === false && image !== "") {
 
                             //upload image if the user selected a valid one
-                            saveImage(image, user.uid)
+                            saveProfileImage(image, user.uid)
                                 .then((filename) => {
 
                                     //get the image URL from firebase storage
@@ -150,11 +150,9 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 const width = img.naturalWidth
                 const height = img.naturalHeight
                 if (width <= 128 && height <= 128) {
-                    console.log("true")
                     resolve(true)
                 }
                 else {
-                    console.log("false")
                     reject("Image is larger than 128x128px")
                 }
             }

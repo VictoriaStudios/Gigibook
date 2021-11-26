@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Avatar, Box, Button, Card, CardHeader, CardContent, MenuItem, Select, TextField, Typography } from "@material-ui/core";
 import { pushPost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
+import { getImageURL, saveImage } from "../utils/StorageManager";
 
 
 const NewPost = ({ uid, userData, onCloseHandler }) => {
@@ -9,22 +10,84 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
     const [friendsOnly, setFriendsOnly] = useState(false)
     const [image, setImage] = useState("")
     const [alt, setAlt] = useState("")
+    const [wrongFile, setWrongFile] = useState(false)
+    const [uploadErrorMessage, setUploadErrorMessage] = useState("")
 
     const initPost = () => {
+        var imageURL = ""
+        console.log ("InitPost started")
+        if (image !== "")
+        {
+            checkImage()
+            .then (() => {
+                saveImage(image, uid)
+                .then ((imageFileName) => {
+                    getImageURL(imageFileName, uid)
+                    .then ((url) => {
+                        imageURL=url
+                        postData(imageURL)
+                    })
+                    .catch (error => console.log (error))
+                })
+                .catch ((error) => {
+                    console.log (error)
+                    setWrongFile(true)
+                    setUploadErrorMessage(error)
+                    setImage("")
+                })
+
+            })
+            .catch((error) => {
+                console.log (error)
+                setWrongFile(true)
+                setUploadErrorMessage(error)
+                setImage("")
+            })
+        }
+        else {
+            postData (imageURL)
+        }
+    }
+
+    function postData (imageURL) {
         const now = new Date(Date.now())
         const postData = {
             authorUid: uid,
             author: userData.firstName,
             date: now,
-            img: image,
+            img: imageURL,
             alt: alt,
             content: postContent,
             likeCount: 0
         }
         pushPost(uid, postData, friendsOnly)
         onCloseHandler()
+    }
+
+    function checkImage() {
+        console.log ("CheckImage called")
+        return new Promise((resolve, reject) => {
+            if (!image.type.match('image.*')) {
+                console.log("Not an image!")
+                reject("File is not an image")
+            }
+            var img = new Image()
+            img.src = window.URL.createObjectURL(image)
+            img.onload = function () {
+                const width = img.naturalWidth
+                const height = img.naturalHeight
+                if (width <= 1024 && height <= 1024) {
+                    resolve(true)
+                }
+                else {
+                    reject("Image is larger than 1024x1024px")
+                }
+            }
+            window.URL.revokeObjectURL(img.src)
+        })
 
     }
+
 
     const handleChange = (e) => {
         setFriendsOnly(e.target.value)
@@ -55,8 +118,8 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                             <MenuItem value={true}>private</MenuItem>
                         </Select>}>
                     </CardHeader>
-                    
-                 /* otherwise show the proper profile avatar */
+
+                    /* otherwise show the proper profile avatar */
                 ) :
                     <CardHeader
                         avatar={<Avatar src={userData.profileLink.link} />}
@@ -86,9 +149,13 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                         onChange={(e) => setPostContent(e.target.value)}
                     >
                     </TextField>
-                    <Box style={{ display:"flex", justifyContent:"space-between"}}>
-                        <Button onClick={initPost}>
+                    {wrongFile ? (<h6 style={{ color: "red", textAlign: "center" }}> {uploadErrorMessage} </h6>) : ""}
+                    <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                        <Button variant="contained" component="label">
                             Add Picture
+                            <input onChange={(e) => { setImage(e.target.files[0], setUploadErrorMessage(""), setWrongFile(false)) }}
+                                type="file"
+                                hidden />
                         </Button>
                         <Button onClick={initPost}>
                             Post
