@@ -13,7 +13,6 @@ export const pushPost = (uid, postObject, friendsOnly) => {
   else {
     postReferece = ref(db, `/public/posts/${uid}`)
   }
-  console.log (`Pushpost: ${postReferece}`)
 
   push(postReferece, ({
     authorUid:uid,

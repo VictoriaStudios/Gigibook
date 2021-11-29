@@ -1,4 +1,5 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { v1 as v1uuid } from "uuid";
 
 // Create a root reference
 const storage = getStorage();
@@ -9,8 +10,8 @@ export function saveProfileImage(image, uid) {
     var imageFileName = "profile." + fileExt;
     const storageRef = ref(storage, `users/${uid}/images/${imageFileName}`)
     uploadBytes(storageRef, image)
-      .then((snapshot) => {
-        resolve(imageFileName)
+      .then(() => {
+        resolve(storageRef)
       })
       .catch((error) => {
         reject("saveImage failed, error: " + error)
@@ -20,10 +21,12 @@ export function saveProfileImage(image, uid) {
 
 export function saveImage(image, uid) {
   return new Promise((resolve, reject) => {
-    const storageRef = ref(storage, `users/${uid}/images/${image.name}`)
+    const imageUid = v1uuid()
+    const storageRef = ref(storage, `users/${uid}/images/${imageUid}/${image.name}`)
     uploadBytes(storageRef, image)
       .then(() => {
-        resolve(image.name)
+        console.log (storageRef)
+        resolve(storageRef)
       })
       .catch((error) => {
         reject("saveImage failed, error: " + error)
@@ -32,9 +35,9 @@ export function saveImage(image, uid) {
 
 }
 
-export function getImageURL(filename, uid) {
+export function getImageURL(imageRef) {
   return new Promise((resolve, reject) => {
-    getDownloadURL(ref(storage, `users/${uid}/images/${filename}`))
+    getDownloadURL(imageRef)
       .then((url) => {
         resolve(url)
       })

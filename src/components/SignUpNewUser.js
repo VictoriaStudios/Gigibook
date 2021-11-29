@@ -76,10 +76,10 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
                             //upload image if the user selected a valid one
                             saveProfileImage(image, user.uid)
-                                .then((filename) => {
+                                .then((imageRef) => {
 
                                     //get the image URL from firebase storage
-                                    getImageURL(filename, user.uid)
+                                    getImageURL(imageRef)
                                         .then((url) => {
 
                                             //add the profile image url to the database

@@ -21,8 +21,8 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
             checkImage()
             .then (() => {
                 saveImage(image, uid)
-                .then ((imageFileName) => {
-                    getImageURL(imageFileName, uid)
+                .then ((imageRef) => {
+                    getImageURL(imageRef)
                     .then ((url) => {
                         imageURL=url
                         postData(imageURL)
@@ -71,18 +71,27 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                 console.log("Not an image!")
                 reject("File is not an image")
             }
-            var img = new Image()
-            img.src = window.URL.createObjectURL(image)
-            img.onload = function () {
-                const width = img.naturalWidth
-                const height = img.naturalHeight
-                if (width <= 1024 && height <= 1024) {
-                    resolve(true)
-                }
-                else {
-                    reject("Image is larger than 1024x1024px")
+            else{
+                var img = new Image()
+                img.src = window.URL.createObjectURL(image)
+                img.onload = function () {
+                    const width = img.naturalWidth
+                    const height = img.naturalHeight
+                    if (width <= 1024 && height <= 1024) {
+                        if (image.size/1024/1024 > 2) {
+                            reject("Image is larger than 2 MB")
+                        }
+                        else{
+                            resolve(true)
+                        }
+                        
+                    }
+                    else {
+                        reject("Image is larger than 1024x1024px")
+                    }
                 }
             }
+            
             window.URL.revokeObjectURL(img.src)
         })
 
