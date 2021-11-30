@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { db } from "../utils/Firebase";
 import { set, ref } from "firebase/database"
 import { saveProfileImage, getImageURL } from "../utils/StorageManager";
-import { addProfileImageLink } from "./UserDataManager";
+import { addProfileImageLink } from "../utils/UserDataManager";
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const auth = getAuth();

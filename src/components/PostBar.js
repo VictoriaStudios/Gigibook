@@ -4,7 +4,7 @@ import { postOne } from './Feed'
 import { Avatar, Box, Button, Card, CardContent, Modal } from '@material-ui/core'
 import useStyles from './styles'
 import NewPost from './NewPost'
-import { getProfileImageLink } from './UserDataManager'
+import { getProfileImageLink } from '../utils/UserDataManager'
 
 
 const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {

@@ -4,7 +4,7 @@ import MainBody from "./components/MainBody";
 import Header from "./components/Header";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect } from "react";
-import { getUserData } from "./components/UserDataManager";
+import { getUserData } from "./utils/UserDataManager";
 
 const homeURL = "http://localhost:3000"
 const auth = getAuth()

@@ -5,7 +5,7 @@ import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import Login from './Login';
 import { getAuth, signOut } from '@firebase/auth';
 import SignUpNewUser from './SignUpNewUser';
-import UserDataManager from './UserDataManager';
+import UserDataManager from '../utils/UserDataManager';
 
 
 
@@ -101,7 +101,6 @@ const Header = ({ homeURL, loggedIn, uid}) => {
                 </Toolbar>
             </AppBar>
         </Box>
-        <UserDataManager loggedIn = {loggedIn}/>
         </>
 
     )

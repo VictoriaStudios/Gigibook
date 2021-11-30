@@ -12,8 +12,8 @@ import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import Typography from '@material-ui/core/Typography';
 import { formatDistance } from 'date-fns'
-import { getProfileImageLink } from './UserDataManager';
 import { useState, useEffect } from 'react';
+import { getProfileImageLink } from '../utils/UserDataManager';
 
 
 
