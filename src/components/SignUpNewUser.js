@@ -30,11 +30,10 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
 
     function createNewUser() {
-        console.log("Trying to create new user")
         if (password === passwordRepeat) {
             if (image !== "") {
                 checkImage()
-                    .then((result) => {
+                    .then(() => {
                         // if the user selected a valid image, continue with the signup process
                         createNewProfile()
                     })
@@ -70,10 +69,8 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
                 //create realtime database entry
                 createUserData(firstName, familyName, user.uid)
-                    .then((value) => {
-                        console.log(value)
+                    .then(() => {
                         if (wrongFile === false && image !== "") {
-
                             //upload image if the user selected a valid one
                             saveProfileImage(image, user.uid)
                                 .then((imageRef) => {
@@ -97,12 +94,14 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         else {
                             const letters = firstName[0] + familyName[0]
                             addProfileImageLink(user.uid, letters)
-                                .catch((error) => {
-                                    console.log(error)
-                                })
                         }
                     })
-                    .catch((error) => console.log(error))
+                    // this is the error source
+                    .catch((error) => {
+                        console.log ("1")
+                        console.log(error)
+                    }
+                    )
 
             })
             .catch((error) => {
@@ -122,14 +121,15 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
     //this creates the users base data in the realtime db
     function createUserData(firstName, lastName, userId) {
-        console.log("Trying to create user DB data with createUserData")
         return new Promise((resolve, reject) => {
             const pushReference = ref(db, 'users/' + userId)
             set(pushReference, ({
                 firstName: firstName,
                 lastName: lastName,
                 friends: '',
-            })).then(() => { resolve("Data created") })
+                uid: userId
+            })).then(() => {
+                 resolve("Data created") })
                 .catch((error) => {
                     reject("Rejected " + error.message)
                 })
@@ -141,7 +141,6 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     function checkImage() {
         return new Promise((resolve, reject) => {
             if (!image.type.match('image.*')) {
-                console.log("Not an image!")
                 reject("File is not an image")
             }
             var img = new Image()
