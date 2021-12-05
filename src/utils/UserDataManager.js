@@ -5,12 +5,18 @@ import { Button } from "@material-ui/core"
 const dbRef = ref(db)
 
 export function addProfileImageLink(uid, url) {
-    set(ref(db, `users/${uid}/profileLink/`), {
-        link: url
-    })
-        .catch((error) => {
-            console.log(error)
+    return new Promise ((resolve, reject) => {
+        set(ref(db, `users/${uid}/profileLink/`), {
+            link: url
         })
+            .then (()=> {
+                resolve ("Profile link added")
+            })
+            .catch((error) => {
+                reject ("Addprofilelink: " + error.message)
+            })
+    })
+
 }
 
 export function getProfileImageLink(uid) {
@@ -32,6 +38,7 @@ export function getProfileImageLink(uid) {
 }
 
 export function getUserData(uid) {
+    console.log("Getting user data")
     return new Promise((resolve, reject) => {
         get(child(dbRef, 'users/' + uid)).then((snapshot) => {
             if (snapshot.exists()) {

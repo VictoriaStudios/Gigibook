@@ -7,6 +7,7 @@ import { set, ref } from "firebase/database"
 import { saveProfileImage, getImageURL } from "../utils/StorageManager";
 import { addProfileImageLink } from "../utils/UserDataManager";
 
+
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const auth = getAuth();
     const classes = useStyles()
@@ -81,6 +82,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
                                             //add the profile image url to the database
                                             addProfileImageLink(user.uid, url)
+                                                .catch((error) => console.log(error))
                                         })
                                         .catch((error) => {
                                             console.log(error)
@@ -94,11 +96,12 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         else {
                             const letters = firstName[0] + familyName[0]
                             addProfileImageLink(user.uid, letters)
+                                .catch((error) => console.log(error))
                         }
                     })
                     // this is the error source
                     .catch((error) => {
-                        console.log ("1")
+                        console.log("1")
                         console.log(error)
                     }
                     )
@@ -129,7 +132,8 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 friends: '',
                 uid: userId
             })).then(() => {
-                 resolve("Data created") })
+                resolve("Data created")
+            })
                 .catch((error) => {
                     reject("Rejected " + error.message)
                 })
@@ -159,6 +163,12 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
         })
 
     }
+
+    function test() {
+        console.log("test")
+    }
+
+
 
     useEffect(() => {
         if (loggedIn === false) {

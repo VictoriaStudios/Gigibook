@@ -5,9 +5,11 @@ import Header from "./components/Header";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect } from "react";
 import { getUserData } from "./utils/UserDataManager";
+import { update } from "@firebase/database";
 
 const homeURL = "http://localhost:3000"
 const auth = getAuth()
+
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -39,10 +41,11 @@ function App() {
   }, [])
 
 
+
   return (
     <>
       <CssBaseline />
-      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} />
+      <Header homeURL={homeURL} loggedIn={loggedIn}/>
       <MainBody loggedIn={loggedIn} uid={uid} userData={userData}/>
 
 

@@ -30,12 +30,10 @@ const Login = ({onCloseHandler}) => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 uid = user.uid;
-                console.log("Signed in, uid:" + uid)
                 setFormVisible(false)
                 checkIfUserData()
                 onCloseHandler()
             } else {
-                console.log("Signed out")
                 setFormVisible(true)
             }
         });

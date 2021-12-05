@@ -17,7 +17,7 @@ const handleSubmit = (e) => {
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid }) => {
+const Header = ({ homeURL, loggedIn }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false);
     const [newUserOpen, setNewUserOpen] = useState(false);
@@ -107,7 +107,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                                 <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
                                     Sign up to Gigibook
                                 </Typography>
-                                <SignUpNewUser onCloseHandler={handleNewUserClose} loggedIn={loggedIn} uid={uid} />
+                                <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose}/>
                             </Box>
                         </Modal>
                     </Toolbar>
