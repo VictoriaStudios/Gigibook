@@ -6,6 +6,10 @@ import useStyles from './styles'
 import NewPost from './NewPost'
 import { getProfileImageLink } from '../utils/UserDataManager'
 
+export function updateAvatar() {
+    console.log (PostBar.uid)
+    PostBar.getAvatar(PostBar.uid)
+}
 
 const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
@@ -19,6 +23,9 @@ const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
                 console.log(error)
             })
     }
+
+    PostBar.getAvatar = getAvatar
+    PostBar.uid = uid
     const handleOpenNewPost = () => {
         setNewPostOpen(true)
     }

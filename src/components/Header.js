@@ -6,6 +6,7 @@ import Login from './Login';
 import { getAuth, signOut } from '@firebase/auth';
 import SignUpNewUser from './SignUpNewUser';
 import { findFriend } from '../utils/UserDataManager';
+import { updateAvatar } from './PostBar';
 
 
 

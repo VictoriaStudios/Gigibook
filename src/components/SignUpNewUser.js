@@ -6,6 +6,7 @@ import { db } from "../utils/Firebase";
 import { set, ref } from "firebase/database"
 import { saveProfileImage, getImageURL } from "../utils/StorageManager";
 import { addProfileImageLink } from "../utils/UserDataManager";
+import { updateAvatar } from "./PostBar";
 
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
@@ -79,9 +80,9 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                                     //get the image URL from firebase storage
                                     getImageURL(imageRef)
                                         .then((url) => {
-
                                             //add the profile image url to the database
                                             addProfileImageLink(user.uid, url)
+                                                .then (updateAvatar())
                                                 .catch((error) => console.log(error))
                                         })
                                         .catch((error) => {
@@ -96,6 +97,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         else {
                             const letters = firstName[0] + familyName[0]
                             addProfileImageLink(user.uid, letters)
+                                .then (updateAvatar())
                                 .catch((error) => console.log(error))
                         }
                     })
