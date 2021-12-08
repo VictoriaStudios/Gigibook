@@ -5,6 +5,10 @@ const useStyles = makeStyles((theme) => ({
     button: {
         position: "relative",
     },
+    mediumIcon: {
+        transform: "scale(2)",
+        padding: "2px"
+    },
 
     largeIcon: {
         transform: "scale(3)",

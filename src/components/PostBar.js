@@ -7,7 +7,6 @@ import NewPost from './NewPost'
 import { getProfileImageLink } from '../utils/UserDataManager'
 
 export function updateAvatar() {
-    console.log (PostBar.uid)
     PostBar.getAvatar(PostBar.uid)
 }
 

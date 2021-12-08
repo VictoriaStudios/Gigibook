@@ -1,6 +1,5 @@
 import { db } from "./Firebase"
 import { ref, set, child, get } from "firebase/database"
-import { Button } from "@material-ui/core"
 
 const dbRef = ref(db)
 
@@ -60,9 +59,10 @@ export function findFriend(searchString, uid) {
             if (snapshot.exists()) {
                 const usersFound = []
                 snapshot.forEach((user) => {
+                    const thisUserData = user.val()
+                    if (thisUserData.firstName === (searchString) || thisUserData.lastName === searchString) 
                     usersFound.push(user.val())
                 })
-                console.log(usersFound)
                 resolve(usersFound)
             }
             else {
