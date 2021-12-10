@@ -38,10 +38,10 @@ const Feed = ({ feedCards, loggedIn }) => {
     return (
         <>
             {sortfeedCards(feedCards)}
-            {loggedIn === true ? (feedCardsMod.map((card) => (
-                <>
-                    <FeedCard key={card.id} cardData={card} loggedIn={loggedIn} />
-                </>
+            {loggedIn === true ? (feedCardsMod.map((card, index) => (
+                <div key={index}>
+                    <FeedCard cardData={card} loggedIn={loggedIn} />
+                </div>
             ))) : ('')}
         </>
     )

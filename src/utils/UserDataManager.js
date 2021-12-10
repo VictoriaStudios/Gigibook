@@ -58,8 +58,11 @@ export function findFriend(searchString, uid) {
         get(child(dbRef, '/users/')).then((snapshot) => {
             if (snapshot.exists()) {
                 const usersFound = []
+                searchString=searchString.toLowerCase()
                 snapshot.forEach((user) => {
                     const thisUserData = user.val()
+                    thisUserData.firstName = thisUserData.firstName.toLowerCase()
+                    thisUserData.lastName = thisUserData.lastName.toLowerCase()
                     if (thisUserData.firstName === (searchString) || thisUserData.lastName === searchString) 
                     usersFound.push(user.val())
                 })

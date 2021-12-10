@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { AppBar, Button, Box, Modal, Popover, TextField, Toolbar, Typography } from '@material-ui/core'
 import useStyles from './styles'
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
@@ -7,6 +7,7 @@ import Login from './Login';
 import { getAuth, signOut } from '@firebase/auth';
 import SignUpNewUser from './SignUpNewUser';
 import { findFriend } from '../utils/UserDataManager';
+import SearchResults from './SearchResults';
 
 
 
@@ -19,12 +20,13 @@ const Header = ({ homeURL, loggedIn }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
-    const [searchResults, setSearchResults] = useState ([])
+    const [searchResults, setSearchResults] = useState([])
     const [anchorEl, setAnchorEl] = useState(null)
     const [friendRequestOpen, setFriendRequestOpen] = useState(false)
     const [anchorSearchResult, setAnchorSearchResult] = useState(null)
     const [friendSearchOpen, setFriendSearchOpen] = useState(false)
     const searchRef = document.getElementById("searchText")
+    const [searchWidth, setSearchWidth] = useState("227px")
     const handleOpenLogin = () => setLoginOpen(true)
     const handleCloseLogin = () => setLoginOpen(false)
     const handleNewUserOpen = () => setNewUserOpen(true)
@@ -37,7 +39,7 @@ const Header = ({ homeURL, loggedIn }) => {
         setAnchorEl(null)
         setFriendRequestOpen(false)
     }
-    const handleFriendSearchOpen = (event) => {
+    const handleFriendSearchOpen = () => {
         setAnchorSearchResult(searchRef)
         setFriendSearchOpen(true)
     }
@@ -53,6 +55,7 @@ const Header = ({ homeURL, loggedIn }) => {
     const searchFriends = () => {
         findFriend(searchText)
             .then((usersFound) => {
+                updateResultPopperWidth()
                 setSearchResults(usersFound)
                 handleFriendSearchOpen(searchRef.current)
             })
@@ -63,6 +66,15 @@ const Header = ({ homeURL, loggedIn }) => {
         e.preventDefault()
         searchFriends()
     }
+
+    const updateResultPopperWidth = () => {
+        setSearchWidth(searchRef.offsetWidth + "px")
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleFriendSearchClose)
+    },[])
+
 
 
 
@@ -172,16 +184,14 @@ const Header = ({ homeURL, loggedIn }) => {
                 onClose={handleFriendSearchClose}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'center',
+                    horizontal: 'left',
                 }}
             >
-                <Typography sx={{ p: 2 }}> Hi </Typography>
-                <>
-                {searchResults.forEach((result) => {
-                    console.log (result.firstName);
-                    <p>result.firstName</p>
-                })}
-                </>
+                <Box style={{ width: searchWidth }}>
+                    <div>
+                        <SearchResults results={searchResults}></SearchResults>
+                    </div>
+                </Box>
             </Popover>
         </>
 
