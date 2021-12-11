@@ -1,5 +1,5 @@
 import { db } from "./Firebase"
-import { ref, set, child, get } from "firebase/database"
+import { ref, set, child, get, remove } from "firebase/database"
 
 const dbRef = ref(db)
 
@@ -62,8 +62,10 @@ export function findFriend(searchString, uid) {
                     const thisUserData = user.val()
                     thisUserData.firstName = thisUserData.firstName.toLowerCase()
                     thisUserData.lastName = thisUserData.lastName.toLowerCase()
-                    if (thisUserData.firstName === (searchString) || thisUserData.lastName === searchString) 
-                    usersFound.push(user.val())
+                    if (thisUserData.uid!== uid){
+                        if (thisUserData.firstName === (searchString) || thisUserData.lastName === searchString) 
+                        usersFound.push(user.val())
+                    }
                 })
                 resolve(usersFound)
             }
@@ -90,7 +92,33 @@ export function addFriendEntry(friendId, uid) {
     set(ref(db, `users/${uid}/friends/${friendId}`), {
         friends: true
     })
+}
 
+export function setFriendRequest (friendId, uid) {
+    return new Promise ((resolve, reject) => {
+        set(ref(db, `users/${friendId}/friendRequests/${uid}`), {
+            request: "true"
+        })
+            .then (()=> {
+                resolve ("Added friend request")
+            })
+            .catch((error) => {
+                reject ("setFriendRequest: " + error.message)
+            })
+    })
+}
+
+export function removeFriendRequest (friendId, uid) {
+    return new Promise ((resolve, reject) => {
+        remove(ref(db, `users/${friendId}/friendRequests/${uid}`))
+            .then (()=> {
+                console.log ("Removed friend request")
+                resolve ("Added friend request")
+            })
+            .catch((error) => {
+                reject ("removeFriendRequest: " + error.message)
+            })
+    })
 }
 
 export function checkIfFriend(friendId, uid) {
@@ -125,18 +153,5 @@ export function checkIfFriendRequest (friendId, uid) {
     })
 }
 
-export function setFriendRequest (friendId, uid) {
-    console.log ("Setting friend request")
-    return new Promise ((resolve, reject) => {
-        set(ref(db, `users/${friendId}/friendRequests/${uid}`), {
-            request: "true"
-        })
-            .then (()=> {
-                resolve ("Added friend request")
-            })
-            .catch((error) => {
-                reject ("setFriendRequest: " + error.message)
-            })
-    })
-}
+
 

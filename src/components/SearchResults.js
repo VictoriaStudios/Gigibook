@@ -3,7 +3,7 @@ import { Box, IconButton, Typography } from "@material-ui/core"
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded'
-import { checkIfFriend, checkIfFriendRequest } from "../utils/UserDataManager"
+import { checkIfFriend, checkIfFriendRequest, removeFriendRequest, setFriendRequest } from "../utils/UserDataManager"
 
 
 const SearchResults = ({ results, uid }) => {
@@ -13,6 +13,7 @@ const SearchResults = ({ results, uid }) => {
             .then (results => setUpdatedResults(results))
             .catch(error => console.log (error))
     }
+
 
     function doAllIconUpdates () {
         return new Promise ((resolve, reject) => {
@@ -58,6 +59,15 @@ const SearchResults = ({ results, uid }) => {
         
     }
 
+    function handleAddFriendRequest(friendId) {
+        setFriendRequest(friendId, uid).then(updateIconStates())
+    }
+
+    function handleRemoveFriendRequest(friendId) {
+        console.log (`hRFR: friendId: ${friendId}, uid: ${uid}`)
+        removeFriendRequest(friendId, uid).then(updateIconStates())
+    }
+
     useEffect(() => {
         updateIconStates()
     }, [])
@@ -72,7 +82,16 @@ const SearchResults = ({ results, uid }) => {
                         ) : (
                             <>
                             <Typography style={{marginLeft:"5px"}} variant="caption" >{result.firstName} {result.lastName} </Typography>
-                            <IconButton><AddCircleRoundedIcon/></IconButton>
+                            {result.state==="friend"? (
+                                <GroupRoundedIcon/>
+                            ) : ('')}
+                            {result.state==="requested"? (
+                                <IconButton onClick={() => handleRemoveFriendRequest(result.uid)}><CheckCircleRoundedIcon/></IconButton>
+                            ) : ('')}
+                            {result.state==="unrequested"? (
+                                <IconButton onClick = {() => handleAddFriendRequest(result.uid)}><AddCircleRoundedIcon/></IconButton>
+                            ) : ('')}
+                            
                             </>
                         )}
                         

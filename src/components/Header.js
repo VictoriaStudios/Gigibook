@@ -53,7 +53,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
 
     const classes = useStyles()
     const searchFriends = () => {
-        findFriend(searchText)
+        findFriend(searchText, uid)
             .then((usersFound) => {
                 updateResultPopperWidth()
                 setSearchResults(usersFound)
@@ -189,7 +189,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
             >
                 <Box style={{ width: searchWidth }}>
                     <div>
-                        <SearchResults results={searchResults}> uid={uid}</SearchResults>
+                        <SearchResults results={searchResults} uid={uid}> </SearchResults>
                     </div>
                 </Box>
             </Popover>
