@@ -132,6 +132,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 firstName: firstName,
                 lastName: lastName,
                 friends: '',
+                friendRequests:'',
                 uid: userId
             })).then(() => {
                 resolve("Data created")

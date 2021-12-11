@@ -45,7 +45,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Header homeURL={homeURL} loggedIn={loggedIn}/>
+      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid}/>
       <MainBody loggedIn={loggedIn} uid={uid} userData={userData}/>
 
 

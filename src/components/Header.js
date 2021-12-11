@@ -16,7 +16,7 @@ import SearchResults from './SearchResults';
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn }) => {
+const Header = ({ homeURL, loggedIn, uid }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
@@ -189,7 +189,7 @@ const Header = ({ homeURL, loggedIn }) => {
             >
                 <Box style={{ width: searchWidth }}>
                     <div>
-                        <SearchResults results={searchResults}></SearchResults>
+                        <SearchResults results={searchResults}> uid={uid}</SearchResults>
                     </div>
                 </Box>
             </Popover>

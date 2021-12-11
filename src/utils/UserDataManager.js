@@ -30,7 +30,6 @@ export function getProfileImageLink(uid) {
                     reject("No profile Link Found")
                 }
             }).catch((error) => {
-                console.error(error);
                 reject(error)
             })
     })
@@ -83,7 +82,7 @@ export function addFriend(friendId, uid) {
             addFriendEntry(friendId);
         }
     }).catch((error) => {
-        console.error(error);
+        console.error(error)
     })
 }
 
@@ -92,5 +91,52 @@ export function addFriendEntry(friendId, uid) {
         friends: true
     })
 
+}
+
+export function checkIfFriend(friendId, uid) {
+    return new Promise((resolve, reject) => {
+        get(child(dbRef, `users/${uid}/friends/${friendId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                console.log (friendId+ " is a friend already")
+                resolve (true)
+            } else {
+                console.log (friendId+ " is not a friend yet")
+                resolve (false)
+            }
+        }).catch((error) => {
+            reject(error)
+        })
+    })
+}
+
+export function checkIfFriendRequest (friendId, uid) {
+    return new Promise((resolve, reject) => {
+        get(child(dbRef, `users/${friendId}/friendRequests/${uid}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                console.log (friendId+ " is already being requested")
+                resolve (true)
+            } else {
+                console.log (friendId+ " is not being requested yet")
+                resolve (false)
+            }
+        }).catch((error) => {
+            reject(error)
+        })
+    })
+}
+
+export function setFriendRequest (friendId, uid) {
+    console.log ("Setting friend request")
+    return new Promise ((resolve, reject) => {
+        set(ref(db, `users/${friendId}/friendRequests/${uid}`), {
+            request: "true"
+        })
+            .then (()=> {
+                resolve ("Added friend request")
+            })
+            .catch((error) => {
+                reject ("setFriendRequest: " + error.message)
+            })
+    })
 }
 
