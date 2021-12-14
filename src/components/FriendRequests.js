@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
-import { addFriend, getFriendRequests, getUserData } from "../utils/UserDataManager"
+import { addFriend, getFriendRequests, getUserData, removeFriendRequest } from "../utils/UserDataManager"
 import { Box, IconButton, Typography } from "@material-ui/core"
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 
 const FriendRequests = ({uid}) => {
     const [requests, setRequests] = useState([])
@@ -29,8 +30,11 @@ const FriendRequests = ({uid}) => {
     }
 
     function handleAcceptRequest (request) {
-        console.log ("handling Accept request")
         addFriend (request.uid, uid). then (updateFriendRequests())
+    }
+
+    function handleRefuseRequest (request) {
+        removeFriendRequest (uid, request.uid). then (updateFriendRequests())
     }
 
     useEffect(() => {
@@ -49,6 +53,7 @@ const FriendRequests = ({uid}) => {
                         <div key={index}>
                         <Typography style={{marginLeft:"5px"}} variant="caption" >{request.firstName} </Typography>
                         <IconButton onClick={() => {handleAcceptRequest(request)}}><AddCircleRoundedIcon/></IconButton>
+                        <IconButton onClick={() => {handleRefuseRequest(request)}}><RemoveCircleRoundedIcon/></IconButton>
                         </div>
                     ))
                 )}
