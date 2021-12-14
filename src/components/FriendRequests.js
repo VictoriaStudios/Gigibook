@@ -1,13 +1,36 @@
 import { useState, useEffect } from "react"
-import { getFriendRequests } from "../utils/UserDataManager"
-import { Box, Typography } from "@material-ui/core"
+import { addFriend, getFriendRequests, getUserData } from "../utils/UserDataManager"
+import { Box, IconButton, Typography } from "@material-ui/core"
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 
 const FriendRequests = ({uid}) => {
     const [requests, setRequests] = useState([])
 
     function updateFriendRequests () {
-        getFriendRequests(uid).then (foundRequests => setRequests(foundRequests))
+        setRequests([])
+        var requestIds = []
+        getFriendRequests(uid)
+            .then ((foundRequests) => {
+                requestIds=foundRequests
+                var requestData = []
+                requestIds.forEach((request, index) => {
+                    getUserData(request)
+                        .then((userData) => {
+                            requestData.push (userData)
+                            if (index === requestIds.length-1)
+                            {
+                                setRequests(requestData)
+                            }
+                        })
+                        .catch (error => console.log (error))
+                })
+            })
             .catch (error => console.log (error))
+    }
+
+    function handleAcceptRequest (request) {
+        console.log ("handling Accept request")
+        addFriend (request.uid, uid). then (updateFriendRequests())
     }
 
     useEffect(() => {
@@ -19,11 +42,14 @@ const FriendRequests = ({uid}) => {
             <Box style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap"}}>
                 {requests.length===0 ? (
                     <>
-                        <p>Loading</p>
+                        <Typography style={{marginLeft:"5px"}} variant="caption" > No friend requests </Typography>
                     </>
                 ): (
                     requests.map((request, index) => (
-                        <Typography style={{marginLeft:"5px"}} variant="caption" >{request}  </Typography>
+                        <div key={index}>
+                        <Typography style={{marginLeft:"5px"}} variant="caption" >{request.firstName} </Typography>
+                        <IconButton onClick={() => {handleAcceptRequest(request)}}><AddCircleRoundedIcon/></IconButton>
+                        </div>
                     ))
                 )}
             </Box>

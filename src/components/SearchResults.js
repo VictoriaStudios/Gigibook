@@ -29,20 +29,17 @@ const SearchResults = ({ results, uid }) => {
                             resolve (newResults)
                         }
                         else {
-                            console.log ("Not a friend")
                             checkIfFriendRequest(result.uid, uid)
                                 .then ((isRequested) => {
                                     if (isRequested) {
                                         currentResult.state ="requested"
                                         newResults.push (currentResult)
-                                        console.log ("Requested true")
                                         if (index === results.length-1)
                                         resolve (newResults)
                                     }
                                     else {
                                         currentResult.state = "unrequested"
                                         newResults.push (currentResult)
-                                        console.log ("Requested false")
                                         if (index === results.length-1)
                                         resolve (newResults)
                                     }
@@ -64,7 +61,6 @@ const SearchResults = ({ results, uid }) => {
     }
 
     function handleRemoveFriendRequest(friendId) {
-        console.log (`hRFR: friendId: ${friendId}, uid: ${uid}`)
         removeFriendRequest(friendId, uid).then(updateIconStates())
     }
 

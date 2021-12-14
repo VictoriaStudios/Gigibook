@@ -36,7 +36,6 @@ export function getProfileImageLink(uid) {
 }
 
 export function getUserData(uid) {
-    console.log("Getting user data")
     return new Promise((resolve, reject) => {
         get(child(dbRef, 'users/' + uid)).then((snapshot) => {
             if (snapshot.exists()) {
@@ -78,20 +77,71 @@ export function findFriend(searchString, uid) {
 }
 
 export function addFriend(friendId, uid) {
-    get(child(dbRef, `users/${uid}/friends/${friendId}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-        } else {
-            addFriendEntry(friendId);
-            removeFriendRequest(friendId, uid)
-        }
-    }).catch((error) => {
-        console.error(error)
+    return new Promise ((resolve, reject) => {
+        get(child(dbRef, `users/${uid}/friends/${friendId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+            } else {
+                addFriendEntry(friendId, uid)
+                .then (removeFriendRequest(uid, friendId))
+                .then (setFriendsAccepted(friendId, uid))
+                .then (resolve)
+            }
+        }).catch((error) => {
+            reject (error)
+        })
     })
+    
 }
 
 export function addFriendEntry(friendId, uid) {
-    set(ref(db, `users/${uid}/friends/${friendId}`), {
-        friends: true
+    return new Promise ((resolve, reject) => {
+        set(ref(db, `users/${uid}/friends/${friendId}`), {
+            friends: true
+        })
+        .then (resolve())
+        .catch (error => reject(error))
+    })
+
+}
+
+export function setFriendsAccepted (friendId, uid) {
+    return new Promise ((resolve, reject) => {
+        set(ref(db, `users/${friendId}/requestsAccepted/${uid}`), {
+            accepted: true
+        })
+        .then (resolve())
+        .catch (error => reject(error))
+    })
+}
+
+export function getFriendsAccepted (uid) {
+    return new Promise((resolve, reject) => {
+        get(child(dbRef, `users/${uid}/requestsAccepted/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const acceptsFound = []
+                snapshot.forEach((user) => {
+                    const pathArray = user.ref._path.pieces_
+                    acceptsFound.push(pathArray[3])
+                })
+                resolve(acceptsFound)
+            }
+            else {
+                resolve([])
+            }
+        })
+            .catch(error => reject(error))
+    })
+}
+
+export function removeFriendsAccepted (friendId, uid) {
+    return new Promise ((resolve, reject) => {
+        remove(ref(db, `users/${uid}/requestsAccepted/${friendId}`))
+            .then (()=> {
+                resolve ("Removed friend accepted")
+            })
+            .catch((error) => {
+                reject ("removeFriendsAccepted: " + error.message)
+            })
     })
 }
 
@@ -133,8 +183,7 @@ export function removeFriendRequest (friendId, uid) {
     return new Promise ((resolve, reject) => {
         remove(ref(db, `users/${friendId}/friendRequests/${uid}`))
             .then (()=> {
-                console.log ("Removed friend request")
-                resolve ("Added friend request")
+                resolve ("Removed friend request")
             })
             .catch((error) => {
                 reject ("removeFriendRequest: " + error.message)
@@ -146,10 +195,8 @@ export function checkIfFriend(friendId, uid) {
     return new Promise((resolve, reject) => {
         get(child(dbRef, `users/${uid}/friends/${friendId}`)).then((snapshot) => {
             if (snapshot.exists()) {
-                console.log (friendId+ " is a friend already")
                 resolve (true)
             } else {
-                console.log (friendId+ " is not a friend yet")
                 resolve (false)
             }
         }).catch((error) => {
@@ -162,10 +209,8 @@ export function checkIfFriendRequest (friendId, uid) {
     return new Promise((resolve, reject) => {
         get(child(dbRef, `users/${friendId}/friendRequests/${uid}`)).then((snapshot) => {
             if (snapshot.exists()) {
-                console.log (friendId+ " is already being requested")
                 resolve (true)
             } else {
-                console.log (friendId+ " is not being requested yet")
                 resolve (false)
             }
         }).catch((error) => {
