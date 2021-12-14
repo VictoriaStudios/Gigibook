@@ -8,6 +8,7 @@ import { getAuth, signOut } from '@firebase/auth';
 import SignUpNewUser from './SignUpNewUser';
 import { findFriend } from '../utils/UserDataManager';
 import SearchResults from './SearchResults';
+import FriendRequests from './FriendRequests';
 
 
 
@@ -176,15 +177,15 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                     horizontal: 'center',
                 }}
             >
-                <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+                <FriendRequests uid={uid}/>
             </Popover>
             <Popover
                 open={friendSearchOpen}
                 anchorEl={anchorSearchResult}
                 onClose={handleFriendSearchClose}
                 anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                    vertical: 'center',
+                    horizontal: 'center',
                 }}
             >
                 <Box style={{ width: searchWidth }}>

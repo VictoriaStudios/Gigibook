@@ -82,6 +82,7 @@ export function addFriend(friendId, uid) {
         if (snapshot.exists()) {
         } else {
             addFriendEntry(friendId);
+            removeFriendRequest(friendId, uid)
         }
     }).catch((error) => {
         console.error(error)
@@ -107,6 +108,26 @@ export function setFriendRequest (friendId, uid) {
             })
     })
 }
+
+export function getFriendRequests(uid) {
+    return new Promise((resolve, reject) => {
+        get(child(dbRef, `users/${uid}/friendRequests/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const requestsFound = []
+                snapshot.forEach((user) => {
+                    const pathArray = user.ref._path.pieces_
+                    requestsFound.push(pathArray[3])
+                })
+                resolve(requestsFound)
+            }
+            else {
+                resolve([])
+            }
+        })
+            .catch(error => reject(error))
+    })
+}
+
 
 export function removeFriendRequest (friendId, uid) {
     return new Promise ((resolve, reject) => {
