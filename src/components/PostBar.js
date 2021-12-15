@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import { pushPost } from '../utils/FeedUpdater'
-import { postOne } from './Feed'
 import { Avatar, Box, Button, Card, CardContent, Modal } from '@material-ui/core'
 import useStyles from './styles'
 import NewPost from './NewPost'
@@ -10,7 +8,7 @@ export function updateAvatar() {
     PostBar.getAvatar(PostBar.uid)
 }
 
-const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
+const PostBar = ({ loggedIn, uid, userData }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const [avatarVal, setAvatarVal] = useState("")
     const getAvatar = (uid) => {
@@ -69,17 +67,6 @@ const PostBar = ({ addFeedCard, loggedIn, uid, userData }) => {
                     <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} />
                 </Box>
             </Modal>
-
-
-
-            <div style={{ marginTop: "1rem" }}>
-
-
-                <div />
-                <Button onClick={() => { pushPost(uid, postOne, true) }}>Test FireBase Upload</Button>
-                <div />
-            </div>
-
         </>
 
     )

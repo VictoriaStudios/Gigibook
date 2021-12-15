@@ -3,6 +3,7 @@ import { Avatar, Box, Button, Card, CardHeader, CardContent, MenuItem, Select, T
 import { pushPost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
+import { updateFeedCards } from "./MainBody";
 
 
 const NewPost = ({ uid, userData, onCloseHandler }) => {
@@ -61,6 +62,7 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
             likeCount: 0
         }
         pushPost(uid, postData, friendsOnly)
+        updateFeedCards()
         onCloseHandler()
     }
 

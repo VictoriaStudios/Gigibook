@@ -46,15 +46,13 @@ export function getAllPosts(uid, addFeedCard) {
 
   //get all friends' posts
   //first, get all friends' uids
+  console.log ("Getting friends' posts")
   const friendUids = []
   get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
     if (snapshot.exists()) {
       snapshot.forEach((child) => {
         friendUids.push (child.key)
       })
-    }
-    else {
-      console.log ("Friend database folder not found")
     }
 
   }).catch((error) => {

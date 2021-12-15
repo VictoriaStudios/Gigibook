@@ -5,19 +5,29 @@ import PostBar from './PostBar'
 import Feed from './Feed'
 import { getAllPosts } from '../utils/FeedUpdater'
 
-
+export function updateFeedCards () {
+    MainBody.updateFeedCards()
+}
 
 const MainBody = ({ loggedIn, uid, userData }) => {
     const [feedCards, setFeedCards] = useState([])
     const addFeedCards = (newFeedCard) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
+
+    const updateFeedCards = () => {
+        setFeedCards([])
+        getAllPosts(uid, addFeedCards)
+    }
+
+    MainBody.updateFeedCards = updateFeedCards
+
     useEffect(() => {
         if (loggedIn === false) {
             setFeedCards([])
         }
         else {
-            getAllPosts(uid, addFeedCards)
+            updateFeedCards()
         }
     }, [loggedIn])
 
