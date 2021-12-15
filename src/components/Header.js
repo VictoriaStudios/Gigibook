@@ -32,6 +32,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
     const handleCloseLogin = () => setLoginOpen(false)
     const handleNewUserOpen = () => setNewUserOpen(true)
     const handleNewUserClose = () => setNewUserOpen(false)
+    
     const handleFriendRequestClick = (event) => {
         setAnchorEl(event.currentTarget)
         setFriendRequestOpen(true)
@@ -49,7 +50,16 @@ const Header = ({ homeURL, loggedIn, uid }) => {
         setFriendSearchOpen(false)
     }
 
-
+    function findTopLeft(element) {
+        var ele = document.getElementById(element)
+        if (ele){ 
+            var rec=ele.getBoundingClientRect()
+            console.log ("Available")    
+            return {top: rec.top + window.scrollY, left: rec.left + window.scrollX};
+        }
+       
+      } //call it like findTopLeft('#header');
+      
 
 
     const classes = useStyles()
@@ -74,6 +84,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
 
     useEffect(() => {
         window.addEventListener('resize', handleFriendSearchClose)
+        findTopLeft("#friendListIcon")
     },[])
 
 
@@ -119,6 +130,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                                 </>) : (
                                     <>
                                         <Button
+                                            id="friendListIcon"
                                             className={classes.button}
                                             color="inherit"
                                             startIcon={<GroupRoundedIcon className={classes.mediumIcon}
@@ -175,7 +187,11 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',
-                }}
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
             >
                 <FriendRequests uid={uid}/>
             </Popover>
@@ -184,8 +200,8 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                 anchorEl={anchorSearchResult}
                 onClose={handleFriendSearchClose}
                 anchorOrigin={{
-                    vertical: 'center',
-                    horizontal: 'center',
+                    vertical: 'bottom',
+                    horizontal: 'left',
                 }}
             >
                 <Box style={{ width: searchWidth }}>
