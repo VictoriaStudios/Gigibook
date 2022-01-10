@@ -39,6 +39,7 @@ const FeedCard = ({ cardData, loggedIn }) => {
 
     const [avatarVal, setAvatarVal] = useState("")
     const getAvatar = (uid) => {
+        console.log ("Getting the avatar of uid " + uid)
         getProfileImageLink(uid)
             .then((url) => {
                 setAvatarVal(url)
@@ -52,7 +53,7 @@ const FeedCard = ({ cardData, loggedIn }) => {
         if (loggedIn) {
             getAvatar(cardData.authorUid)
         }
-    }, [loggedIn])
+    }, [])
 
     const classes = useStyles();
     const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })

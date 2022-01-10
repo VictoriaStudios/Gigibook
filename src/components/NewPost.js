@@ -79,7 +79,7 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                 img.onload = function () {
                     const width = img.naturalWidth
                     const height = img.naturalHeight
-                    if (width <= 1024 && height <= 1024) {
+                    if (width <= 2048 && height <= 2048) {
                         if (image.size/1024/1024 > 2) {
                             reject("Image is larger than 2 MB")
                         }
@@ -89,7 +89,7 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
                         
                     }
                     else {
-                        reject("Image is larger than 1024x1024px")
+                        reject("Image is larger than 2048x2048px")
                     }
                 }
             }

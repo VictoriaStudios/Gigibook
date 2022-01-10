@@ -44,9 +44,23 @@ export function getAllPosts(uid, addFeedCard) {
     }
   })
 
+  //get all personal posts
+  get(child(dbRef, `/users/${uid}/posts/private/`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+      var card = child.val()
+      var dateRestored = new Date(card.date)
+      card.date = dateRestored
+      card.id = child.val().key
+      addFeedCard(card)
+      })
+    }
+  }).catch((error) => {
+  })
+
+
   //get all friends' posts
   //first, get all friends' uids
-  console.log ("Getting friends' posts")
   const friendUids = []
   get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
     if (snapshot.exists()) {
@@ -57,7 +71,9 @@ export function getAllPosts(uid, addFeedCard) {
 
   }).catch((error) => {
     console.log (error.message)
-  }).then (() => {
+  })
+  //get all posts by each friend
+  .then (() => {
     friendUids.forEach ((friend) => {
       get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
         if (snapshot.exists()) {
@@ -67,17 +83,12 @@ export function getAllPosts(uid, addFeedCard) {
           card.date = dateRestored
           card.id = child.val().key
           addFeedCard(card)
-    
           })
         }
-    
       }).catch((error) => {
       })
     })
-    
   })
-
-
 }
 
 
