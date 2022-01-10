@@ -36,10 +36,8 @@ const handleShare = (e) => {
 
 
 const FeedCard = ({ cardData, loggedIn }) => {
-
     const [avatarVal, setAvatarVal] = useState("")
     const getAvatar = (uid) => {
-        console.log ("Getting the avatar of uid " + uid)
         getProfileImageLink(uid)
             .then((url) => {
                 setAvatarVal(url)
@@ -48,17 +46,13 @@ const FeedCard = ({ cardData, loggedIn }) => {
                 console.log(error)
             })
     }
-
-    useEffect(() => {
-        if (loggedIn) {
-            getAvatar(cardData.authorUid)
-        }
-    }, [])
+    
 
     const classes = useStyles();
     const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })
     return (
         <div style={{ marginTop: "1rem" }}>
+            {getAvatar (cardData.authorUid)}
             <Card className={classes.FeedCard}>
                 {avatarVal.length === 2 ? (
                     <CardHeader
