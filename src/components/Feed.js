@@ -3,7 +3,7 @@ import { differenceInSeconds } from 'date-fns'
 
 
 
-const Feed = ({ feedCards, loggedIn }) => {
+const Feed = ({ feedCards, loggedIn, uid }) => {
     var feedCardsMod = []
     //a function to sort all feed cards in descending time order
     const sortfeedCards = (feedCards) => {
@@ -21,7 +21,7 @@ const Feed = ({ feedCards, loggedIn }) => {
             {sortfeedCards(feedCards)}
             {loggedIn === true ? (feedCardsMod.map((card, index) => (
                 <div key={index}>
-                    <FeedCard cardData={card} loggedIn={loggedIn} />
+                    <FeedCard cardData={card} loggedIn={loggedIn} uid={uid}/>
                 </div>
             ))) : ('')}
         </>

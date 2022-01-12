@@ -59,7 +59,6 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
             img: imageURL,
             alt: alt,
             content: postContent,
-            likeCount: 0
         }
         pushPost(uid, postData, friendsOnly)
         updateFeedCards()

@@ -14,28 +14,11 @@ import Typography from '@material-ui/core/Typography';
 import { formatDistance } from 'date-fns'
 import { useState, useEffect } from 'react';
 import { getProfileImageLink } from '../utils/UserDataManager';
+import { likePost } from '../utils/FeedUpdater';
 
 
-
-
-const handleMoreButton = (e) => {
-
-}
-
-const handleLike = (e) => {
-
-}
-
-const handleComment = (e) => {
-
-}
-
-const handleShare = (e) => {
-
-}
-
-
-const FeedCard = ({ cardData, loggedIn }) => {
+const FeedCard = ({ cardData, uid }) => {
+    const [postLiked, setPostLiked] = useState(false)
     const [avatarVal, setAvatarVal] = useState("")
     const getAvatar = (uid) => {
         getProfileImageLink(uid)
@@ -46,13 +29,54 @@ const FeedCard = ({ cardData, loggedIn }) => {
                 console.log(error)
             })
     }
-    
+    const handleMoreButton = (e) => {
+
+    }
+
+    const handleLike = (e) => {
+        console.log(`Handling like of ${cardData.author}'s post, id: ${cardData.id}`)
+        if (!postLiked){
+            likePost (uid, cardData)
+            .then (getPostLiked(uid))
+            .catch (error => console.log (error))
+        }
+    }
+
+    const handleComment = (e) => {
+
+    }
+
+    const handleShare = (e) => {
+
+    }
+
+    const getPostLiked = (uid) => {
+        console.log ("GetPostLiked executed, uid: " + uid)
+        let likeFound = false
+        if (cardData.likeData.likeUids !== undefined) {
+            if (cardData.likeData.likeUids.includes(uid)) {
+                console.log("Found uid in likes")
+                likeFound = true
+            }
+            else {
+                console.log("Didn't find uid in likes")
+                likeFound = false
+            }
+        }
+        setPostLiked (likeFound)
+    }
+
+    useEffect(() => {
+        getPostLiked(uid)
+    }, [])
+
 
     const classes = useStyles();
     const elapsedTime = formatDistance(cardData.date, Date.now(), { addSuffix: true })
     return (
         <div style={{ marginTop: "1rem" }}>
-            {getAvatar (cardData.authorUid)}
+            {getAvatar(cardData.authorUid)}
+            {/*getPostLiked(uid)*/}
             <Card className={classes.FeedCard}>
                 {avatarVal.length === 2 ? (
                     <CardHeader
@@ -92,15 +116,23 @@ const FeedCard = ({ cardData, loggedIn }) => {
                     />) : ""}
 
                     {/*Show Likes if available*/}
-                    {cardData.likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {cardData.likeCount}</Typography></div>)
+                    {cardData.likeData.likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {cardData.likeData.likeCount}</Typography></div>)
                         : ""}
                 </CardContent>
 
                 <CardActions className={classes.feedCardActionBar}>
-                    <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1" }}>
-                        <ThumbUpRoundedIcon />
-                        <Typography className={classes.feedCardActionDesc}> Like </Typography>
-                    </IconButton>
+                    {!postLiked? (
+                        <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1" }}>
+                            <ThumbUpRoundedIcon />
+                            <Typography className={classes.feedCardActionDesc}> Like </Typography>
+                        </IconButton>
+                    ) : (
+                        <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1", color:"blue" }}>
+                            <ThumbUpRoundedIcon />
+                            <Typography className={classes.feedCardActionDesc}> Like </Typography>
+                        </IconButton>
+                    )}
+
                     <IconButton aria-label="comment" onClick={handleComment} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ChatRoundedIcon />
                         <Typography className={classes.feedCardActionDesc}> Comment </Typography>
