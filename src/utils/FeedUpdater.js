@@ -127,6 +127,25 @@ export function likePost(uid, cardData) {
   })
 }
 
+export function unLikePost(uid, cardData) {
+  return new Promise((resolve, reject) => {
+    if (cardData.likeData.likeUids === undefined) {
+      console.log ("Undefined")
+      if (cardData.likeData.likeUids.includes(uid)) reject("Post already liked")
+      return
+    }
+    if (!cardData.likeData.likeUids.includes (uid)) reject ("Uid not found in like data")
+    let newLikeUids = cardData.likeData.likeUids.replace(uid, "")
+    let newLikeCount = cardData.likeData.likeCount -1
+    set(ref(db, `${cardData.path}/likeData`), {
+        likeUids: newLikeUids,
+        likeCount: newLikeCount
+    })
+    .then (resolve ("DB: Uid like entry modified"))
+    .catch (error => reject (error))
+  })
+}
+
 
 
 

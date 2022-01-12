@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { formatDistance } from 'date-fns'
 import { useState, useEffect } from 'react';
 import { getProfileImageLink } from '../utils/UserDataManager';
-import { likePost } from '../utils/FeedUpdater';
+import { likePost, unLikePost } from '../utils/FeedUpdater';
 
 
 const FeedCard = ({ cardData, uid }) => {
@@ -37,6 +37,11 @@ const FeedCard = ({ cardData, uid }) => {
         console.log(`Handling like of ${cardData.author}'s post, id: ${cardData.id}`)
         if (!postLiked){
             likePost (uid, cardData)
+            .then (getPostLiked(uid))
+            .catch (error => console.log (error))
+        }
+        if (postLiked) {
+            unLikePost (uid, cardData)
             .then (getPostLiked(uid))
             .catch (error => console.log (error))
         }
