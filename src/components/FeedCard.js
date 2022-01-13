@@ -15,11 +15,11 @@ import { formatDistance } from 'date-fns'
 import { useState, useEffect } from 'react';
 import { getProfileImageLink } from '../utils/UserDataManager';
 import { likePost, unLikePost } from '../utils/FeedUpdater';
-import { updateFeedCards } from './MainBody';
 
 
 const FeedCard = ({ cardData, uid }) => {
     const [postLiked, setPostLiked] = useState(false)
+    const [likeCount, setLikeCount] = useState (0)
     const [avatarVal, setAvatarVal] = useState("")
     const getAvatar = (uid) => {
         getProfileImageLink(uid)
@@ -38,12 +38,18 @@ const FeedCard = ({ cardData, uid }) => {
         console.log(`Handling like of ${cardData.author}'s post, id: ${cardData.id}`)
         if (!postLiked){
             likePost (uid, cardData)
-            .then (() => updateFeedCards())
+            .then (() => {
+                setPostLiked (true)
+                setLikeCount (likeCount+1)
+            })
             .catch (error => console.log (error))
         }
         if (postLiked) {
             unLikePost (uid, cardData)
-            .then (()=> updateFeedCards())
+            .then (()=> {
+                setPostLiked (false)
+                setLikeCount (likeCount-1)
+            })
             .catch (error => console.log (error))
         }
     }
@@ -57,19 +63,18 @@ const FeedCard = ({ cardData, uid }) => {
     }
 
     const getPostLiked = (uid) => {
-        console.log ("GetPostLiked executed, uid: " + uid)
-        let likeFound = false
+        console.log ("Executing get post liked")
         if (cardData.likeData.likeUids !== undefined) {
             if (cardData.likeData.likeUids.includes(uid)) {
-                console.log("Found uid in likes")
-                likeFound = true
+                setPostLiked (true)
             }
             else {
-                console.log("Didn't find uid in likes")
-                likeFound = false
+                setPostLiked (false)
             }
         }
-        setPostLiked (likeFound)
+        if (cardData.likeData.likeCount !== undefined) {
+            setLikeCount (cardData.likeData.likeCount)
+        }
     }
 
     useEffect(() => {
@@ -122,7 +127,7 @@ const FeedCard = ({ cardData, uid }) => {
                     />) : ""}
 
                     {/*Show Likes if available*/}
-                    {cardData.likeData.likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {cardData.likeData.likeCount}</Typography></div>)
+                    {likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
                         : ""}
                 </CardContent>
 
