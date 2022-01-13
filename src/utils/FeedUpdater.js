@@ -1,5 +1,6 @@
 import { db } from "./Firebase"
 import { push, ref, child, get, set } from "firebase/database"
+import { cardClasses } from "@mui/material";
 
 const dbRef = ref(db);
 
@@ -23,8 +24,8 @@ export const pushPost = (uid, postObject, friendsOnly) => {
     alt: postObject.alt,
     content: postObject.content,
     likeData: {
-      likeCount:0,
-      likeUids:""
+      likeCount: 0,
+      likeUids: ""
     }
   }))
 
@@ -103,49 +104,58 @@ export function getAllPosts(uid, addFeedCard) {
     })
 }
 
-export function likePost(uid, cardData) {
+export function likePost(uid, path) {
   return new Promise((resolve, reject) => {
-    if (cardData.likeData.likeUids === undefined) {
-      console.log ("Undefined")
-      if (cardData.likeData.likeUids.includes(uid)) reject("Post already liked")
-      return
-    }
-    let newLikeUids = ""
-    if (cardData.likeData.likeUids !== undefined) {
-      newLikeUids= `${cardData.likeData.likeUids},${uid}`
-    }
-    else{
-      newLikeUids = uid
-    }
-    let newLikeCount = cardData.likeData.likeCount +1
-    set(ref(db, `${cardData.path}/likeData`), {
+    get(child(dbRef, path)).then((snapshot => {
+      let cardData = snapshot.val()
+      console.log(cardData)
+      if (cardData.likeData.likeUids === undefined) {
+        reject("Undefined")
+        return
+      }
+      if (cardData.likeData.likeUids.includes(uid)) {
+        reject("Post already liked")
+        return
+      }
+      let newLikeUids = `${cardData.likeData.likeUids},${uid}`
+      let newLikeCount = cardData.likeData.likeCount + 1
+      set(ref(db, `${path}/likeData`), {
         likeUids: newLikeUids,
         likeCount: newLikeCount
-    })
-    .then (() => {
-      console.log ("Now modified")
-      resolve ("DB: Uid like entry modified")
-    })
-    .catch (error => reject (error))
+      })
+        .then(() => {
+          console.log("Now modified")
+          resolve("DB: Uid like entry modified")
+        })
+        .catch(error => reject(error))
+    }))
   })
 }
 
-export function unLikePost(uid, cardData) {
+export function unLikePost(uid, path) {
+  console.log ("Unlikepost started")
   return new Promise((resolve, reject) => {
-    if (cardData.likeData.likeUids === undefined) {
-      console.log ("Undefined")
-      if (cardData.likeData.likeUids.includes(uid)) reject("Post already liked")
-      return
-    }
-    if (!cardData.likeData.likeUids.includes (uid)) reject ("Uid not found in like data")
-    let newLikeUids = cardData.likeData.likeUids.replace(uid, "")
-    let newLikeCount = cardData.likeData.likeCount -1
-    set(ref(db, `${cardData.path}/likeData`), {
+    get(child(dbRef, path)).then((snapshot) => {
+      let cardData = snapshot.val()
+      console.log (cardData)
+      if (cardData.likeData.likeUids === undefined) {
+        console.log("Undefined")
+        return
+      }
+      if (!cardData.likeData.likeUids.includes(uid)) {
+        reject("Uid not found in like data")
+        return
+      }
+      console.log ("Like Uids: " + cardData.likeData.likeUids)
+      let newLikeUids = cardData.likeData.likeUids.replace(uid, "")
+      let newLikeCount = cardData.likeData.likeCount - 1
+      set(ref(db, `${path}/likeData`), {
         likeUids: newLikeUids,
         likeCount: newLikeCount
+      })
+        .then(resolve("DB: Uid like entry modified"))
+        .catch(error => reject(error))
     })
-    .then (resolve ("DB: Uid like entry modified"))
-    .catch (error => reject (error))
   })
 }
 

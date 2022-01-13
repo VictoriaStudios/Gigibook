@@ -37,7 +37,7 @@ const FeedCard = ({ cardData, uid }) => {
     const handleLike = (e) => {
         console.log(`Handling like of ${cardData.author}'s post, id: ${cardData.id}`)
         if (!postLiked){
-            likePost (uid, cardData)
+            likePost (uid, cardData.path)
             .then (() => {
                 setPostLiked (true)
                 setLikeCount (likeCount+1)
@@ -45,7 +45,7 @@ const FeedCard = ({ cardData, uid }) => {
             .catch (error => console.log (error))
         }
         if (postLiked) {
-            unLikePost (uid, cardData)
+            unLikePost (uid, cardData.path)
             .then (()=> {
                 setPostLiked (false)
                 setLikeCount (likeCount-1)
