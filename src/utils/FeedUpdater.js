@@ -122,7 +122,10 @@ export function likePost(uid, cardData) {
         likeUids: newLikeUids,
         likeCount: newLikeCount
     })
-    .then (resolve ("DB: Uid like entry modified"))
+    .then (() => {
+      console.log ("Now modified")
+      resolve ("DB: Uid like entry modified")
+    })
     .catch (error => reject (error))
   })
 }
