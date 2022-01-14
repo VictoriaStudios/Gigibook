@@ -4,53 +4,58 @@ import { pushPost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
 import { updateFeedCards } from "./MainBody";
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 
 
-const ModifyPost = ({ uid, onCloseHandler, userData, cardData }) => {
+const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
     const [postContent, setPostContent] = useState("")
     const [friendsOnly, setFriendsOnly] = useState(false)
     const [image, setImage] = useState("")
     const [alt, setAlt] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
-
-    const initPost = () => {
-        var imageURL = ""
-        console.log ("InitPost started")
-        if (image !== "")
-        {
-            checkImage()
-            .then (() => {
-                saveImage(image, uid)
-                .then ((imageRef) => {
-                    getImageURL(imageRef)
-                    .then ((url) => {
-                        imageURL=url
-                        postData(imageURL)
-                    })
-                    .catch (error => console.log (error))
-                })
-                .catch ((error) => {
-                    console.log (error)
-                    setWrongFile(true)
-                    setUploadErrorMessage(error)
-                    setImage("")
-                })
-
+    const handleImageChange = (e) => {
+        console.log ("Executing handleImageChange " + e)
+        checkImage(e.target.files[0])
+            .then(() => {
+                setWrongFile (false)
+                setUploadErrorMessage("")
+                setImage (e.target.files[0])
             })
             .catch((error) => {
-                console.log (error)
                 setWrongFile(true)
                 setUploadErrorMessage(error)
                 setImage("")
             })
-        }
+    }
+
+    const initPost = () => {
+        var imageURL = ""
+        console.log("InitPost started")
+        if (image !== "" && !wrongFile) {
+                    saveImage(image, uid)
+                        .then((imageRef) => {
+                            getImageURL(imageRef)
+                                .then((url) => {
+                                    imageURL = url
+                                    postData(imageURL)
+                                })
+                                .catch(error => console.log(error))
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                            setWrongFile(true)
+                            setUploadErrorMessage(error)
+                            setImage("")
+                        })
+
+                }
         else {
-            postData (imageURL)
+            postData(imageURL)
         }
     }
 
-    function postData (imageURL) {
+    function postData(imageURL) {
         const now = new Date(Date.now())
         const postData = {
             authorUid: uid,
@@ -65,34 +70,34 @@ const ModifyPost = ({ uid, onCloseHandler, userData, cardData }) => {
         onCloseHandler()
     }
 
-    function checkImage() {
-        console.log ("CheckImage called")
+    function checkImage(file) {
+        console.log("CheckImage called, image: " + file)
         return new Promise((resolve, reject) => {
-            if (!image.type.match('image.*')) {
+            if (!file.type.match('image.*')) {
                 console.log("Not an image!")
                 reject("File is not an image")
             }
-            else{
+            else {
                 var img = new Image()
-                img.src = window.URL.createObjectURL(image)
+                img.src = window.URL.createObjectURL(file)
                 img.onload = function () {
                     const width = img.naturalWidth
                     const height = img.naturalHeight
                     if (width <= 2048 && height <= 2048) {
-                        if (image.size/1024/1024 > 2) {
+                        if (image.size / 1024 / 1024 > 2) {
                             reject("Image is larger than 2 MB")
                         }
-                        else{
+                        else {
                             resolve(true)
                         }
-                        
+
                     }
                     else {
                         reject("Image is larger than 2048x2048px")
                     }
                 }
             }
-            
+
             window.URL.revokeObjectURL(img.src)
         })
 
@@ -108,7 +113,7 @@ const ModifyPost = ({ uid, onCloseHandler, userData, cardData }) => {
     return (
         <div>
             <Typography variant="h6" align="center" className={classes.newPostTitle}>
-                Modify Post
+                Write a new post
             </Typography>
             <Card>
                 {/* if the profile link only consists of two letters, show there */}
@@ -148,6 +153,7 @@ const ModifyPost = ({ uid, onCloseHandler, userData, cardData }) => {
                     </CardHeader>}
 
                 <CardContent>
+
                     <TextField
                         variant="outlined"
                         hiddenLabel
@@ -159,11 +165,16 @@ const ModifyPost = ({ uid, onCloseHandler, userData, cardData }) => {
                         onChange={(e) => setPostContent(e.target.value)}
                     >
                     </TextField>
-                    {wrongFile ? (<h6 style={{ color: "red", textAlign: "center" }}> {uploadErrorMessage} </h6>) : ""}
-                    <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                    {wrongFile ? (<h6 style={{ color: "red", textAlign: "center" }}> {uploadErrorMessage} </h6>) 
+                    : <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}> 
+                    <h6 style={{ color: "black", textAlign: "center", marginRight:"5px" }}> {image.name}</h6>
+                    {image !== "" ? (<RemoveCircleOutlineRoundedIcon onClick={() => setImage("")} style={{cursor:"pointer"}} />) : ""}
+                    </div>
+                    }
+                    <Box style={{ display: "flex", justifyContent: "space-between"}}>
                         <Button variant="contained" component="label">
-                            Add Picture
-                            <input onChange={(e) => { setImage(e.target.files[0], setUploadErrorMessage(""), setWrongFile(false)) }}
+                            Add / Change Picture
+                            <input onChange={(e) =>  handleImageChange(e)}
                                 type="file"
                                 hidden />
                         </Button>
