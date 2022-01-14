@@ -39,7 +39,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
         <>
             <Container maxWidth="md" className={classes.container}>
                 <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} userData={userData} />
-                <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} />
+                <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} />
             </Container>
         </>
     )
