@@ -15,7 +15,6 @@ export const pushPost = (uid, postObject, friendsOnly) => {
     postReferece = ref(db, `/public/posts/${uid}`)
   }
 
-
   push(postReferece, ({
     authorUid: uid,
     author: postObject.author,
@@ -25,7 +24,7 @@ export const pushPost = (uid, postObject, friendsOnly) => {
     content: postObject.content,
     likeData: {
       likeCount: 0,
-      likeUids: ""
+      likeUids: [""]
     }
   }))
 
@@ -113,20 +112,19 @@ export function likePost(uid, path) {
         reject("Undefined")
         return
       }
-      if (cardData.likeData.likeUids.includes(uid)) {
-        reject("Post already liked")
-        return
-      }
-      let newLikeUids = `${cardData.likeData.likeUids},${uid}`
+      cardData.likeData.likeUids.forEach ((entry) => {
+        if (entry === uid){
+          reject("Post already liked")
+          return
+        }
+      })
+      let newLikeUids = [...cardData.likeData.likeUids, uid]
       let newLikeCount = cardData.likeData.likeCount + 1
       set(ref(db, `${path}/likeData`), {
         likeUids: newLikeUids,
         likeCount: newLikeCount
       })
-        .then(() => {
-          console.log("Now modified")
-          resolve("DB: Uid like entry modified")
-        })
+        .then(() => resolve("DB: Uid like entry modified"))
         .catch(error => reject(error))
     }))
   })
@@ -142,18 +140,27 @@ export function unLikePost(uid, path) {
         console.log("Undefined")
         return
       }
-      if (!cardData.likeData.likeUids.includes(uid)) {
+      let uidFound = false
+      let uidIndex = -1
+      cardData.likeData.likeUids.forEach ((entry, index) => {
+        if (entry === uid){
+          uidFound = true
+          uidIndex = index
+          console.log ("Found uid, index is " + uidIndex)
+        }
+      })
+      if (!uidFound) {
         reject("Uid not found in like data")
         return
       }
-      console.log ("Like Uids: " + cardData.likeData.likeUids)
-      let newLikeUids = cardData.likeData.likeUids.replace(uid, "")
+      cardData.likeData.likeUids.splice (uidIndex, 1)
+      let newLikeUids = cardData.likeData.likeUids
       let newLikeCount = cardData.likeData.likeCount - 1
       set(ref(db, `${path}/likeData`), {
         likeUids: newLikeUids,
         likeCount: newLikeCount
       })
-        .then(resolve("DB: Uid like entry modified"))
+        .then(() => resolve("DB: Uid like entry modified"))
         .catch(error => reject(error))
     })
   })

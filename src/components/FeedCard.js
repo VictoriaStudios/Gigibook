@@ -19,8 +19,10 @@ import { likePost, unLikePost } from '../utils/FeedUpdater';
 
 const FeedCard = ({ cardData, uid }) => {
     const [postLiked, setPostLiked] = useState(false)
-    const [likeCount, setLikeCount] = useState (0)
+    const [likeCount, setLikeCount] = useState(0)
     const [avatarVal, setAvatarVal] = useState("")
+    const [optionsOpen, setOptionsOpen] = useState (false)
+    var likeUpdating = false
     const getAvatar = (uid) => {
         getProfileImageLink(uid)
             .then((url) => {
@@ -36,22 +38,28 @@ const FeedCard = ({ cardData, uid }) => {
 
     const handleLike = (e) => {
         console.log(`Handling like of ${cardData.author}'s post, id: ${cardData.id}`)
-        if (!postLiked){
-            likePost (uid, cardData.path)
-            .then (() => {
-                setPostLiked (true)
-                setLikeCount (likeCount+1)
-            })
-            .catch (error => console.log (error))
+        if (!likeUpdating){
+            likeUpdating = true
+            if (!postLiked) {
+                likePost(uid, cardData.path)
+                    .then(() => {
+                        setPostLiked(true)
+                        setLikeCount(likeCount + 1)
+                        likeUpdating = false
+                    })
+                    .catch(error => console.log(error))
+            }
+            if (postLiked) {
+                unLikePost(uid, cardData.path)
+                    .then(() => {
+                        setPostLiked(false)
+                        setLikeCount(likeCount - 1)
+                        likeUpdating = false
+                    })
+                    .catch(error => console.log(error))
+            }
         }
-        if (postLiked) {
-            unLikePost (uid, cardData.path)
-            .then (()=> {
-                setPostLiked (false)
-                setLikeCount (likeCount-1)
-            })
-            .catch (error => console.log (error))
-        }
+
     }
 
     const handleComment = (e) => {
@@ -63,17 +71,19 @@ const FeedCard = ({ cardData, uid }) => {
     }
 
     const getPostLiked = (uid) => {
-        console.log ("Executing get post liked")
-        if (cardData.likeData.likeUids !== undefined) {
-            if (cardData.likeData.likeUids.includes(uid)) {
-                setPostLiked (true)
+        let uidFound = false
+        if (cardData.likeData.likeUids === undefined) return
+        cardData.likeData.likeUids.forEach((entry) => {
+            if (entry === uid) {
+                uidFound = true
+                console.log ("Uid found")
             }
-            else {
-                setPostLiked (false)
-            }
-        }
+        })
+        if (uidFound) setPostLiked(true)
+        else setPostLiked(false)
+
         if (cardData.likeData.likeCount !== undefined) {
-            setLikeCount (cardData.likeData.likeCount)
+            setLikeCount(cardData.likeData.likeCount)
         }
     }
 
@@ -132,13 +142,13 @@ const FeedCard = ({ cardData, uid }) => {
                 </CardContent>
 
                 <CardActions className={classes.feedCardActionBar}>
-                    {!postLiked? (
+                    {!postLiked ? (
                         <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                             <ThumbUpRoundedIcon />
                             <Typography className={classes.feedCardActionDesc}> Like </Typography>
                         </IconButton>
                     ) : (
-                        <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1", color:"blue" }}>
+                        <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1", color: "blue" }}>
                             <ThumbUpRoundedIcon />
                             <Typography className={classes.feedCardActionDesc}> Like </Typography>
                         </IconButton>
