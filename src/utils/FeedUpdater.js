@@ -36,78 +36,112 @@ export const pushPost = (uid, postObject, friendsOnly) => {
 
 
 
-export function getAllPosts(uid, addFeedCard) {
+export function getAllPosts(uid) {
+  return new Promise ((resolve, reject) => {
+    let publicDone = false
+    let personalDone = false
+    let friendsDone = false
+    let postsFound = []
 
-  function prepareCard(post) {
-    var card = post.val()
-    var dateRestored = new Date(card.date)
-    card.date = dateRestored
-    card.id = post.key
-    const pathArray = post.ref._path.pieces_
-    var path = '/'
-    pathArray.forEach((element) => path += `${element}/`)
-    card.path = path
-    return card
-  }
+    function checkIfDone () {
+      if (publicDone&&personalDone&&friendsDone) {
+        console.log ("FU: All posts retrieved")
+        resolve (postsFound)
+      }
+    }
 
-  //get all public posts 
-  get(child(dbRef, '/public/posts/')).then((snapshot) => {
-    if (snapshot.exists()) {
-      snapshot.forEach((child) => {
-        child.forEach((post) => {
-          const card = prepareCard(post)
-          addFeedCard(card)
+    function prepareCard(post) {
+      var card = post.val()
+      var dateRestored = new Date(card.date)
+      card.date = dateRestored
+      card.id = post.key
+      const pathArray = post.ref._path.pieces_
+      var path = '/'
+      pathArray.forEach((element) => path += `${element}/`)
+      card.path = path
+      return card
+    }
+  
+    //get all public posts 
+    get(child(dbRef, '/public/posts/')).then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((child) => {
+          child.forEach((post) => {
+            const card = prepareCard(post)
+            postsFound.push(card)
+          })
+        publicDone = true
+        checkIfDone()
         })
-      })
-    }
-  })
-
-  //get all personal posts
-  get(child(dbRef, `/users/${uid}/posts/private/`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      snapshot.forEach((post) => {
-        const card = prepareCard(post)
-        addFeedCard(card)
-      })
-    }
-  }).catch((error) => {
-  })
-
-
-  //get all friends' posts
-  //first, get all friends' uids
-  const friendUids = []
-  get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      snapshot.forEach((child) => {
-        friendUids.push(child.key)
-      })
-    }
-
-  }).catch((error) => {
-    console.log(error.message)
-  })
-    //get all posts by each friend
-    .then(() => {
-      friendUids.forEach((friend) => {
-        get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            snapshot.forEach((post) => {
-              const card = prepareCard(post)
-              addFeedCard(card)
-            })
-          }
-        }).catch((error) => {
-        })
-      })
+      }
+      else {
+        publicDone = true
+        checkIfDone()
+      }
     })
+  
+    //get all personal posts
+    get(child(dbRef, `/users/${uid}/posts/private/`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((post) => {
+          const card = prepareCard(post)
+          postsFound.push(card)
+        })
+        personalDone = true
+        checkIfDone()
+      }
+      else {
+        personalDone = true
+        checkIfDone()
+      }
+    }).catch((error) => {
+    })
+  
+  
+    //get all friends' posts
+    //first, get all friends' uids
+    const friendUids = []
+    get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((child) => {
+          friendUids.push(child.key)
+        })
+      }
+  
+    }).catch((error) => {
+      console.log(error.message)
+    })
+      //get all posts by each friend
+      .then(() => {
+        friendUids.forEach((friend) => {
+          get(child(dbRef, `/users/${friend}/posts/private/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+              snapshot.forEach((post) => {
+                const card = prepareCard(post)
+                postsFound.push(card)
+                console.log ("Pushed the friend card " + card.path)
+              })
+              friendsDone = true
+              checkIfDone()
+            }
+            else {
+              friendsDone = true
+              checkIfDone()
+            }
+          }).catch((error) => {
+          })
+        })
+      })
+  })
+
+
+  
 }
 
 export function likePost(uid, path) {
   return new Promise((resolve, reject) => {
     get(child(dbRef, path)).then((snapshot => {
       let cardData = snapshot.val()
-      console.log(cardData)
       if (cardData.likeData.likeUids === undefined) {
         reject("Undefined")
         return
@@ -135,7 +169,6 @@ export function unLikePost(uid, path) {
   return new Promise((resolve, reject) => {
     get(child(dbRef, path)).then((snapshot) => {
       let cardData = snapshot.val()
-      console.log (cardData)
       if (cardData.likeData.likeUids === undefined) {
         console.log("Undefined")
         return

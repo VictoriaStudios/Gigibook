@@ -50,7 +50,6 @@ const FeedCard = ({ cardData, uid, userData }) => {
     }
 
     const handleLike = (e) => {
-        console.log(`Handling like of ${cardData.author}'s post, id: ${cardData.id}`)
         if (!likeUpdating) {
             likeUpdating = true
             if (!postLiked) {
@@ -84,13 +83,11 @@ const FeedCard = ({ cardData, uid, userData }) => {
     }
 
     const getPostLiked = (uid) => {
-        console.log ("Userdata: " + userData)
         let uidFound = false
         if (cardData.likeData.likeUids === undefined) return
         cardData.likeData.likeUids.forEach((entry) => {
             if (entry === uid) {
                 uidFound = true
-                console.log("Uid found")
             }
         })
         if (uidFound) setPostLiked(true)

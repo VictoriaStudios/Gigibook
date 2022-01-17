@@ -16,19 +16,20 @@ const MainBody = ({ loggedIn, uid, userData }) => {
     }
 
     const updateFeedCards = () => {
-        setFeedCards([])
-        getAllPosts(uid, addFeedCards)
+        setFeedCards ([])
+        if (loggedIn){
+            getAllPosts(uid)
+            .then ((cards) => {
+                setFeedCards (cards)
+            })
+        }
     }
 
     MainBody.updateFeedCards = updateFeedCards
 
     useEffect(() => {
-        if (loggedIn === false) {
-            setFeedCards([])
-        }
-        else {
-            updateFeedCards()
-        }
+        console.log ("MB: Updating feed cards")
+        updateFeedCards()
     }, [loggedIn])
 
 
