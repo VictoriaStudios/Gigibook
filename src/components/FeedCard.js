@@ -23,10 +23,11 @@ const FeedCard = ({ cardData, uid, userData }) => {
     const [postLiked, setPostLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
     const [avatarVal, setAvatarVal] = useState("")
+    const [anchorModifyButton, setAnchorModifyButton] = useState (null)
     const [optionsOpen, setOptionsOpen] = useState(false)
     const [modifyPostOpen, setModifyPostOpen] = useState(false)
     var likeUpdating = false
-    const moreButtonRef = document.getElementById("moreButton")
+    
     const getAvatar = (uid) => {
         getProfileImageLink(uid)
             .then((url) => {
@@ -36,8 +37,14 @@ const FeedCard = ({ cardData, uid, userData }) => {
                 console.log(error)
             })
     }
-    const handleMoreButton = (e) => {
-        setOptionsOpen(!optionsOpen)
+    const handleMoreButtonOpen = (e) => {
+        setAnchorModifyButton (e.currentTarget)
+        setOptionsOpen(true)
+    }
+
+    const handleMoreButtonClose = (e) => {
+        setAnchorModifyButton (null)
+        setOptionsOpen(false)
     }
 
     const handleOpenModifyPost = (e) => {
@@ -46,7 +53,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
 
     const handleCloseModifyPost = (e) => {
         setModifyPostOpen (false)
-        setOptionsOpen (false)
+        handleMoreButtonClose()
     }
 
     const handleLike = (e) => {
@@ -116,7 +123,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
                         title={cardData.author}
                         subheader={elapsedTime}
                         action={
-                            <IconButton aria-label="settings" onClick={handleMoreButton}>
+                            <IconButton aria-label="settings" onClick={handleMoreButtonOpen}>
                                 <MoreHorizRoundedIcon />
                             </IconButton>
                         }
@@ -127,7 +134,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
                         title={cardData.author}
                         subheader={elapsedTime}
                         action={
-                            <IconButton id="moreButton" aria-label="settings" onClick={handleMoreButton}>
+                            <IconButton aria-label="settings" onClick={handleMoreButtonOpen}>
                                 <MoreHorizRoundedIcon />
                             </IconButton>
                         }
@@ -176,8 +183,8 @@ const FeedCard = ({ cardData, uid, userData }) => {
                 </CardActions>
                 <Popover
                     open={optionsOpen}
-                    anchorEl={moreButtonRef}
-                    onClose={handleMoreButton}
+                    anchorEl={anchorModifyButton}
+                    onClose={handleMoreButtonClose}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right',

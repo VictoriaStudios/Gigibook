@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, Box, Button, Card, CardHeader, CardContent, MenuItem, Select, TextField, Typography } from "@material-ui/core";
 import { pushPost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
@@ -29,9 +29,27 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
             })
     }
 
-    const initPost = () => {
+    function getImage () {
+        if (cardData.img !== ""){
+            let imageStr = cardData.img.split ('%2F')
+            const shortPath = imageStr.filter (entry => entry.includes ("alt"))
+            const split = shortPath[0].split ('alt')
+            const filename = (split.filter (entry => entry.includes ("?"))).toString()
+            const clearName = filename.substring (0, filename.indexOf ('?'))
+            setImage ({
+                name:clearName,
+                unchanged:true
+                })
+        }
+    }
+
+    useEffect(() => {
+        getImage()
+    }, [])
+
+    const modifyPost = () => {
         var imageURL = ""
-        console.log("InitPost started")
+        console.log("modifyPost started")
         if (image !== "" && !wrongFile) {
                     saveImage(image, uid)
                         .then((imageRef) => {
@@ -178,8 +196,8 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
                                 type="file"
                                 hidden />
                         </Button>
-                        <Button onClick={initPost}>
-                            Post
+                        <Button onClick={modifyPost}>
+                            Modify
                         </Button>
                     </Box>
                 </CardContent>
