@@ -132,7 +132,6 @@ export function getAllPosts(uid) {
                 const card = prepareCard(post)
                 card.public = false
                 postsFound.push(card)
-                console.log("Pushed the friend card " + card.path)
               })
               friendsDone = true
               checkIfDone()
