@@ -23,11 +23,11 @@ const FeedCard = ({ cardData, uid, userData }) => {
     const [postLiked, setPostLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
     const [avatarVal, setAvatarVal] = useState("")
-    const [anchorModifyButton, setAnchorModifyButton] = useState (null)
+    const [anchorModifyButton, setAnchorModifyButton] = useState(null)
     const [optionsOpen, setOptionsOpen] = useState(false)
     const [modifyPostOpen, setModifyPostOpen] = useState(false)
     var likeUpdating = false
-    
+
     const getAvatar = (uid) => {
         getProfileImageLink(uid)
             .then((url) => {
@@ -38,21 +38,21 @@ const FeedCard = ({ cardData, uid, userData }) => {
             })
     }
     const handleMoreButtonOpen = (e) => {
-        setAnchorModifyButton (e.currentTarget)
+        setAnchorModifyButton(e.currentTarget)
         setOptionsOpen(true)
     }
 
     const handleMoreButtonClose = (e) => {
-        setAnchorModifyButton (null)
+        setAnchorModifyButton(null)
         setOptionsOpen(false)
     }
 
     const handleOpenModifyPost = (e) => {
-        setModifyPostOpen (true)
+        setModifyPostOpen(true)
     }
 
     const handleCloseModifyPost = (e) => {
-        setModifyPostOpen (false)
+        setModifyPostOpen(false)
         handleMoreButtonClose()
     }
 
@@ -115,13 +115,16 @@ const FeedCard = ({ cardData, uid, userData }) => {
     return (
         <div style={{ marginTop: "1rem" }}>
             {getAvatar(cardData.authorUid)}
-            {/*getPostLiked(uid)*/}
             <Card className={classes.FeedCard}>
                 {avatarVal.length === 2 ? (
                     <CardHeader
                         avatar={<Avatar> {avatarVal} </Avatar>}
                         title={cardData.author}
-                        subheader={elapsedTime}
+                        subheader={<Box>
+                            {elapsedTime}
+                            <p style={{ fontSize: "0.875rem", display: "inline" }}> | </p>
+                            <p style={{ fontSize: "0.875rem", display: "inline", marginLeft: "0.15rem" }}> {(cardData.public) ? ("public") : ("private")}</p>
+                        </Box>}
                         action={
                             <IconButton aria-label="settings" onClick={handleMoreButtonOpen}>
                                 <MoreHorizRoundedIcon />
@@ -132,7 +135,11 @@ const FeedCard = ({ cardData, uid, userData }) => {
                     <CardHeader
                         avatar={<Avatar src={avatarVal} />}
                         title={cardData.author}
-                        subheader={elapsedTime}
+                        subheader={<Box>
+                            {elapsedTime}
+                            <p style={{ fontSize: "0.875rem", display: "inline" }}> | </p>
+                            <p style={{ fontSize: "0.875rem", display: "inline", marginLeft: "0.15rem" }}> {(cardData.public) ? ("public") : ("private")}</p>
+                        </Box>}
                         action={
                             <IconButton aria-label="settings" onClick={handleMoreButtonOpen}>
                                 <MoreHorizRoundedIcon />
@@ -182,6 +189,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
                     </IconButton>
                 </CardActions>
                 <Popover
+                    PaperProps={{className: classes.popoverPaper}}
                     open={optionsOpen}
                     anchorEl={anchorModifyButton}
                     onClose={handleMoreButtonClose}
@@ -194,12 +202,14 @@ const FeedCard = ({ cardData, uid, userData }) => {
                         horizontal: 'right',
                     }}
                 >
-                    <Button onClick={handleOpenModifyPost}>
-                        <Typography style={{ marginLeft: "5px" }} variant="caption" > Modify </Typography>
-                    </Button>
+                    {(uid === cardData.authorUid) ? (
+                        <Button onClick={handleOpenModifyPost}>
+                            <Typography style={{ marginLeft: "5px" }} variant="caption" > Modify </Typography>
+                        </Button>
+                    ) : ("")}
                 </Popover>
             </Card>
-            <Modal 
+            <Modal
                 open={modifyPostOpen}
                 onClose={handleCloseModifyPost}
                 aria-labelledby="modal-modal-title"

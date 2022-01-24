@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Avatar, Box, Button, Card, CardHeader, CardContent, MenuItem, Select, TextField, Typography } from "@material-ui/core";
-import { pushPost } from "../utils/FeedUpdater";
+import { changePost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
 import { updateFeedCards } from "./MainBody";
@@ -9,7 +9,6 @@ import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutl
 
 const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
     const [postContent, setPostContent] = useState("")
-    const [friendsOnly, setFriendsOnly] = useState(false)
     const [image, setImage] = useState("")
     const [alt, setAlt] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
@@ -56,7 +55,7 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
                             getImageURL(imageRef)
                                 .then((url) => {
                                     imageURL = url
-                                    postData(imageURL)
+                                    modifyData(imageURL)
                                 })
                                 .catch(error => console.log(error))
                         })
@@ -69,11 +68,13 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
 
                 }
         else {
-            postData(imageURL)
+            console.log ("I'm here")
+            modifyData(imageURL)
         }
     }
 
-    function postData(imageURL) {
+    function modifyData(imageURL) {
+        console.log ("ModifyData Started")
         const now = new Date(Date.now())
         const postData = {
             authorUid: uid,
@@ -83,7 +84,7 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
             alt: alt,
             content: postContent,
         }
-        pushPost(uid, postData, friendsOnly)
+        changePost(uid, postData, cardData)
         updateFeedCards()
         onCloseHandler()
     }
@@ -122,16 +123,13 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
     }
 
 
-    const handleChange = (e) => {
-        setFriendsOnly(e.target.value)
-    }
 
     const classes = useStyles()
 
     return (
         <div>
             <Typography variant="h6" align="center" className={classes.newPostTitle}>
-                Write a new post
+                Modify Post
             </Typography>
             <Card>
                 {/* if the profile link only consists of two letters, show there */}
@@ -139,17 +137,7 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
                     <CardHeader
                         avatar={<Avatar>{userData.profileLink.link}</Avatar>}
                         title={userData.firstName}
-                        subheader={<Select
-                            labelId="select-visibility"
-                            id="select-visibility"
-                            value={friendsOnly}
-                            label="public"
-                            onChange={handleChange}
-                            style={{ fontSize: "0.875rem" }}
-                        >
-                            <MenuItem value={false}>public</MenuItem>
-                            <MenuItem value={true}>private</MenuItem>
-                        </Select>}>
+                        subheader={<p style={{ fontSize: "0.875rem", display:"inline"}}> {(cardData.public) ? ("public"): ("private")}</p>}>
                     </CardHeader>
 
                     /* otherwise show the proper profile avatar */
@@ -157,21 +145,9 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
                     <CardHeader
                         avatar={<Avatar src={userData.profileLink.link} />}
                         title={userData.firstName}
-                        subheader={<Select
-                            labelId="select-visibility"
-                            id="select-visibility"
-                            value={friendsOnly}
-                            label="public"
-                            onChange={handleChange}
-                            style={{ fontSize: "0.875rem" }}
-                        >
-                            <MenuItem value={false}>public</MenuItem>
-                            <MenuItem value={true}>private</MenuItem>
-                        </Select>}>
+                        subheader={<p style={{ fontSize: "0.875rem", display:"inline"}}> {(cardData.public) ? ("public"): ("private")}</p>}>
                     </CardHeader>}
-
                 <CardContent>
-
                     <TextField
                         variant="outlined"
                         hiddenLabel

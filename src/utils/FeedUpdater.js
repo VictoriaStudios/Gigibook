@@ -1,6 +1,5 @@
 import { db } from "./Firebase"
 import { push, ref, child, get, set } from "firebase/database"
-import { cardClasses } from "@mui/material";
 
 const dbRef = ref(db);
 
@@ -27,26 +26,37 @@ export const pushPost = (uid, postObject, friendsOnly) => {
       likeUids: [""]
     }
   }))
+}
 
-
-
-
-
+export const changePost = (uid, postObject, cardData) => {
+  const cleanDate = postObject.date.toJSON()
+  set(ref(db, cardData.path), {
+    authorUid: uid,
+    author: postObject.author,
+    date: cleanDate,
+    img: postObject.img,
+    alt: postObject.alt,
+    content: postObject.content,
+    likeData: {
+      likeCount: cardData.likeData.likeCount,
+      likeUids: cardData.likeData.likeUids
+    }
+  })
 }
 
 
 
 export function getAllPosts(uid) {
-  return new Promise ((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let publicDone = false
     let personalDone = false
     let friendsDone = false
     let postsFound = []
 
-    function checkIfDone () {
-      if (publicDone&&personalDone&&friendsDone) {
-        console.log ("FU: All posts retrieved")
-        resolve (postsFound)
+    function checkIfDone() {
+      if (publicDone && personalDone && friendsDone) {
+        console.log("FU: All posts retrieved")
+        resolve(postsFound)
       }
     }
 
@@ -61,17 +71,18 @@ export function getAllPosts(uid) {
       card.path = path
       return card
     }
-  
+
     //get all public posts 
     get(child(dbRef, '/public/posts/')).then((snapshot) => {
       if (snapshot.exists()) {
         snapshot.forEach((child) => {
           child.forEach((post) => {
             const card = prepareCard(post)
+            card.public = true
             postsFound.push(card)
           })
-        publicDone = true
-        checkIfDone()
+          publicDone = true
+          checkIfDone()
         })
       }
       else {
@@ -79,12 +90,13 @@ export function getAllPosts(uid) {
         checkIfDone()
       }
     })
-  
+
     //get all personal posts
     get(child(dbRef, `/users/${uid}/posts/private/`)).then((snapshot) => {
       if (snapshot.exists()) {
         snapshot.forEach((post) => {
           const card = prepareCard(post)
+          card.public = false
           postsFound.push(card)
         })
         personalDone = true
@@ -96,8 +108,8 @@ export function getAllPosts(uid) {
       }
     }).catch((error) => {
     })
-  
-  
+
+
     //get all friends' posts
     //first, get all friends' uids
     const friendUids = []
@@ -107,7 +119,7 @@ export function getAllPosts(uid) {
           friendUids.push(child.key)
         })
       }
-  
+
     }).catch((error) => {
       console.log(error.message)
     })
@@ -118,8 +130,9 @@ export function getAllPosts(uid) {
             if (snapshot.exists()) {
               snapshot.forEach((post) => {
                 const card = prepareCard(post)
+                card.public = false
                 postsFound.push(card)
-                console.log ("Pushed the friend card " + card.path)
+                console.log("Pushed the friend card " + card.path)
               })
               friendsDone = true
               checkIfDone()
@@ -135,7 +148,7 @@ export function getAllPosts(uid) {
   })
 
 
-  
+
 }
 
 export function likePost(uid, path) {
@@ -146,8 +159,8 @@ export function likePost(uid, path) {
         reject("Undefined")
         return
       }
-      cardData.likeData.likeUids.forEach ((entry) => {
-        if (entry === uid){
+      cardData.likeData.likeUids.forEach((entry) => {
+        if (entry === uid) {
           reject("Post already liked")
           return
         }
@@ -165,7 +178,7 @@ export function likePost(uid, path) {
 }
 
 export function unLikePost(uid, path) {
-  console.log ("Unlikepost started")
+  console.log("Unlikepost started")
   return new Promise((resolve, reject) => {
     get(child(dbRef, path)).then((snapshot) => {
       let cardData = snapshot.val()
@@ -175,18 +188,18 @@ export function unLikePost(uid, path) {
       }
       let uidFound = false
       let uidIndex = -1
-      cardData.likeData.likeUids.forEach ((entry, index) => {
-        if (entry === uid){
+      cardData.likeData.likeUids.forEach((entry, index) => {
+        if (entry === uid) {
           uidFound = true
           uidIndex = index
-          console.log ("Found uid, index is " + uidIndex)
+          console.log("Found uid, index is " + uidIndex)
         }
       })
       if (!uidFound) {
         reject("Uid not found in like data")
         return
       }
-      cardData.likeData.likeUids.splice (uidIndex, 1)
+      cardData.likeData.likeUids.splice(uidIndex, 1)
       let newLikeUids = cardData.likeData.likeUids
       let newLikeCount = cardData.likeData.likeCount - 1
       set(ref(db, `${path}/likeData`), {

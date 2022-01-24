@@ -74,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor:"white",
         paddingTop:".5rem",
         paddingBottom:".5rem"
+    },
+    popoverPaper: {
+        minWidth:"0"
     }
 }))
 
