@@ -1,5 +1,5 @@
 import { db } from "./Firebase"
-import { push, ref, child, get, set } from "firebase/database"
+import { push, ref, child, get, set, remove } from "firebase/database"
 
 const dbRef = ref(db);
 
@@ -211,6 +211,40 @@ export function unLikePost(uid, path) {
   })
 }
 
+export function removePost (path) {
+  return new Promise ((resolve, reject) => {
+    remove (ref (db, path))
+      .then (() => resolve ("Post deleted"))
+      .catch ((error) => reject (error))
+  })
+}
+
+export function addComment (cardData, uid, userData, content) {
+  return new Promise ((resolve, reject) => {
+    push (ref(db, `${cardData.path}/comments/${uid}`), {
+      authorUid: uid,
+      author: userData.firstName,
+      content: content,
+      likeData: {
+        likeCount: 0,
+        likeUids: [""]
+      }
+    })
+  })
+}
+
+export function getAllComments (path) {
+  return new Promise ((resolve, reject) => {
+    var commentsArray = []
+    get(child(dbRef, `${path}/comments`)).then ((comments) => {
+        comments.forEach(comment => {
+          commentsArray.push (comment.val())
+        })
+      resolve (commentsArray)
+    })
+    .catch (error => reject (error))
+})
+}
 
 
 

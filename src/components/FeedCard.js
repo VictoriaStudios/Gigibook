@@ -10,13 +10,17 @@ import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { Box, Button, Modal, Popover } from '@material-ui/core';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import Typography from '@material-ui/core/Typography';
 import { formatDistance } from 'date-fns'
 import { useState, useEffect } from 'react';
 import { getProfileImageLink } from '../utils/UserDataManager';
-import { likePost, unLikePost } from '../utils/FeedUpdater';
+import { likePost, removePost, unLikePost } from '../utils/FeedUpdater';
 import ModifyPost from './ModifyPost';
+import { updateFeedCards } from './MainBody';
+import Comments from './Comments';
 
 
 const FeedCard = ({ cardData, uid, userData }) => {
@@ -26,6 +30,8 @@ const FeedCard = ({ cardData, uid, userData }) => {
     const [anchorModifyButton, setAnchorModifyButton] = useState(null)
     const [optionsOpen, setOptionsOpen] = useState(false)
     const [modifyPostOpen, setModifyPostOpen] = useState(false)
+    const [removePostOpen, setRemovePostOpen] = useState(false)
+    const [commentsOpen, setCommentsOpen] = useState(false)
     var likeUpdating = false
 
     const getAvatar = (uid) => {
@@ -56,6 +62,20 @@ const FeedCard = ({ cardData, uid, userData }) => {
         handleMoreButtonClose()
     }
 
+    const handleRemovePostOpen = (e) => {
+        setRemovePostOpen(true)
+    }
+
+    const handleRemovePostClose = (e) => {
+        setRemovePostOpen(false)
+    }
+
+    const handleDeletePost = () => {
+        removePost(cardData.path)
+            .then(() => updateFeedCards())
+            .catch((error) => console.log(error))
+    }
+
     const handleLike = (e) => {
         if (!likeUpdating) {
             likeUpdating = true
@@ -81,13 +101,18 @@ const FeedCard = ({ cardData, uid, userData }) => {
 
     }
 
-    const handleComment = (e) => {
-
+    const toggleComments = (e) => {
+        setCommentsOpen(!commentsOpen)
     }
 
-    const handleShare = (e) => {
-
+    const handleCommentsOpen = (e) => {
+        setCommentsOpen(true)
     }
+
+    const handleCommentsClose = (e) => {
+        setCommentsOpen(false)
+    }
+
 
     const getPostLiked = (uid) => {
         let uidFound = false
@@ -179,20 +204,25 @@ const FeedCard = ({ cardData, uid, userData }) => {
                         </IconButton>
                     )}
 
-                    <IconButton aria-label="comment" onClick={handleComment} sx={{ borderRadius: "5%", flexGrow: "1" }}>
+                    <IconButton aria-label="comments" onClick={toggleComments} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ChatRoundedIcon />
-                        <Typography className={classes.feedCardActionDesc}> Comment </Typography>
+                        <Typography className={classes.feedCardActionDesc}> Comments </Typography>
                     </IconButton>
-                    <IconButton aria-label="share" onClick={handleShare} sx={{ borderRadius: "5%", flexGrow: "1" }}>
+                    {/* <IconButton aria-label="share" onClick={handleShare} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ShareRoundedIcon />
                         <Typography className={classes.feedCardActionDesc}> Share </Typography>
-                    </IconButton>
+                    </IconButton> */}
                 </CardActions>
+                {commentsOpen ? (
+                        <>
+                            <Comments cardData={cardData} uid={uid} userData={userData}/>
+                        </>
+                    ) : ("")}
                 <Popover
-                    PaperProps={{className: classes.popoverPaper}}
+                    PaperProps={{ className: classes.popoverPaper }}
                     open={optionsOpen}
                     anchorEl={anchorModifyButton}
-                    onClose={handleMoreButtonClose}
+                    onClose={() => { handleMoreButtonClose(); handleRemovePostClose() }}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right',
@@ -203,11 +233,27 @@ const FeedCard = ({ cardData, uid, userData }) => {
                     }}
                 >
                     {(uid === cardData.authorUid) ? (
-                        <Button onClick={handleOpenModifyPost}>
-                            <Typography style={{ marginLeft: "5px" }} variant="caption" > Modify </Typography>
-                        </Button>
+                        <>
+                            <Button onClick={handleOpenModifyPost}>
+                                <Typography style={{ marginLeft: "5px" }} variant="caption" > Modify </Typography>
+                            </Button>
+                            <div />
+                            {!removePostOpen ? (<Button onClick={handleRemovePostOpen}>
+                                <Typography style={{ marginLeft: "5px" }} variant="caption" > Remove </Typography>
+                            </Button>)
+                                : (<>
+                                    <IconButton onClick={handleDeletePost}>
+                                        <CheckCircleRoundedIcon />
+                                    </IconButton>
+                                    <IconButton onClick={handleRemovePostClose}>
+                                        <CancelRoundedIcon />
+                                    </IconButton>
+                                </>)}
+                        </>
+
                     ) : ("")}
                 </Popover>
+
             </Card>
             <Modal
                 open={modifyPostOpen}
@@ -223,6 +269,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
                     <ModifyPost uid={uid} userData={userData} cardData={cardData} onCloseHandler={handleCloseModifyPost} />
                 </Box>
             </Modal>
+
         </div>
     )
 }
