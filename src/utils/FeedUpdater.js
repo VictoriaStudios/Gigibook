@@ -236,9 +236,11 @@ export function addComment (cardData, uid, userData, content) {
 export function getAllComments (path) {
   return new Promise ((resolve, reject) => {
     var commentsArray = []
-    get(child(dbRef, `${path}/comments`)).then ((comments) => {
-        comments.forEach(comment => {
-          commentsArray.push (comment.val())
+    get(child(dbRef, `${path}/comments`)).then ((entries) => {
+        entries.forEach(entry => {
+          entry.forEach (comment => {
+            commentsArray.push (comment.val())
+          })
         })
       resolve (commentsArray)
     })
