@@ -221,10 +221,13 @@ export function removePost (path) {
 
 export function addComment (cardData, uid, userData, content) {
   return new Promise ((resolve, reject) => {
+    const now = new Date(Date.now())
+    console.log (now)
     push (ref(db, `${cardData.path}/comments/${uid}`), {
       authorUid: uid,
       author: userData.firstName,
       content: content,
+      date:now.toJSON(),
       likeData: {
         likeCount: 0,
         likeUids: [""]
@@ -239,7 +242,10 @@ export function getAllComments (path) {
     get(child(dbRef, `${path}/comments`)).then ((entries) => {
         entries.forEach(entry => {
           entry.forEach (comment => {
-            commentsArray.push (comment.val())
+            let commentPrepared = comment.val()
+            var dateRestored = new Date(commentPrepared.date)
+            commentPrepared.date = dateRestored
+            commentsArray.push (commentPrepared)
           })
         })
       resolve (commentsArray)

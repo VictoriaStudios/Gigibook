@@ -3,6 +3,7 @@ import { addComment, getAllComments } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { Box, TextField, IconButton } from "@material-ui/core";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import Comment from "./Comment";
 
 const Comments = ({ cardData, uid, userData }) => {
   const [comments, setComments] = useState([])
@@ -50,6 +51,15 @@ const Comments = ({ cardData, uid, userData }) => {
     <IconButton style={{display:"inline-flex"}} onClick={handleSubmit}>
       <SendRoundedIcon/>
     </IconButton>
+    </Box>
+    <Box>
+      {comments.map((commentData, index) => (
+        <>
+        <div key = {`comment ${index}`}>
+          <Comment commentData = {commentData}  />
+        </div>
+        </>
+      ))}
     </Box>
   </div>
   )
