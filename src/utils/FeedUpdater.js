@@ -244,6 +244,10 @@ export function getAllComments (path) {
             let commentPrepared = comment.val()
             var dateRestored = new Date(commentPrepared.date)
             commentPrepared.date = dateRestored
+            const pathArray = comment.ref._path.pieces_
+            var path = '/'
+            pathArray.forEach((element) => path += `${element}/`)
+            commentPrepared.path = path
             commentsArray.push (commentPrepared)
           })
         })
@@ -251,6 +255,68 @@ export function getAllComments (path) {
     })
     .catch (error => reject (error))
 })
+}
+
+export function likeComment(uid, path) {
+  console.log ("Path: " + path)
+  return new Promise((resolve, reject) => {
+    get(child(dbRef, path)).then((snapshot => {
+      let commentData = snapshot.val()
+      if (commentData.likeData.likeUids === undefined) {
+        reject("Undefined")
+        return
+      }
+      commentData.likeData.likeUids.forEach((entry) => {
+        if (entry === uid) {
+          reject("Post already liked")
+          return
+        }
+      })
+      let newLikeUids = [...commentData.likeData.likeUids, uid]
+      let newLikeCount = commentData.likeData.likeCount + 1
+      set(ref(db, `${path}/likeData`), {
+        likeUids: newLikeUids,
+        likeCount: newLikeCount
+      })
+        .then(() => resolve("DB: Uid like entry modified"))
+        .catch(error => reject(error))
+    }))
+  })
+}
+
+export function unLikeComment(uid, path) {
+  console.log("Unlikepost started")
+  return new Promise((resolve, reject) => {
+    get(child(dbRef, path)).then((snapshot) => {
+      let commentData = snapshot.val()
+      if (commentData.likeData.likeUids === undefined) {
+        console.log("Undefined")
+        return
+      }
+      let uidFound = false
+      let uidIndex = -1
+      commentData.likeData.likeUids.forEach((entry, index) => {
+        if (entry === uid) {
+          uidFound = true
+          uidIndex = index
+          console.log("Found uid, index is " + uidIndex)
+        }
+      })
+      if (!uidFound) {
+        reject("Uid not found in like data")
+        return
+      }
+      commentData.likeData.likeUids.splice(uidIndex, 1)
+      let newLikeUids = commentData.likeData.likeUids
+      let newLikeCount = commentData.likeData.likeCount - 1
+      set(ref(db, `${path}/likeData`), {
+        likeUids: newLikeUids,
+        likeCount: newLikeCount
+      })
+        .then(() => resolve("DB: Uid like entry modified"))
+        .catch(error => reject(error))
+    })
+  })
 }
 
 

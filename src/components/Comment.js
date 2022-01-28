@@ -8,12 +8,14 @@ import CardContent from '@mui/material/CardContent';
 import { Avatar, Box, IconButton, Typography } from "@material-ui/core";
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
+import { likeComment, unLikeComment } from "../utils/FeedUpdater";
 
 
 const Comment = ({ commentData, uid }) => {
   const [avatarVal, setAvatarVal] = useState("");
   const [commentLiked, setCommentLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
+  var likeUpdating = false
 
   const getAvatar = (uid) => {
     getProfileImageLink(uid)
@@ -42,7 +44,27 @@ const Comment = ({ commentData, uid }) => {
   }
 
   const handleLike = () => {
-    console.log ("Handling Like")
+    if (!likeUpdating) {
+      likeUpdating = true
+      if (!commentLiked) {
+          likeComment (uid, commentData.path)
+              .then(() => {
+                  setCommentLiked(true)
+                  setLikeCount(likeCount + 1)
+                  likeUpdating = false
+              })
+              .catch(error => console.log(error))
+      }
+      if (commentLiked) {
+          unLikeComment(uid, commentData.path)
+              .then(() => {
+                  setCommentLiked(false)
+                  setLikeCount(likeCount - 1)
+                  likeUpdating = false
+              })
+              .catch(error => console.log(error))
+      }
+  }
   }
 
   useEffect(() => {
@@ -93,8 +115,8 @@ const Comment = ({ commentData, uid }) => {
           <Typography variant="body2" gutterBottom>
             {commentData.content}
             {/*Show Likes if available*/}
-            {/*likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
-              : ""*/}
+            {likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
+              : ""}
             {!commentLiked ? (
               <Box style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap"}}>
               <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1" }}>
@@ -103,10 +125,12 @@ const Comment = ({ commentData, uid }) => {
               </IconButton>
               </Box>
             ) : (
-              <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1", color: "blue" }}>
-                <ThumbUpRoundedIcon />
-                <Typography className={classes.feedCardActionDesc}> Like </Typography>
+              <Box style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap"}}>
+              <IconButton aria-label="like" onClick={handleLike} style={{color:"blue"}} sx={{ borderRadius: "5%", flexGrow: "1" }}>
+                <ThumbUpRoundedIcon style={{maxHeight:"1rem"}} />
+                <Typography className={classes.commentActionDesc}> Liked </Typography>
               </IconButton>
+              </Box>
             )}
           </Typography>
         </CardContent>
