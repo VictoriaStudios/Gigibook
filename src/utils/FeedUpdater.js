@@ -222,7 +222,6 @@ export function removePost (path) {
 export function addComment (cardData, uid, userData, content) {
   return new Promise ((resolve, reject) => {
     const now = new Date(Date.now())
-    console.log (now)
     push (ref(db, `${cardData.path}/comments/${uid}`), {
       authorUid: uid,
       author: userData.firstName,
