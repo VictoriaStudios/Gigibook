@@ -34,7 +34,7 @@ const Comments = ({ cardData, uid, userData }) => {
     getComments()
 
 
-  }, []);
+  }, [])
 
   return(
   <div>
@@ -56,7 +56,7 @@ const Comments = ({ cardData, uid, userData }) => {
       {comments.map((commentData, index) => (
         <>
         <div key = {`comment ${index}`}>
-          <Comment commentData = {commentData}  />
+          <Comment commentData = {commentData} uid={uid}  />
         </div>
         </>
       ))}

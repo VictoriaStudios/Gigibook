@@ -77,6 +77,10 @@ const useStyles = makeStyles((theme) => ({
     },
     popoverPaper: {
         minWidth:"0"
+    },
+    commentActionDesc:{
+        marginLeft:".5rem",
+        fontSize: "1rem"
     }
 }))
 
