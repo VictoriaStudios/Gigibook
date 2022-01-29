@@ -21,6 +21,7 @@ import { likePost, removePost, unLikePost } from '../utils/FeedUpdater';
 import ModifyPost from './ModifyPost';
 import { updateFeedCards } from './MainBody';
 import Comments from './Comments';
+import { getAllComments } from '../utils/FeedUpdater';
 
 
 const FeedCard = ({ cardData, uid, userData }) => {
@@ -32,6 +33,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
     const [modifyPostOpen, setModifyPostOpen] = useState(false)
     const [removePostOpen, setRemovePostOpen] = useState(false)
     const [commentsOpen, setCommentsOpen] = useState(false)
+    const [commentsCount, setCommentsCount] = useState (0)
     var likeUpdating = false
 
     const getAvatar = (uid) => {
@@ -43,6 +45,13 @@ const FeedCard = ({ cardData, uid, userData }) => {
                 console.log(error)
             })
     }
+
+    function getCommentsCount() {
+        getAllComments(cardData.path).then((results) => {
+          modifyCommentCount (results.length)
+        })
+    }
+
     const handleMoreButtonOpen = (e) => {
         setAnchorModifyButton(e.currentTarget)
         setOptionsOpen(true)
@@ -105,12 +114,9 @@ const FeedCard = ({ cardData, uid, userData }) => {
         setCommentsOpen(!commentsOpen)
     }
 
-    const handleCommentsOpen = (e) => {
-        setCommentsOpen(true)
-    }
-
-    const handleCommentsClose = (e) => {
-        setCommentsOpen(false)
+    const modifyCommentCount = (amount) => {
+        setCommentsCount (amount)
+        console.log ("Comments amount is " + commentsCount)
     }
 
 
@@ -132,6 +138,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
 
     useEffect(() => {
         getPostLiked(uid)
+        getCommentsCount()
     }, [])
 
 
@@ -187,8 +194,6 @@ const FeedCard = ({ cardData, uid, userData }) => {
                     />) : ""}
 
                     {/*Show Likes if available*/}
-                    {/* {likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
-                        : ""} */}
                 </CardContent>
 
                 <CardActions className={classes.feedCardActionBar}>
@@ -210,6 +215,8 @@ const FeedCard = ({ cardData, uid, userData }) => {
 
                     <IconButton aria-label="comments" onClick={toggleComments} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                         <ChatRoundedIcon />
+                        {commentsCount > 0 ? (<div style={{ marginLeft: ".25rem" }}><Typography variant="caption" style={{ alignSelf: "end" }}> {commentsCount}</Typography></div>)
+                                : ""}
                         <Typography className={classes.feedCardActionDesc}> Comments </Typography>
                     </IconButton>
                     {/* <IconButton aria-label="share" onClick={handleShare} sx={{ borderRadius: "5%", flexGrow: "1" }}>
@@ -219,7 +226,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
                 </CardActions>
                 {commentsOpen ? (
                         <>
-                            <Comments cardData={cardData} uid={uid} userData={userData}/>
+                            <Comments cardData={cardData} uid={uid} userData={userData} getCommentsCount={getCommentsCount}/>
                         </>
                     ) : ("")}
                 <Popover

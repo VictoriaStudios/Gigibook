@@ -259,7 +259,6 @@ export function getAllComments (path) {
 }
 
 export function likeComment(uid, path) {
-  console.log ("Path: " + path)
   return new Promise((resolve, reject) => {
     get(child(dbRef, path)).then((snapshot => {
       let commentData = snapshot.val()

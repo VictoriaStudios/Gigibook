@@ -13,7 +13,7 @@ import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import { removePost } from "../utils/FeedUpdater";
 
-const Comment = ({ commentData, uid, getComments }) => {
+const Comment = ({ commentData, uid, getComments, getCommentsCount }) => {
   const [avatarVal, setAvatarVal] = useState("");
   const [commentLiked, setCommentLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
@@ -100,7 +100,10 @@ const Comment = ({ commentData, uid, getComments }) => {
 
   const handleDeleteComment = () => {
     removePost(commentData.path)
-        .then(() => getComments())
+        .then(() => {
+          getComments()
+          getCommentsCount()
+        })
         .catch((error) => console.log(error))
   }
 

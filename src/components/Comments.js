@@ -6,26 +6,28 @@ import Comment from "./Comment";
 
 
 
-const Comments = ({ cardData, uid, userData }) => {
+const Comments = ({ cardData, uid, userData, getCommentsCount }) => {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState ("")
+  
 
   let commentBusy = false
 
   function getComments() {
-    console.log("Getting all comments")
-    getAllComments(cardData.path).then((results) => setComments(results))
+    getAllComments(cardData.path).then((results) => {
+      setComments(results)
+    })
+    
   }
 
   function handleSubmit() {
     if (!commentBusy) {
-      console.log ("Submitting")
       commentBusy = true
       addComment (cardData, uid, userData, commentText)
         .then (() => {
-          console.log ("Here")
           setCommentText ("")
           getComments()
+          getCommentsCount()
           commentBusy = false
         })
         .catch (error => console.log (error))
@@ -58,11 +60,9 @@ const Comments = ({ cardData, uid, userData }) => {
     </Box>
     <Box>
       {comments.map((commentData, index) => (
-        <>
         <div key = {`comment ${index}`}>
-          <Comment commentData = {commentData} uid={uid} getComments={getComments} />
+          <Comment commentData = {commentData} uid={uid} getComments={getComments} getCommentsCount={getCommentsCount} />
         </div>
-        </>
       ))}
     </Box>
   </div>
