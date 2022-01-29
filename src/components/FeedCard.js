@@ -187,19 +187,23 @@ const FeedCard = ({ cardData, uid, userData }) => {
                     />) : ""}
 
                     {/*Show Likes if available*/}
-                    {likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
-                        : ""}
+                    {/* {likeCount > 0 ? (<div style={{ display: "flex" }}><ThumbUpRoundedIcon className={classes.feedCardLikeIcon} /><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
+                        : ""} */}
                 </CardContent>
 
                 <CardActions className={classes.feedCardActionBar}>
                     {!postLiked ? (
                         <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1" }}>
                             <ThumbUpRoundedIcon />
+                            {likeCount > 0 ? (<div style={{ marginLeft: ".25rem" }}><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
+                                : ""}
                             <Typography className={classes.feedCardActionDesc}> Like </Typography>
                         </IconButton>
                     ) : (
                         <IconButton aria-label="like" onClick={handleLike} sx={{ borderRadius: "5%", flexGrow: "1", color: "blue" }}>
                             <ThumbUpRoundedIcon />
+                            {likeCount > 0 ? (<div style={{ marginLeft: ".25rem" }}><Typography variant="caption" style={{ alignSelf: "end" }}> {likeCount}</Typography></div>)
+                                : ""}
                             <Typography className={classes.feedCardActionDesc}> Like </Typography>
                         </IconButton>
                     )}
@@ -241,14 +245,14 @@ const FeedCard = ({ cardData, uid, userData }) => {
                             {!removePostOpen ? (<Button onClick={handleRemovePostOpen}>
                                 <Typography style={{ marginLeft: "5px" }} variant="caption" > Remove </Typography>
                             </Button>)
-                                : (<>
-                                    <IconButton onClick={handleDeletePost}>
+                                : (<div>
+                                    <IconButton  onClick={handleDeletePost}>
                                         <CheckCircleRoundedIcon />
                                     </IconButton>
-                                    <IconButton onClick={handleRemovePostClose}>
+                                    <IconButton  onClick={handleRemovePostClose}>
                                         <CancelRoundedIcon />
                                     </IconButton>
-                                </>)}
+                                </div>)}
                         </>
 
                     ) : ("")}

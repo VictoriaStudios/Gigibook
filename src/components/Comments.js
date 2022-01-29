@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { addComment, getAllComments } from "../utils/FeedUpdater";
-import useStyles from "./styles";
 import { Box, TextField, IconButton } from "@material-ui/core";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Comment from "./Comment";
+
+
 
 const Comments = ({ cardData, uid, userData }) => {
   const [comments, setComments] = useState([])
@@ -22,8 +23,10 @@ const Comments = ({ cardData, uid, userData }) => {
       commentBusy = true
       addComment (cardData, uid, userData, commentText)
         .then (() => {
+          console.log ("Here")
           setCommentText ("")
-          getAllComments()
+          getComments()
+          commentBusy = false
         })
         .catch (error => console.log (error))
     }
@@ -44,6 +47,7 @@ const Comments = ({ cardData, uid, userData }) => {
       hiddenLabel
       multiline
       placeholder="Write a comment..."
+      value = {commentText}
       onChange={(e) => setCommentText(e.target.value)}
       style={{backgroundColor:"#00000005",flexGrow:"1"}}
     >
@@ -56,7 +60,7 @@ const Comments = ({ cardData, uid, userData }) => {
       {comments.map((commentData, index) => (
         <>
         <div key = {`comment ${index}`}>
-          <Comment commentData = {commentData} uid={uid}  />
+          <Comment commentData = {commentData} uid={uid} getComments={getComments} />
         </div>
         </>
       ))}

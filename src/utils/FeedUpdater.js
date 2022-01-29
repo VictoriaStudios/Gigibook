@@ -231,7 +231,8 @@ export function addComment (cardData, uid, userData, content) {
         likeCount: 0,
         likeUids: [""]
       }
-    })
+    }).then (resolve ("Comment pushed"))
+      .catch (error => reject (error))
   })
 }
 
