@@ -20,6 +20,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
         if (loggedIn){
             getAllPosts(uid)
             .then ((cards) => {
+                console.log ("Feedcards found")
                 setFeedCards (cards)
             })
         }

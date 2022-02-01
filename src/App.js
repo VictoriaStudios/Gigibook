@@ -4,25 +4,50 @@ import MainBody from "./components/MainBody";
 import Header from "./components/Header";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect } from "react";
-import { addFriendEntry, getFriendsAccepted, getUserData, removeFriendsAccepted } from "./utils/UserDataManager";
+import { addFriendEntry, deleteFriend, getDeleteRequests, getFriends, getFriendsAccepted, getUserData, removeFriendsAccepted } from "./utils/UserDataManager";
 
 const homeURL = "http://localhost:3000"
 const auth = getAuth()
 
+export function updateFriendList () {
+  App.updateFriendList()
+}
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [uid, setUid] = useState('')
   const [userData, setUserData] = useState('')
+  const [friends, setFriends] = useState ([])
 
   function updateFriends(uid){
+    console.log ("Updating friends")
     getFriendsAccepted(uid).then ((acceptsFound) => {
-      acceptsFound.forEach (acceptId => {
-        addFriendEntry(acceptId, uid)
-        removeFriendsAccepted(acceptId, uid)
-      })
+      if (acceptsFound.length !== 0) {
+        acceptsFound.forEach (acceptId => {
+          addFriendEntry(acceptId, uid)
+          removeFriendsAccepted(acceptId, uid).then (() => updateFriendList(uid))
+        })
+      }
+      else {
+        getDeleteRequests (uid). then ((requests) => {
+          requests.forEach (request => {
+            deleteFriend (uid, request)
+          })
+          updateFriendList(uid)
+        })
+        .catch (error => console.log (error))
+        
+      }
     })
   }
+
+  function updateFriendList (uid) {
+    getFriends(uid).then ((results) => {
+      setFriends(results)
+    })
+  }
+
+  App.updateFriendList = updateFriendList
 
 
   useEffect(() => {
@@ -54,7 +79,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid}/>
+      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends}/>
       <MainBody loggedIn={loggedIn} uid={uid} userData={userData}/>
 
 

@@ -2,9 +2,12 @@ import { useState, useEffect } from "react"
 import { addFriend, getFriendRequests, getUserData, removeFriendRequest } from "../utils/UserDataManager"
 import { Box, IconButton, Typography } from "@material-ui/core"
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
-import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded'
+import useStyles from './styles'
+import Friend from "./Friend"
+import { updateFriendList } from "../App"
 
-const FriendRequests = ({uid}) => {
+const FriendRequests = ({uid, friends}) => {
     const [requests, setRequests] = useState([])
 
     function updateFriendRequests () {
@@ -30,20 +33,25 @@ const FriendRequests = ({uid}) => {
     }
 
     function handleAcceptRequest (request) {
-        addFriend (request.uid, uid). then (updateFriendRequests())
+        addFriend (request.uid, uid). then (() => {
+            updateFriendRequests()
+            updateFriendList()
+        })
     }
 
     function handleRefuseRequest (request) {
-        removeFriendRequest (uid, request.uid). then (updateFriendRequests())
+        removeFriendRequest (uid, request.uid). then (() => updateFriendRequests())
     }
 
     useEffect(() => {
         updateFriendRequests()
     }, [])
 
+    const classes = useStyles()
+
     return (
         <div>
-            <Box style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap"}}>
+            <Box className={classes.friendRequestBox}>
                 {requests.length===0 ? (
                     <>
                         <Typography style={{marginLeft:"5px"}} variant="caption" > No friend requests </Typography>
@@ -57,6 +65,17 @@ const FriendRequests = ({uid}) => {
                         </div>
                     ))
                 )}
+            </Box>
+            <Box className={classes.friendListBox}>
+            <Typography variant="caption" >--- Friend List ---</Typography>
+                {friends.length !== 0 ? (
+                    (friends.map ((friend, index) => (
+                        <div key = {`friend ${index}`}>
+                            <Friend friend={friend} uid={uid}/>
+                        </div>
+                    )))
+                ):
+                ("")}
             </Box>
         </div>
     )

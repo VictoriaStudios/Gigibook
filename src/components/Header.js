@@ -17,7 +17,7 @@ import FriendRequests from './FriendRequests';
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid }) => {
+const Header = ({ homeURL, loggedIn, uid, friends }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
@@ -57,8 +57,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
             console.log ("Available")    
             return {top: rec.top + window.scrollY, left: rec.left + window.scrollX};
         }
-       
-      } //call it like findTopLeft('#header');
+      } 
       
 
 
@@ -193,7 +192,7 @@ const Header = ({ homeURL, loggedIn, uid }) => {
                     horizontal: 'right',
                   }}
             >
-                <FriendRequests uid={uid}/>
+                <FriendRequests uid={uid} friends = {friends}/>
             </Popover>
             <Popover
                 open={friendSearchOpen}

@@ -116,7 +116,6 @@ const FeedCard = ({ cardData, uid, userData }) => {
 
     const modifyCommentCount = (amount) => {
         setCommentsCount (amount)
-        console.log ("Comments amount is " + commentsCount)
     }
 
 

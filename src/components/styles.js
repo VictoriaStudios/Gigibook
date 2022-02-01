@@ -81,6 +81,16 @@ const useStyles = makeStyles((theme) => ({
     commentActionDesc:{
         marginLeft:".5rem",
         fontSize: "1rem"
+    },
+    friendRequestBox: {
+        textAlign:"center",
+        display:"flex", 
+        justifyContent:"center", 
+        alignItems:"center", 
+        flexWrap:"wrap",
+    },
+    friendListBox: {
+        textAlign:"center",
     }
 }))
 

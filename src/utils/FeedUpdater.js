@@ -81,14 +81,11 @@ export function getAllPosts(uid) {
             card.public = true
             postsFound.push(card)
           })
-          publicDone = true
-          checkIfDone()
         })
       }
-      else {
-        publicDone = true
-        checkIfDone()
-      }
+      publicDone = true
+      checkIfDone()
+
     })
 
     //get all personal posts
@@ -99,13 +96,9 @@ export function getAllPosts(uid) {
           card.public = false
           postsFound.push(card)
         })
-        personalDone = true
-        checkIfDone()
       }
-      else {
-        personalDone = true
-        checkIfDone()
-      }
+      personalDone = true
+      checkIfDone()
     }).catch((error) => {
     })
 
@@ -118,6 +111,10 @@ export function getAllPosts(uid) {
         snapshot.forEach((child) => {
           friendUids.push(child.key)
         })
+      }
+      else {
+        friendsDone = true
+        checkIfDone()
       }
 
     }).catch((error) => {
@@ -133,13 +130,9 @@ export function getAllPosts(uid) {
                 card.public = false
                 postsFound.push(card)
               })
-              friendsDone = true
-              checkIfDone()
             }
-            else {
-              friendsDone = true
-              checkIfDone()
-            }
+            friendsDone = true
+            checkIfDone()
           }).catch((error) => {
           })
         })
