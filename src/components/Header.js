@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { AppBar, Button, Box, Modal, Popover, TextField, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Box, Icon, Modal, Popover, SvgIcon, TextField, Toolbar, Typography } from '@material-ui/core'
 import useStyles from './styles'
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
+import logo from "../images/logo.png"
+import svgLogo from "../images/logo.svg"
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import Login from './Login';
 import { getAuth, signOut } from '@firebase/auth';
@@ -32,7 +34,12 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
     const handleCloseLogin = () => setLoginOpen(false)
     const handleNewUserOpen = () => setNewUserOpen(true)
     const handleNewUserClose = () => setNewUserOpen(false)
-    
+    const logoIcon = (
+        <Icon>
+            <img alt="Gigibook logo" src={logo} />
+        </Icon>
+    )
+
     const handleFriendRequestClick = (event) => {
         setAnchorEl(event.currentTarget)
         setFriendRequestOpen(true)
@@ -52,13 +59,13 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
 
     function findTopLeft(element) {
         var ele = document.getElementById(element)
-        if (ele){ 
-            var rec=ele.getBoundingClientRect()
-            console.log ("Available")    
-            return {top: rec.top + window.scrollY, left: rec.left + window.scrollX};
+        if (ele) {
+            var rec = ele.getBoundingClientRect()
+            console.log("Available")
+            return { top: rec.top + window.scrollY, left: rec.left + window.scrollX };
         }
-      } 
-      
+    }
+
 
 
     const classes = useStyles()
@@ -84,7 +91,7 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
     useEffect(() => {
         window.addEventListener('resize', handleFriendSearchClose)
         findTopLeft("#friendListIcon")
-    },[])
+    }, [])
 
 
 
@@ -96,11 +103,13 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
                     <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
                         <div style={{ display: "flex" }}>
                             <Button
+                                style={{borderRadius:"50%"}}
                                 className={classes.button}
                                 href={homeURL}
                                 color="inherit"
-                                startIcon={<FacebookRoundedIcon className={classes.largeIcon} />}
-                            />
+                            >
+                                <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
+                            </Button>
                             {loggedIn === true ? (
                                 <>
                                     <form noValidate autoComplete="off" className={classes.searchField} onSubmit={handleSubmit}>
@@ -186,13 +195,13 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',
-                  }}
-                  transformOrigin={{
+                }}
+                transformOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
-                  }}
+                }}
             >
-                <FriendRequests uid={uid} friends = {friends}/>
+                <FriendRequests uid={uid} friends={friends} />
             </Popover>
             <Popover
                 open={friendSearchOpen}
