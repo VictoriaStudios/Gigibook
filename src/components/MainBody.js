@@ -9,6 +9,10 @@ export function updateFeedCards () {
     MainBody.updateFeedCards()
 }
 
+export function updateFeedCardsWithId () {
+    MainBody.updateFeedCardsWithId()
+}
+
 const MainBody = ({ loggedIn, uid, userData }) => {
     const [feedCards, setFeedCards] = useState([])
     const addFeedCards = (newFeedCard) => {
@@ -16,6 +20,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
     }
 
     const updateFeedCards = () => {
+        console.log ("updateFeedCards, uid is " + uid)
         setFeedCards ([])
         if (loggedIn){
             getAllPosts(uid)
@@ -26,7 +31,21 @@ const MainBody = ({ loggedIn, uid, userData }) => {
         }
     }
 
+    const updateFeedCardsWithId = (userId) => {
+        console.log ("updateFeedCardsWithId, uid is " + userId)
+        setFeedCards ([])
+        if (loggedIn){
+            getAllPosts(userId)
+            .then ((cards) => {
+                console.log ("Feedcards found")
+                setFeedCards (cards)
+            })
+        }
+    }
+
     MainBody.updateFeedCards = updateFeedCards
+
+    MainBody.updateFeedCardsWithId = updateFeedCardsWithId
 
     useEffect(() => {
         console.log ("MB: Updating feed cards")

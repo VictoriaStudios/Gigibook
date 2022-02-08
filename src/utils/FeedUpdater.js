@@ -100,6 +100,7 @@ export function getAllPosts(uid) {
       personalDone = true
       checkIfDone()
     }).catch((error) => {
+      reject (error)
     })
 
 
@@ -112,10 +113,8 @@ export function getAllPosts(uid) {
           friendUids.push(child.key)
         })
       }
-      else {
-        friendsDone = true
-        checkIfDone()
-      }
+      friendsDone = true
+      checkIfDone()
 
     }).catch((error) => {
       console.log(error.message)

@@ -7,6 +7,7 @@ import { set, ref } from "firebase/database"
 import { saveProfileImage, getImageURL } from "../utils/StorageManager";
 import { addProfileImageLink } from "../utils/UserDataManager";
 import { updateAvatar } from "./PostBar";
+import { updateFeedCards } from "./MainBody";
 
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
@@ -76,13 +77,15 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                             //upload image if the user selected a valid one
                             saveProfileImage(image, user.uid)
                                 .then((imageRef) => {
-
                                     //get the image URL from firebase storage
                                     getImageURL(imageRef)
                                         .then((url) => {
                                             //add the profile image url to the database
                                             addProfileImageLink(user.uid, url)
-                                                .then (updateAvatar())
+                                                .then(() => {
+                                                    updateAvatar()
+                                                    updateFeedCards(user.uid)
+                                                })
                                                 .catch((error) => console.log(error))
                                         })
                                         .catch((error) => {
@@ -97,7 +100,10 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                         else {
                             const letters = firstName[0] + familyName[0]
                             addProfileImageLink(user.uid, letters)
-                                .then (updateAvatar())
+                                .then(() => {
+                                    updateAvatar()
+                                    updateFeedCards(user.uid)
+                                })
                                 .catch((error) => console.log(error))
                         }
                     })
@@ -132,7 +138,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                 firstName: firstName,
                 lastName: lastName,
                 friends: '',
-                friendRequests:'',
+                friendRequests: '',
                 uid: userId
             })).then(() => {
                 resolve("Data created")

@@ -34,8 +34,9 @@ const FriendRequests = ({uid, friends}) => {
 
     function handleAcceptRequest (request) {
         addFriend (request.uid, uid). then (() => {
-            updateFriendRequests()
-            updateFriendList()
+            updateFriendRequests(). then (() => {
+                updateFriendList()
+            })
         })
     }
 
