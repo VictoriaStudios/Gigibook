@@ -59,9 +59,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
     return (
         <>
             <Container maxWidth="md" className={classes.container}>
-                {userData.profileLink!=undefined ? (
-                <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} userData={userData} />)
-                :("")}
+                <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} userData={userData} />
                 <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} />
             </Container>
         </>

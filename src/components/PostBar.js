@@ -4,16 +4,19 @@ import useStyles from './styles'
 import NewPost from './NewPost'
 import { getProfileImageLink } from '../utils/UserDataManager'
 
-export function updateAvatar() {
-    PostBar.getAvatar(PostBar.uid)
+export function updateAvatar(userId) {
+    console.log ("updateAvatar called")
+    PostBar.getAvatar(userId)
 }
 
 const PostBar = ({ loggedIn, uid, userData }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const [avatarVal, setAvatarVal] = useState("")
-    const getAvatar = (uid) => {
-        getProfileImageLink(uid)
+    const getAvatar = (userId) => {
+        console.log ("getAvatar called with userId: " + userId)
+        getProfileImageLink(userId)
             .then((url) => {
+                console.log ("Setting avatar url to " + url)
                 setAvatarVal(url)
             })
             .catch((error) => {
@@ -40,33 +43,38 @@ const PostBar = ({ loggedIn, uid, userData }) => {
     const classes = useStyles()
     return (
         <>
-            {loggedIn ? (<Card style={{ marginTop: ".5rem" }}>
-                <CardContent className={classes.postbar}>
-                    <Box style={{ display: "flex", gap: "10px" }}>
-                        {avatarVal.length===2 ? (
-                        <Avatar>{avatarVal}</Avatar>) : (
-                            <Avatar src= {avatarVal}/>
-                        )}
-                        <Button className={classes.postbarAddPostButton} onClick={handleOpenNewPost}>
-                            What's on your mind?
-                        </Button>
-                    </Box>
-                </CardContent>
-            </Card>) : ""}
-            <Modal 
-                open={newPostOpen}
-                onClose={handleCloseNewPost}
-                aria-labelledby="modal-modal-title"
-                BackdropProps={{
-                    style: {
-                        backgroundColor: "rgba(0, 0, 0, 0.8)"
-                    }
-                }}
-            >
-                <Box className={classes.modal}>
-                    <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} />
-                </Box>
-            </Modal>
+            {avatarVal !== "" ? (
+                <>
+                    <Card style={{ marginTop: ".5rem" }}>
+                        <CardContent className={classes.postbar}>
+                            <Box style={{ display: "flex", gap: "10px" }}>
+                                {avatarVal.length === 2 ? (
+                                    <Avatar>{avatarVal}</Avatar>) : (
+                                    <Avatar src={avatarVal} />
+                                )}
+                                <Button className={classes.postbarAddPostButton} onClick={handleOpenNewPost}>
+                                    What's on your mind?
+                                </Button>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                    <Modal
+                        open={newPostOpen}
+                        onClose={handleCloseNewPost}
+                        aria-labelledby="modal-modal-title"
+                        BackdropProps={{
+                            style: {
+                                backgroundColor: "rgba(0, 0, 0, 0.8)"
+                            }
+                        }}
+                    >
+                        <Box className={classes.modal}>
+                            <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} />
+                        </Box>
+                    </Modal>
+                </>
+            ) : ("")}
+
         </>
 
     )

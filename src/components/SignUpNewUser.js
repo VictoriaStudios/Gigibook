@@ -7,7 +7,7 @@ import { set, ref } from "firebase/database"
 import { saveProfileImage, getImageURL } from "../utils/StorageManager";
 import { addProfileImageLink } from "../utils/UserDataManager";
 import { updateAvatar } from "./PostBar";
-import { updateFeedCards } from "./MainBody";
+import { updateFeedCardsWithId } from "./MainBody";
 
 
 const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
@@ -83,8 +83,8 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                                             //add the profile image url to the database
                                             addProfileImageLink(user.uid, url)
                                                 .then(() => {
-                                                    updateAvatar()
-                                                    updateFeedCards(user.uid)
+                                                    updateAvatar(user.uid)
+                                                    updateFeedCardsWithId(user.uid)
                                                 })
                                                 .catch((error) => console.log(error))
                                         })
@@ -101,8 +101,8 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
                             const letters = firstName[0] + familyName[0]
                             addProfileImageLink(user.uid, letters)
                                 .then(() => {
-                                    updateAvatar()
-                                    updateFeedCards(user.uid)
+                                    updateAvatar(user.uid)
+                                    updateFeedCardsWithId(user.uid)
                                 })
                                 .catch((error) => console.log(error))
                         }

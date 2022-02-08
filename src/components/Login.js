@@ -32,7 +32,6 @@ const Login = ({onCloseHandler}) => {
             if (user) {
                 uid = user.uid;
                 setFormVisible(false)
-                checkIfUserData()
                 onCloseHandler()
             } else {
                 setFormVisible(true)
@@ -57,36 +56,6 @@ const Login = ({onCloseHandler}) => {
         setEmail("")
         setPassword("")
     }
-
-
-    const dbRef = ref(db);
-    async function checkIfUserData() {
-        get(child(dbRef, 'users/' + uid)).then((snapshot) => {
-            if (snapshot.exists()) {
-                console.log("Found user data")
-                return
-
-            } else {
-                console.log("User Data not found, creating data");
-                createUserData("Marcel", "Bruna")
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    }
-
-
-    function createUserData(firstName, lastName) {
-        set(ref(db, 'users/' + uid), {
-            firstName: firstName,
-            lastName: email,
-          });
-    }
-
-
-
-
-
 
     return (
         <div style={{ display: "flex" ,justifyContent: "center", alignItems: "center" }}>

@@ -24,9 +24,11 @@ export function getProfileImageLink(uid) {
             .then((snapshot) => {
                 if (snapshot.exists()) {
                     // found profile Link
+                    console.log ("Found the profile link")
                     resolve(snapshot.val().link)
                 } else {
                     // no profile Link found
+                    console.log("No profile Link Found")
                     reject("No profile Link Found")
                 }
             }).catch((error) => {
