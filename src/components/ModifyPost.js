@@ -27,23 +27,23 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
             })
     }
 
-    function getImage () {
-        if (cardData.img !== ""){
-            let imageStr = cardData.img.split ('%2F')
-            const shortPath = imageStr.filter (entry => entry.includes ("alt"))
-            const split = shortPath[0].split ('alt')
-            const filename = (split.filter (entry => entry.includes ("?"))).toString()
-            const clearName = filename.substring (0, filename.indexOf ('?'))
-            setImage ({
-                name:clearName,
-                unchanged:true
-                })
-        }
-    }
-
     useEffect(() => {
+        function getImage () {
+            if (cardData.img !== ""){
+                let imageStr = cardData.img.split ('%2F')
+                const shortPath = imageStr.filter (entry => entry.includes ("alt"))
+                const split = shortPath[0].split ('alt')
+                const filename = (split.filter (entry => entry.includes ("?"))).toString()
+                const clearName = filename.substring (0, filename.indexOf ('?'))
+                setImage ({
+                    name:clearName,
+                    unchanged:true
+                    })
+            }
+        }
+
         getImage()
-    }, [])
+    }, [cardData])
 
     const modifyPost = () => {
         var imageURL = ""

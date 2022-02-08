@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Container } from '@material-ui/core'
 import useStyles from './styles'
 import PostBar from './PostBar'
@@ -19,7 +19,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
 
-    const updateFeedCards = () => {
+    const updateFeedCards = useCallback (() => {
         console.log ("updateFeedCards, uid is " + uid)
         setFeedCards ([])
         if (loggedIn){
@@ -29,7 +29,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
                 setFeedCards (cards)
             })
         }
-    }
+    }, [uid, loggedIn])
 
     const updateFeedCardsWithId = (userId) => {
         console.log ("updateFeedCardsWithId, uid is " + userId)
@@ -50,7 +50,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
     useEffect(() => {
         console.log ("MB: Updating feed cards")
         updateFeedCards()
-    }, [loggedIn])
+    }, [loggedIn, updateFeedCards])
 
 
 

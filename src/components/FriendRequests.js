@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { addFriend, getFriendRequests, getUserData, removeFriendRequest } from "../utils/UserDataManager"
 import { Box, IconButton, Typography } from "@material-ui/core"
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
@@ -10,7 +10,7 @@ import { updateFriendList } from "../App"
 const FriendRequests = ({uid, friends}) => {
     const [requests, setRequests] = useState([])
 
-    function updateFriendRequests () {
+    const updateFriendRequests = useCallback (() => {
         setRequests([])
         var requestIds = []
         getFriendRequests(uid)
@@ -30,7 +30,7 @@ const FriendRequests = ({uid, friends}) => {
                 })
             })
             .catch (error => console.log (error))
-    }
+    }, [uid])
 
     function handleAcceptRequest (request) {
         addFriend(request.uid, uid).then(() => {
@@ -46,7 +46,7 @@ const FriendRequests = ({uid, friends}) => {
 
     useEffect(() => {
         updateFriendRequests()
-    },[])
+    },[updateFriendRequests])
 
     const classes = useStyles()
 

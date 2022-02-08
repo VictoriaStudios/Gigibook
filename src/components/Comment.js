@@ -22,31 +22,6 @@ const Comment = ({ commentData, uid, getComments, getCommentsCount }) => {
   const [removeCommentOpen, setRemoveCommentOpen] = useState(false)
   var likeUpdating = false
 
-  const getAvatar = (uid) => {
-    getProfileImageLink(uid)
-      .then((url) => {
-        setAvatarVal(url)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-
-  const getCommentLiked = () => {
-    let uidFound = false
-    if (commentData.likeData.likeUids === undefined) return
-    commentData.likeData.likeUids.forEach((entry) => {
-      if (entry === uid) {
-        uidFound = true
-      }
-    })
-    if (uidFound) setCommentLiked(true)
-    else setCommentLiked(false)
-
-    if (commentData.likeData.likeCount !== undefined) {
-      setLikeCount(commentData.likeData.likeCount)
-    }
-  }
 
   const handleLike = () => {
     if (!likeUpdating) {
@@ -73,9 +48,35 @@ const Comment = ({ commentData, uid, getComments, getCommentsCount }) => {
   }
 
   useEffect(() => {
+    const getAvatar = (uid) => {
+      getProfileImageLink(uid)
+        .then((url) => {
+          setAvatarVal(url)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+
+    const getCommentLiked = () => {
+      let uidFound = false
+      if (commentData.likeData.likeUids === undefined) return
+      commentData.likeData.likeUids.forEach((entry) => {
+        if (entry === uid) {
+          uidFound = true
+        }
+      })
+      if (uidFound) setCommentLiked(true)
+      else setCommentLiked(false)
+  
+      if (commentData.likeData.likeCount !== undefined) {
+        setLikeCount(commentData.likeData.likeCount)
+      }
+    }
+
     getAvatar(commentData.authorUid)
     getCommentLiked()
-  }, [])
+  }, [commentData, uid])
 
   const classes = useStyles();
   const elapsedTime = formatDistance(commentData.date, Date.now(), { addSuffix: true })

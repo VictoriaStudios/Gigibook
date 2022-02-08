@@ -179,7 +179,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
         else {
             onCloseHandler()
         }
-    }, [loggedIn])
+    }, [loggedIn, onCloseHandler])
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

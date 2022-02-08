@@ -31,7 +31,7 @@ const Login = ({onCloseHandler}) => {
                 setFormVisible(true)
             }
         });
-    }, [])
+    }, [auth, onCloseHandler])
 
 
     function signIn(auth, email, password) {

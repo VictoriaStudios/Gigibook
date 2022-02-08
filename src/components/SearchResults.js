@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Box, IconButton, Typography } from "@material-ui/core"
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
@@ -8,13 +8,8 @@ import { checkIfFriend, checkIfFriendRequest, removeFriendRequest, setFriendRequ
 
 const SearchResults = ({ results, uid }) => {
     const [updatedResults, setUpdatedResults] = useState([])
-    function updateIconStates() {
-        doAllIconUpdates()
-            .then (results => setUpdatedResults(results))
-            .catch(error => console.log (error))
-    }
-
-
+    
+    const updateIconStates = useCallback (() => {
     function doAllIconUpdates () {
         return new Promise ((resolve, reject) => {
             let newResults = []
@@ -49,12 +44,18 @@ const SearchResults = ({ results, uid }) => {
                     })
                     .catch (error => reject (error))
             })
-
-
-
         })
-        
     }
+
+        doAllIconUpdates()
+            .then (results => setUpdatedResults(results))
+            .catch(error => console.log (error))
+    }, [results, uid])
+    
+    useEffect(() => {
+        updateIconStates()
+    }, [updateIconStates])
+
 
     function handleAddFriendRequest(friendId) {
         setFriendRequest(friendId, uid).then(updateIconStates())
@@ -64,9 +65,7 @@ const SearchResults = ({ results, uid }) => {
         removeFriendRequest(friendId, uid).then(updateIconStates())
     }
 
-    useEffect(() => {
-        updateIconStates()
-    }, [])
+
 
     return (
         <div>

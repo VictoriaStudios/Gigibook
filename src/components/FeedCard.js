@@ -14,7 +14,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
 import Typography from '@material-ui/core/Typography';
 import { formatDistance } from 'date-fns'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getProfileImageLink } from '../utils/UserDataManager';
 import { likePost, removePost, unLikePost } from '../utils/FeedUpdater';
 import ModifyPost from './ModifyPost';
@@ -43,12 +43,6 @@ const FeedCard = ({ cardData, uid, userData }) => {
             .catch((error) => {
                 console.log(error)
             })
-    }
-
-    function getCommentsCount() {
-        getAllComments(cardData.path).then((results) => {
-          modifyCommentCount (results.length)
-        })
     }
 
     const handleMoreButtonOpen = (e) => {
@@ -118,26 +112,38 @@ const FeedCard = ({ cardData, uid, userData }) => {
     }
 
 
-    const getPostLiked = (uid) => {
-        let uidFound = false
-        if (cardData.likeData.likeUids === undefined) return
-        cardData.likeData.likeUids.forEach((entry) => {
-            if (entry === uid) {
-                uidFound = true
-            }
-        })
-        if (uidFound) setPostLiked(true)
-        else setPostLiked(false)
+    const getCommentsCount = useCallback (() => {
+        getAllComments(cardData.path).then((results) => {
+            modifyCommentCount (results.length)
+          })
+    }, [cardData.path])
 
-        if (cardData.likeData.likeCount !== undefined) {
-            setLikeCount(cardData.likeData.likeCount)
-        }
-    }
+    // function getCommentsCount() {
+    //     getAllComments(cardData.path).then((results) => {
+    //       modifyCommentCount (results.length)
+    //     })
+    // }
+
 
     useEffect(() => {
+        const getPostLiked = (uid) => {
+            let uidFound = false
+            if (cardData.likeData.likeUids === undefined) return
+            cardData.likeData.likeUids.forEach((entry) => {
+                if (entry === uid) {
+                    uidFound = true
+                }
+            })
+            if (uidFound) setPostLiked(true)
+            else setPostLiked(false)
+    
+            if (cardData.likeData.likeCount !== undefined) {
+                setLikeCount(cardData.likeData.likeCount)
+            }
+        }
         getPostLiked(uid)
         getCommentsCount()
-    }, [])
+    }, [uid, cardData, getCommentsCount])
 
 
     const classes = useStyles();

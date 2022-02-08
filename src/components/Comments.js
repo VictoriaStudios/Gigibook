@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { addComment, getAllComments } from "../utils/FeedUpdater";
 import { Box, TextField, IconButton } from "@material-ui/core";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
@@ -13,12 +13,12 @@ const Comments = ({ cardData, uid, userData, getCommentsCount }) => {
 
   let commentBusy = false
 
-  function getComments() {
+  const getComments = useCallback (() => {
     getAllComments(cardData.path).then((results) => {
       setComments(results)
     })
-    
-  }
+  }, [cardData])
+
 
   function handleSubmit() {
     if (!commentBusy) {
@@ -37,9 +37,7 @@ const Comments = ({ cardData, uid, userData, getCommentsCount }) => {
 
   useEffect(() => {
     getComments()
-
-
-  }, [])
+  }, [getComments])
 
   return(
   <div>

@@ -3,7 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MainBody from "./components/MainBody";
 import Header from "./components/Header";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { addFriendEntry, deleteFriend, getDeleteRequests, getFriends, getFriendsAccepted, getUserData, removeFriendsAccepted } from "./utils/UserDataManager";
 
 const homeURL = "http://localhost:3000"
@@ -19,7 +19,8 @@ function App() {
   const [userData, setUserData] = useState('')
   const [friends, setFriends] = useState ([])
 
-  function updateFriends(uid){
+
+  const updateFriends = useCallback ((uid) => {
     console.log ("Updating friends")
     getFriendsAccepted(uid).then ((acceptsFound) => {
       if (acceptsFound.length !== 0) {
@@ -39,7 +40,7 @@ function App() {
         
       }
     })
-  }
+  }, []) 
 
   function updateFriendList (uid) {
     getFriends(uid).then ((results) => {
@@ -72,7 +73,7 @@ function App() {
         setUserData('')
       }
     })
-  }, [])
+  }, [updateFriends])
 
 
 
