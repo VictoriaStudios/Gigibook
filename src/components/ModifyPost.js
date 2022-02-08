@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Avatar, Box, Button, Card, CardHeader, CardContent, MenuItem, Select, TextField, Typography } from "@material-ui/core";
+import { Avatar, Box, Button, Card, CardHeader, CardContent, TextField, Typography } from "@material-ui/core";
 import { changePost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
@@ -10,7 +10,6 @@ import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutl
 const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
     const [postContent, setPostContent] = useState("")
     const [image, setImage] = useState("")
-    const [alt, setAlt] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
     const handleImageChange = (e) => {
@@ -81,7 +80,7 @@ const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
             author: userData.firstName,
             date: now,
             img: imageURL,
-            alt: alt,
+            alt: "",
             content: postContent,
         }
         changePost(uid, postData, cardData)

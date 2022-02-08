@@ -173,12 +173,6 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
     }
 
-    function test() {
-        console.log("test")
-    }
-
-
-
     useEffect(() => {
         if (loggedIn === false) {
         }

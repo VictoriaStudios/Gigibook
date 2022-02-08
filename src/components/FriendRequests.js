@@ -33,20 +33,20 @@ const FriendRequests = ({uid, friends}) => {
     }
 
     function handleAcceptRequest (request) {
-        addFriend (request.uid, uid). then (() => {
-            updateFriendRequests(). then (() => {
+        addFriend(request.uid, uid).then(() => {
+            updateFriendRequests().then(() => {
                 updateFriendList()
             })
         })
     }
 
     function handleRefuseRequest (request) {
-        removeFriendRequest (uid, request.uid). then (() => updateFriendRequests())
+        removeFriendRequest(uid, request.uid).then(() => updateFriendRequests())
     }
 
     useEffect(() => {
         updateFriendRequests()
-    }, [])
+    },[])
 
     const classes = useStyles()
 

@@ -2,11 +2,6 @@ import { useState, useEffect } from "react"
 import useStyles from "./styles"
 import { Button, TextField } from "@material-ui/core"
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { db } from "../utils/Firebase";
-import { set, ref, child, get } from "firebase/database"
-import { updateFeedCards } from "./MainBody";
-
-var uid = ""
 
 const Login = ({onCloseHandler}) => {
     const auth = getAuth();
@@ -30,7 +25,6 @@ const Login = ({onCloseHandler}) => {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                uid = user.uid;
                 setFormVisible(false)
                 onCloseHandler()
             } else {

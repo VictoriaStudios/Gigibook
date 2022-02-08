@@ -35,9 +35,9 @@ const PostBar = ({ loggedIn, uid, userData }) => {
 
     useEffect(() => {
         if (loggedIn) {
-            getAvatar(uid)
+             getAvatar(uid)
         }
-    }, [loggedIn])
+    }, [loggedIn, uid])
 
 
     const classes = useStyles()

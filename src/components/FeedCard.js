@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { Box, Button, Modal, Popover } from '@material-ui/core';
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
@@ -218,10 +217,6 @@ const FeedCard = ({ cardData, uid, userData }) => {
                                 : ""}
                         <Typography className={classes.feedCardActionDesc}> Comments </Typography>
                     </IconButton>
-                    {/* <IconButton aria-label="share" onClick={handleShare} sx={{ borderRadius: "5%", flexGrow: "1" }}>
-                        <ShareRoundedIcon />
-                        <Typography className={classes.feedCardActionDesc}> Share </Typography>
-                    </IconButton> */}
                 </CardActions>
                 {commentsOpen ? (
                         <>

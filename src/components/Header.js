@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { AppBar, Button, Box, Icon, Modal, Popover, SvgIcon, TextField, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Box, Modal, Popover, TextField, Toolbar, Typography } from '@material-ui/core'
 import useStyles from './styles'
-import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import logo from "../images/logo.png"
 import svgLogo from "../images/logo.svg"
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import Login from './Login';
@@ -34,11 +32,7 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
     const handleCloseLogin = () => setLoginOpen(false)
     const handleNewUserOpen = () => setNewUserOpen(true)
     const handleNewUserClose = () => setNewUserOpen(false)
-    const logoIcon = (
-        <Icon>
-            <img alt="Gigibook logo" src={logo} />
-        </Icon>
-    )
+
 
     const handleFriendRequestClick = (event) => {
         setAnchorEl(event.currentTarget)

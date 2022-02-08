@@ -145,7 +145,7 @@ export function getDeleteRequests (uid) {
     console.log ("getDeleteRequests executed")
     return new Promise ((resolve, reject) => {
         let foundRequests = []
-        get (child(dbRef, `users/${uid}/deleteRequests`)). then ((snapshot) => {
+        get (child(dbRef, `users/${uid}/deleteRequests`)).then((snapshot) => {
             if (snapshot.exists()){
                 snapshot.forEach (entry => {
                     const pathArray = entry.ref._path.pieces_

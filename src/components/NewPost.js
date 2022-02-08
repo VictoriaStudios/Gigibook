@@ -11,7 +11,6 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
     const [postContent, setPostContent] = useState("")
     const [friendsOnly, setFriendsOnly] = useState(false)
     const [image, setImage] = useState("")
-    const [alt, setAlt] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
     const handleImageChange = (e) => {
@@ -62,7 +61,7 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
             author: userData.firstName,
             date: now,
             img: imageURL,
-            alt: alt,
+            alt: "",
             content: postContent,
         }
         pushPost(uid, postData, friendsOnly)

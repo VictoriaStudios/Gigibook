@@ -1,19 +1,8 @@
 import FeedCard from './FeedCard'
 import { differenceInSeconds } from 'date-fns'
-import { useEffect, useState } from 'react'
 
-export function updateFeed () {
-    Feed.updateFeed()
-}
 
 const Feed = ({ feedCards, loggedIn, uid, userData }) => {
-    function updateFeed () {
-        setUpdate(true)
-    }
-
-    Feed.updateFeed = updateFeed
-
-    const [update, setUpdate] = useState(false)
 
     var feedCardsMod = []
     //a function to sort all feed cards in descending time order

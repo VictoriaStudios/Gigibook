@@ -29,7 +29,7 @@ function App() {
         })
       }
       else {
-        getDeleteRequests (uid). then ((requests) => {
+        getDeleteRequests(uid).then((requests) => {
           requests.forEach (request => {
             deleteFriend (uid, request)
           })
