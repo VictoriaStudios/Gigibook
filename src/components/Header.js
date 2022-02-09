@@ -10,14 +10,9 @@ import { findFriend } from '../utils/UserDataManager';
 import SearchResults from './SearchResults';
 import FriendRequests from './FriendRequests';
 
-
-
-
-
-
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid, friends, updateFriendList }) => {
+const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
@@ -200,7 +195,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriendList }) => {
                     horizontal: 'right',
                 }}
             >
-                <FriendRequests uid={uid} friends={friends} updateFriendList={updateFriendList}/>
+                <FriendRequests uid={uid} friends={friends} updateFriends={updateFriends}/>
             </Popover>
             <Popover
                 open={friendSearchOpen}

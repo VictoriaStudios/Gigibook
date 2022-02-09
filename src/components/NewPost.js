@@ -3,18 +3,16 @@ import { Avatar, Box, Button, Card, CardHeader, CardContent, MenuItem, Select, T
 import { pushPost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
-import { updateFeedCards } from "./MainBody";
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 
 
-const NewPost = ({ uid, userData, onCloseHandler }) => {
+const NewPost = ({ uid, userData, onCloseHandler, updateFeedCards }) => {
     const [postContent, setPostContent] = useState("")
     const [friendsOnly, setFriendsOnly] = useState(false)
     const [image, setImage] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
     const handleImageChange = (e) => {
-        console.log ("Executing handleImageChange " + e)
         checkImage(e.target.files[0])
             .then(() => {
                 setWrongFile (false)
@@ -30,7 +28,6 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
 
     const initPost = () => {
         var imageURL = ""
-        console.log("InitPost started")
         if (image !== "" && !wrongFile) {
                     saveImage(image, uid)
                         .then((imageRef) => {
@@ -70,10 +67,8 @@ const NewPost = ({ uid, userData, onCloseHandler }) => {
     }
 
     function checkImage(file) {
-        console.log("CheckImage called, image: " + file)
         return new Promise((resolve, reject) => {
             if (!file.type.match('image.*')) {
-                console.log("Not an image!")
                 reject("File is not an image")
             }
             else {

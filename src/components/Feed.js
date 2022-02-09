@@ -2,7 +2,7 @@ import FeedCard from './FeedCard'
 import { differenceInSeconds } from 'date-fns'
 
 
-const Feed = ({ feedCards, loggedIn, uid, userData }) => {
+const Feed = ({ feedCards, loggedIn, uid, userData, updateFeedCards }) => {
 
     var feedCardsMod = []
     //a function to sort all feed cards in descending time order
@@ -27,7 +27,7 @@ const Feed = ({ feedCards, loggedIn, uid, userData }) => {
             {limitFeedCards()}
             {loggedIn === true ? (feedCardsMod.map((card, index) => (
                 <div key={index}>
-                    <FeedCard cardData={card} loggedIn={loggedIn} uid={uid} userData={userData} />
+                    <FeedCard cardData={card} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards}/>
                 </div>
             ))) : ('')}
         </>

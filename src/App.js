@@ -18,7 +18,6 @@ function App() {
 
 
   const updateFriends = useCallback ((uid) => {
-    console.log ("Updating friends")
     updateFriendList(uid)
     getFriendsAccepted(uid).then ((acceptsFound) => {
       if (acceptsFound.length !== 0) {
@@ -41,11 +40,7 @@ function App() {
   }, []) 
 
   function updateFriendList (uid) {
-    console.log ("Updatefriendlist called, uid:" + uid)
     getFriends(uid).then ((results) => {
-      results.forEach((result, index) => {
-        console.log ("App: friendResuls no. " + index + " is " + result)
-      })
       setFriends(results)
     })
   }
@@ -82,7 +77,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriendList={updateFriendList}/>
+      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends}/>
       <MainBody loggedIn={loggedIn} uid={uid} userData={userData}/>
 
 

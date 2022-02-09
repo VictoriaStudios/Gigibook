@@ -55,7 +55,6 @@ export function getAllPosts(uid) {
 
     function checkIfDone() {
       if (publicDone && personalDone && friendsDone) {
-        console.log("FU: All posts retrieved")
         resolve(postsFound)
       }
     }
@@ -169,7 +168,6 @@ export function likePost(uid, path) {
 }
 
 export function unLikePost(uid, path) {
-  console.log("Unlikepost started")
   return new Promise((resolve, reject) => {
     get(child(dbRef, path)).then((snapshot) => {
       let cardData = snapshot.val()

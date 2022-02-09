@@ -4,7 +4,7 @@ import { Avatar, Box, Typography, IconButton } from "@material-ui/core"
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 
-const Friend = ({ friend, uid }) => {
+const Friend = ({ friend, uid, updateFriends }) => {
     const [avatar, setAvatar] = useState("")
     const [friendData, setFriendData] = useState([])
     const [removeFriendOpen, setRemoveFriendOpen] = useState(false)
@@ -18,10 +18,9 @@ const Friend = ({ friend, uid }) => {
     }
 
     const handleDeleteFriend = () => {
-        Promise.all (deleteFriend(uid, friend), addDeleteRequest(uid, friend))
+        Promise.all ([deleteFriend(uid, friend), addDeleteRequest(uid, friend)])
             .then (() => {
-                console.log ("Waited both promises")
-                friend = ""
+                updateFriends()
             })
         
         
@@ -44,7 +43,6 @@ const Friend = ({ friend, uid }) => {
 
     return (
         <div>
-            {friend !== "" ? (
             <Box style={{ display: "flex", alignItems: "center" }}>
             {avatar.length === 2 ? (
                 <Avatar style={{ scale: "0.6" }}>{avatar} </Avatar>
@@ -61,7 +59,6 @@ const Friend = ({ friend, uid }) => {
                 </>
             )}
         </Box>
-            ): ""}
         </div>
     )
 }

@@ -18,12 +18,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { getProfileImageLink } from '../utils/UserDataManager';
 import { likePost, removePost, unLikePost } from '../utils/FeedUpdater';
 import ModifyPost from './ModifyPost';
-import { updateFeedCards } from './MainBody';
 import Comments from './Comments';
 import { getAllComments } from '../utils/FeedUpdater';
 
 
-const FeedCard = ({ cardData, uid, userData }) => {
+const FeedCard = ({ cardData, uid, userData, updateFeedCards }) => {
     const [postLiked, setPostLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
     const [avatarVal, setAvatarVal] = useState("")
@@ -118,11 +117,6 @@ const FeedCard = ({ cardData, uid, userData }) => {
           })
     }, [cardData.path])
 
-    // function getCommentsCount() {
-    //     getAllComments(cardData.path).then((results) => {
-    //       modifyCommentCount (results.length)
-    //     })
-    // }
 
 
     useEffect(() => {
@@ -277,7 +271,7 @@ const FeedCard = ({ cardData, uid, userData }) => {
                 }}
             >
                 <Box className={classes.modal}>
-                    <ModifyPost uid={uid} userData={userData} cardData={cardData} onCloseHandler={handleCloseModifyPost} />
+                    <ModifyPost uid={uid} userData={userData} cardData={cardData} onCloseHandler={handleCloseModifyPost} updateFeedCards={updateFeedCards}/>
                 </Box>
             </Modal>
 

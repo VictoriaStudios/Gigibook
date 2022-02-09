@@ -9,14 +9,12 @@ export function updateAvatar(userId) {
     PostBar.getAvatar(userId)
 }
 
-const PostBar = ({ loggedIn, uid, userData }) => {
+const PostBar = ({ loggedIn, uid, userData, updateFeedCards }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const [avatarVal, setAvatarVal] = useState("")
     const getAvatar = (userId) => {
-        console.log ("getAvatar called with userId: " + userId)
         getProfileImageLink(userId)
             .then((url) => {
-                console.log ("Setting avatar url to " + url)
                 setAvatarVal(url)
             })
             .catch((error) => {
@@ -72,7 +70,7 @@ const PostBar = ({ loggedIn, uid, userData }) => {
                         }}
                     >
                         <Box className={classes.modal}>
-                            <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} />
+                            <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} updateFeedCards={updateFeedCards}/>
                         </Box>
                     </Modal>
                 </>

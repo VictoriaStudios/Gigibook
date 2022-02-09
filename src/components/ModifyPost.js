@@ -3,11 +3,10 @@ import { Avatar, Box, Button, Card, CardHeader, CardContent, TextField, Typograp
 import { changePost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
-import { updateFeedCards } from "./MainBody";
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 
 
-const ModifyPost = ({ uid, userData, cardData, onCloseHandler }) => {
+const ModifyPost = ({ uid, userData, cardData, onCloseHandler, updateFeedCards }) => {
     const [postContent, setPostContent] = useState("")
     const [image, setImage] = useState("")
     const [wrongFile, setWrongFile] = useState(false)

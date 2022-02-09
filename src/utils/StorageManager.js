@@ -25,7 +25,6 @@ export function saveImage(image, uid) {
     const storageRef = ref(storage, `users/${uid}/images/${imageUid}/${image.name}`)
     uploadBytes(storageRef, image)
       .then(() => {
-        console.log (storageRef)
         resolve(storageRef)
       })
       .catch((error) => {
