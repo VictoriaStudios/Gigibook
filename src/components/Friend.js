@@ -18,8 +18,13 @@ const Friend = ({ friend, uid }) => {
     }
 
     const handleDeleteFriend = () => {
-        deleteFriend(uid, friend)
-        addDeleteRequest(uid, friend)
+        Promise.all (deleteFriend(uid, friend), addDeleteRequest(uid, friend))
+            .then (() => {
+                console.log ("Waited both promises")
+                friend = ""
+            })
+        
+        
     }
 
 
@@ -39,23 +44,24 @@ const Friend = ({ friend, uid }) => {
 
     return (
         <div>
+            {friend !== "" ? (
             <Box style={{ display: "flex", alignItems: "center" }}>
-                {avatar.length === 2 ? (
-                    <Avatar style={{ scale: "0.6" }}>{avatar} </Avatar>
-                ) : (
-                    <Avatar src={avatar} style={{ scale: "0.6" }} />
-                )}
-                <Typography variant="caption" >{friendData.firstName} </Typography>
-                {!removeFriendOpen ? (
-                    <IconButton onClick={handleRemoveFriendOpen} style={{ width: "12px", height: "12px" }}> <CancelRoundedIcon /> </IconButton>
-                ) : (
-                    <>
-                        <IconButton onClick={handleDeleteFriend} style={{ width: "12px", height: "12px" }}> <CheckCircleRoundedIcon /> </IconButton>
-                        <IconButton onClick={handleRemoveFriendClose} style={{ width: "12px", height: "12px" }}> <CancelRoundedIcon /> </IconButton>
-                    </>
-                )}
-            </Box>
-
+            {avatar.length === 2 ? (
+                <Avatar style={{ scale: "0.6" }}>{avatar} </Avatar>
+            ) : (
+                <Avatar src={avatar} style={{ scale: "0.6" }} />
+            )}
+            <Typography variant="caption" >{friendData.firstName} </Typography>
+            {!removeFriendOpen ? (
+                <IconButton onClick={handleRemoveFriendOpen} style={{ width: "12px", height: "12px" }}> <CancelRoundedIcon /> </IconButton>
+            ) : (
+                <>
+                    <IconButton onClick={handleDeleteFriend} style={{ width: "12px", height: "12px" }}> <CheckCircleRoundedIcon /> </IconButton>
+                    <IconButton onClick={handleRemoveFriendClose} style={{ width: "12px", height: "12px" }}> <CancelRoundedIcon /> </IconButton>
+                </>
+            )}
+        </Box>
+            ): ""}
         </div>
     )
 }

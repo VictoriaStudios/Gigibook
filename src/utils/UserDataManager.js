@@ -86,7 +86,10 @@ export function addFriend(friendId, uid) {
                 addFriendEntry(friendId, uid)
                     .then(() => removeFriendRequest(uid, friendId))
                     .then(() => setFriendsAccepted(friendId, uid))
-                    .then(() => resolve())
+                    .then(() => {
+                        console.log ("UDM: addFriend complete")
+                        resolve()
+                    })
             }
         }).catch((error) => {
             reject(error)
@@ -106,15 +109,19 @@ export function addFriendEntry(friendId, uid) {
 }
 
 export function getFriends(uid) {
+    console.log ("UDM: getFriends called")
     return new Promise((resolve, reject) => {
         get(child(dbRef, `users/${uid}/friends`)).then((snapshot) => {
             let friendsFound = []
             if (snapshot.exists()) {
                 snapshot.forEach((entry) => {
                     const pathArray = entry.ref._path.pieces_
+                    console.log ("UDM: getFriends, friendEntry: " + pathArray[3])
                     friendsFound.push(pathArray[3])
                 })
             }
+            console.log ("UDM: Getfriends, friendsfound is " + friendsFound)
+            console.log ("UDM: Getfriends, friendsfound is a " + typeof friendsFound)
             resolve(friendsFound)
         })
             .catch(error => reject(error))
@@ -216,6 +223,7 @@ export function setFriendRequest(friendId, uid) {
 }
 
 export function getFriendRequests(uid) {
+    console.log ("getFriendRequests called, uid " + uid)
     return new Promise((resolve, reject) => {
         get(child(dbRef, `users/${uid}/friendRequests/`)).then((snapshot) => {
             if (snapshot.exists()) {

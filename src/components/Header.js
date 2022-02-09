@@ -17,7 +17,7 @@ import FriendRequests from './FriendRequests';
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid, friends }) => {
+const Header = ({ homeURL, loggedIn, uid, friends, updateFriendList }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
@@ -78,6 +78,11 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
         searchFriends()
     }
 
+    const handleLogOff = (e) => {
+        console.log ("Signing off")
+        signOut(auth)
+    }
+
     const updateResultPopperWidth = () => {
         setSearchWidth(searchRef.offsetWidth + "px")
     }
@@ -97,7 +102,7 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
                     <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
                         <div style={{ display: "flex" }}>
                             <Button
-                                style={{borderRadius:"50%"}}
+                                style={{ borderRadius: "50%" }}
                                 className={classes.button}
                                 href={homeURL}
                                 color="inherit"
@@ -138,7 +143,7 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
                                             startIcon={<GroupRoundedIcon className={classes.mediumIcon}
                                                 onClick={handleFriendRequestClick} />}
                                         />
-                                        <Button onClick={() => signOut(auth)}>
+                                        <Button onClick={handleLogOff}>
                                             Logout
                                         </Button>
                                     </>)}
@@ -195,7 +200,7 @@ const Header = ({ homeURL, loggedIn, uid, friends }) => {
                     horizontal: 'right',
                 }}
             >
-                <FriendRequests uid={uid} friends={friends} />
+                <FriendRequests uid={uid} friends={friends} updateFriendList={updateFriendList}/>
             </Popover>
             <Popover
                 open={friendSearchOpen}

@@ -9,9 +9,6 @@ import { addFriendEntry, deleteFriend, getDeleteRequests, getFriends, getFriends
 const homeURL = "http://localhost:3000"
 const auth = getAuth()
 
-export function updateFriendList () {
-  App.updateFriendList()
-}
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -22,6 +19,7 @@ function App() {
 
   const updateFriends = useCallback ((uid) => {
     console.log ("Updating friends")
+    updateFriendList(uid)
     getFriendsAccepted(uid).then ((acceptsFound) => {
       if (acceptsFound.length !== 0) {
         acceptsFound.forEach (acceptId => {
@@ -43,7 +41,11 @@ function App() {
   }, []) 
 
   function updateFriendList (uid) {
+    console.log ("Updatefriendlist called, uid:" + uid)
     getFriends(uid).then ((results) => {
+      results.forEach((result, index) => {
+        console.log ("App: friendResuls no. " + index + " is " + result)
+      })
       setFriends(results)
     })
   }
@@ -80,7 +82,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends}/>
+      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriendList={updateFriendList}/>
       <MainBody loggedIn={loggedIn} uid={uid} userData={userData}/>
 
 

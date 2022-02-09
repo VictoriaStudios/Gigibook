@@ -37,6 +37,9 @@ const PostBar = ({ loggedIn, uid, userData }) => {
         if (loggedIn) {
              getAvatar(uid)
         }
+        if (!loggedIn) {
+            setAvatarVal ("")
+        }
     }, [loggedIn, uid])
 
 
