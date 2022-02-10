@@ -9,6 +9,8 @@ import SignUpNewUser from './SignUpNewUser';
 import { findFriend } from '../utils/UserDataManager';
 import SearchResults from './SearchResults';
 import FriendRequests from './FriendRequests';
+import Terms from './Terms';
+import Privacy from './Privacy'
 
 const auth = getAuth()
 
@@ -23,6 +25,12 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     const [friendSearchOpen, setFriendSearchOpen] = useState(false)
     const searchRef = document.getElementById("searchText")
     const [searchWidth, setSearchWidth] = useState("227px")
+    const [anchorTerms, setAnchorTerms] = useState(null)
+    const [termsOpen, setTermsOpen] = useState(false)
+    const termsRef = document.getElementById("termsRef")
+    const [anchorPrivacy, setAnchorPrivacy] = useState(null)
+    const [privacyOpen, setPrivacyOpen] = useState(false)
+    const privavyRef = document.getElementById("privacyRef")
     const handleOpenLogin = () => setLoginOpen(true)
     const handleCloseLogin = () => setLoginOpen(false)
     const handleNewUserOpen = () => setNewUserOpen(true)
@@ -44,6 +52,36 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     const handleFriendSearchClose = () => {
         setAnchorSearchResult(null)
         setFriendSearchOpen(false)
+    }
+
+    const handleTermsClick = () => {
+        if (termsOpen) handleTermsClose()
+        else handleTermsOpen()
+    }
+
+    const handleTermsOpen = () => {
+        setAnchorTerms(termsRef)
+        setTermsOpen(true)
+    }
+
+    const handleTermsClose = () => {
+        setAnchorTerms(null)
+        setTermsOpen(false)
+    }
+
+    const handlePrivacyClick = () => {
+        if (termsOpen) handlePrivacyClose()
+        else handlePrivacyOpen()
+    }
+
+    const handlePrivacyOpen = () => {
+        setAnchorPrivacy(privavyRef)
+        setPrivacyOpen(true)
+    }
+
+    const handlePrivacyClose = () => {
+        setAnchorPrivacy(null)
+        setPrivacyOpen(false)
     }
 
     function findTopLeft(element) {
@@ -74,7 +112,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     }
 
     const handleLogOff = (e) => {
-        console.log ("Signing off")
+        console.log("Signing off")
         signOut(auth)
     }
 
@@ -92,7 +130,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
 
     return (
         <>
-            <Box sx={{ flexGrow: 1 }} >
+            <Box sx={{ flexGrow: 1, width:"100vw" }} >
                 <AppBar position="static" color="primary">
                     <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
                         <div style={{ display: "flex" }}>
@@ -110,13 +148,19 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                                         <TextField onChange={(e) => setSearchText(e.target.value)}
                                             id="searchText"
                                             variant="outlined"
-                                            label="Search GigiBook"
+                                            label="Search Friends"
                                             color="secondary"
                                         />
                                     </form>
                                     <Button onClick={searchFriends} style={{ maxHeight: "36.5px", alignSelf: "center" }}>Find Friends</Button>
                                 </>
                             ) : ("")}
+                            <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                Terms
+                            </Button>
+                            <Button onClick={handlePrivacyOpen} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                Privacy
+                            </Button>
 
                         </div>
                         <Box style={{ justifySelf: "flex-end" }}>
@@ -195,7 +239,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                     horizontal: 'right',
                 }}
             >
-                <FriendRequests uid={uid} friends={friends} updateFriends={updateFriends}/>
+                <FriendRequests uid={uid} friends={friends} updateFriends={updateFriends} />
             </Popover>
             <Popover
                 open={friendSearchOpen}
@@ -212,6 +256,42 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                     </div>
                 </Box>
             </Popover>
+            <Popover
+                open={termsOpen}
+                anchorEl={anchorTerms}
+                onClose={handleTermsClose}
+                anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'center',
+                }}
+            >
+                <Box>
+                    <Terms closeTerms={handleTermsClose}/>
+                </Box>
+            </Popover>
+            <Popover
+                open={privacyOpen}
+                anchorEl={anchorPrivacy}
+                onClose={handlePrivacyClose}
+                anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'center',
+                }}
+            >
+                <Box>
+                    <Privacy closePrivacy={handlePrivacyClose}/>
+                </Box>
+            </Popover>
+            <div className={classes.deadCenter} id="termsRef"/> 
+            <div className={classes.deadCenter} id="privacyRef"/> 
         </>
 
     )
