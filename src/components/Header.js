@@ -65,6 +65,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     }
 
     const handleTermsClose = () => {
+        console.log ("Closing terms")
         setAnchorTerms(null)
         setTermsOpen(false)
     }
@@ -158,7 +159,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                             <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
                                 Terms
                             </Button>
-                            <Button onClick={handlePrivacyOpen} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                            <Button onClick={handlePrivacyClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
                                 Privacy
                             </Button>
 
@@ -220,7 +221,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                                 <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
                                     Sign up to Gigibook
                                 </Typography>
-                                <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose} />
+                                <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose} openTerms={handleTermsOpen} openPrivacy={handlePrivacyOpen}/>
                             </Box>
                         </Modal>
                     </Toolbar>
@@ -270,7 +271,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                 }}
             >
                 <Box>
-                    <Terms closeTerms={handleTermsClose}/>
+                    <Terms closeTerms={handleTermsClose} openPrivacy={handlePrivacyOpen}/>
                 </Box>
             </Popover>
             <Popover

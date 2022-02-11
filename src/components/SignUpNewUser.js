@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import useStyles from "./styles"
-import { Button, TextField } from "@material-ui/core"
+import { Button, Checkbox, TextField } from "@material-ui/core"
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { db } from "../utils/Firebase";
 import { set, ref } from "firebase/database"
@@ -10,7 +10,7 @@ import { updateAvatar } from "./PostBar";
 import { updateFeedCardsWithId } from "./MainBody";
 
 
-const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
+const SignUpNewUser = ({ loggedIn, onCloseHandler, openTerms, openPrivacy }) => {
     const auth = getAuth();
     const classes = useStyles()
     const [email, setEmail] = useState("")
@@ -23,8 +23,13 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     const [wrongFile, setWrongFile] = useState(false)
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
     const [image, setImage] = useState("")
+    const [accepted, setAccepted] = useState(false)
+    const [acceptReminder, setAcceptReminder] = useState(false)
 
 
+    const handleCheck = (event) => {
+        setAccepted(event.target.checked)
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -34,26 +39,30 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
 
     function createNewUser() {
         if (password === passwordRepeat) {
-            if (image !== "") {
-                checkImage()
-                    .then(() => {
-                        // if the user selected a valid image, continue with the signup process
-                        createNewProfile()
-                    })
-                    .catch((error) => {
-                        //if not, reset the file and prompt the user to upload a different file
-                        setUploadErrorMessage(error)
-                        setWrongFile(true)
-                        setImage("")
-                    })
-
+            if (!accepted) {
+                setAcceptReminder(true)
+                return
             }
             else {
-                //if no file was selected, continue with the signup process
-                createNewProfile()
+                if (image !== "") {
+                    checkImage()
+                        .then(() => {
+                            // if the user selected a valid image, continue with the signup process
+                            createNewProfile()
+                        })
+                        .catch((error) => {
+                            //if not, reset the file and prompt the user to upload a different file
+                            setUploadErrorMessage(error)
+                            setWrongFile(true)
+                            setImage("")
+                        })
+
+                }
+                else {
+                    //if no file was selected, continue with the signup process
+                    createNewProfile()
+                }
             }
-
-
         }
         else {
             setEnteredWrong(true)
@@ -182,57 +191,94 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler }) => {
     }, [loggedIn, onCloseHandler])
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <form autoComplete="off" onSubmit={handleSubmit}>
-                <TextField className={classes.loginForm} required onChange={(e) => setEmail(e.target.value)}
-                    id="filled-basic"
-                    variant="outlined"
-                    label="email"
-                    color="primary"
-                />
-                <div />
+        <div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <form autoComplete="off" onSubmit={handleSubmit}>
+                    <TextField className={classes.loginForm} required onChange={(e) => setEmail(e.target.value)}
+                        id="filled-basic"
+                        variant="outlined"
+                        label="email"
+                        color="primary"
+                    />
+                    <div />
 
-                <TextField className={classes.loginForm} required type="password" onChange={(e) => setPassword(e.target.value)}
-                    id="filled-basic"
-                    variant="outlined"
-                    label="password"
-                    color="primary"
-                />
-                <TextField className={classes.loginForm} required type="password" onChange={(e) => setPasswordRepeat(e.target.value)}
-                    id="filled-basic"
-                    variant="outlined"
-                    label="repeat password"
-                    color="primary"
-                />
-                <TextField className={classes.loginForm} required onChange={(e) => setFirstName(e.target.value)}
-                    id="filled-basic"
-                    variant="outlined"
-                    label="first name"
-                    color="primary"
-                />
-                <TextField className={classes.loginForm} required onChange={(e) => setFamilyName(e.target.value)}
-                    id="filled-basic"
-                    variant="outlined"
-                    label="family name"
-                    color="primary"
-                />
-                <div />
-                {enteredWrong ? (<h6 style={{ color: "red", textAlign: "center" }}> {errorMessage} </h6>) : ""}
+                    <TextField className={classes.loginForm} required type="password" onChange={(e) => setPassword(e.target.value)}
+                        id="filled-basic"
+                        variant="outlined"
+                        label="password"
+                        color="primary"
+                    />
+                    <TextField className={classes.loginForm} required type="password" onChange={(e) => setPasswordRepeat(e.target.value)}
+                        id="filled-basic"
+                        variant="outlined"
+                        label="repeat password"
+                        color="primary"
+                    />
+                    <TextField className={classes.loginForm} required onChange={(e) => setFirstName(e.target.value)}
+                        id="filled-basic"
+                        variant="outlined"
+                        label="first name"
+                        color="primary"
+                    />
+                    <TextField className={classes.loginForm} required onChange={(e) => setFamilyName(e.target.value)}
+                        id="filled-basic"
+                        variant="outlined"
+                        label="family name"
+                        color="primary"
+                    />
+                    <div />
+                    {enteredWrong ? (<h6 style={{ color: "red", textAlign: "center" }}> {errorMessage} </h6>) : ""}
 
-                <Button variant="contained" component="label">
-                    Select File
-                    <input onChange={(e) => { setImage(e.target.files[0], setUploadErrorMessage(""), setWrongFile(false)) }}
-                        type="file"
-                        hidden />
-                </Button>
-                {image !== "" ? (<h6> {image.name} </h6>) : ("")}
-                {wrongFile ? (<h6 style={{ color: "red", textAlign: "center" }}> {uploadErrorMessage} </h6>) : ""}
-                <div className={classes.loginForm} style={{ textAlign: "center", height: "10vh", marginTop: "1rem", marginBottom: "1rem" }}>
-                    <Button type="submit" color="default" >
-                        Sign Up
+                    <Button variant="contained" component="label">
+                        Select File
+                        <input onChange={(e) => { setImage(e.target.files[0], setUploadErrorMessage(""), setWrongFile(false)) }}
+                            type="file"
+                            hidden />
                     </Button>
+                    {image !== "" ? (<h6> {image.name} </h6>) : ("")}
+                    {wrongFile ? (<h6 style={{ color: "red", textAlign: "center" }}> {uploadErrorMessage} </h6>) : ""}
+                    <div className={classes.loginForm} style={{ verticalAlign: "center" }}>
+                        <Button style={{ width: "100%" }} type="submit" color="default">
+                            Sign Up
+                        </Button>
+                    </div>
+
+                </form>
+            </div>
+            <div className={classes.loginForm} style={{ verticalAlign: "center" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+                    {!acceptReminder ? (
+                        <>
+                            <div style={{ width: "100%", textAlign: "center" }}>
+                                <h6 style={{ display: "inline", marginBottom: "0", marginTop: "1rem" }}>I agree to the</h6> <Button onClick={openTerms}>TERMS OF SERVICE</Button>
+                            </div>
+                            <div style={{ width: "100%", textAlign: "center" }}>
+                                <h6 style={{ display: "inline", marginBottom: "1rem" }}>and the <Button onClick={openPrivacy}>PRIVACY POLICY</Button> </h6>
+                                <Checkbox
+                                    style={{ scale: "0.75" }}
+                                    value={accepted}
+                                    onChange={handleCheck}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                        <div style={{ width: "100%", textAlign: "center", color:"red" }}>
+                            <h6 style={{ display: "inline", marginBottom: "0", marginTop: "1rem" }}>I agree to the</h6> <Button onClick={openTerms}>TERMS OF SERVICE</Button>
+                        </div>
+                        <div style={{ width: "100%", textAlign: "center", color:"red" }}>
+                            <h6 style={{ display: "inline", marginBottom: "1rem" }}>and the <Button onClick={openPrivacy}>PRIVACY POLICY</Button> </h6>
+                            <Checkbox
+                                style={{ scale: "0.75" }}
+                                value={accepted}
+                                onChange={handleCheck}
+                            />
+                        </div>
+                    </>
+                    )}
+
                 </div>
-            </form>
+            </div>
         </div>
     )
 }

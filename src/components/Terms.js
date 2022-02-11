@@ -1,8 +1,7 @@
 import useStyles from "./styles"
-import { Typography } from "@material-ui/core"
-import { Link } from "react-router-dom"
+import { Button, Typography } from "@material-ui/core"
 
-const Terms = ({ closeTerms }) => {
+const Terms = ({ closeTerms, openPrivacy }) => {
 
     const classes = useStyles()
     return (
@@ -12,7 +11,7 @@ const Terms = ({ closeTerms }) => {
                     Generic Terms of Service Template
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    Please read these terms of service ("terms", "terms of service") carefully before using the  <Link to="/" onClick={closeTerms}>https://victoriastudios.github.io/Gigibook/</Link>  website (the "service") operated by Marcel Bruna ("us", 'we", "our").
+                    Please read these terms of service ("terms", "terms of service") carefully before using the  GigiBook website (the "service") operated by Marcel Bruna ("us", 'we", "our").
                 </Typography>
                 <Typography variant="h5" gutterBottom>
                     Conditions of Use
@@ -24,7 +23,7 @@ const Terms = ({ closeTerms }) => {
                     Privacy Policy
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    Before you continue using our website we advise you to read our privacy policy <Link to="/privacy" onClick={closeTerms}>(https://victoriastudios.github.io/Gigibook/privacy)</Link> regarding our user data collection. It will help you better understand our practices.
+                    Before you continue using our website we advise you to read our <Button onClick={() => {closeTerms(); openPrivacy()}}>Privacy Policy</Button> regarding our user data collection. It will help you better understand our practices.
                 </Typography>
                 <Typography variant="h5" gutterBottom>
                     Copyright - Website

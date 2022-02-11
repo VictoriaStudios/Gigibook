@@ -141,7 +141,7 @@ const Comment = ({ commentData, uid, getComments, getCommentsCount }) => {
           />)}
 
         <CardContent>
-          <Typography variant="body2" gutterBottom>
+          <Typography variant="body2" gutterBottom></Typography>
             {commentData.content}
             {!commentLiked ? (
               <Box style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
@@ -162,7 +162,6 @@ const Comment = ({ commentData, uid, getComments, getCommentsCount }) => {
                 </IconButton>
               </Box>
             )}
-          </Typography>
         </CardContent>
       </Card>
       <Popover

@@ -1,6 +1,5 @@
 import useStyles from "./styles"
 import { Typography } from "@material-ui/core"
-import { Link } from "react-router-dom"
 
 const Terms = ({ closePrivacy }) => {
 
@@ -11,14 +10,13 @@ const Terms = ({ closePrivacy }) => {
                 <Typography variant="h5" gutterBottom>
                     Privacy Policy of Gigibook
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+                <Typography variant="body1" gutterBottom></Typography>
                     Marcel Bruna operates the Gigibook website, which provides the SERVICE.
                     <Typography variant="body1" gutterBottom>
                         This page is used to inform website visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service, the Gigibook website.
                         If you choose to use our Service, then you agree to the collection and use of information in relation with this policy. The Personal Information that we collect are used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy.
                         The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at Website URL, unless otherwise defined in this Privacy Policy.
                     </Typography>
-                </Typography>
                 <Typography variant="h5" gutterBottom>
                     Information Collection and Use
                 </Typography>
@@ -38,7 +36,8 @@ const Terms = ({ closePrivacy }) => {
                     Cookies are files with small amount of data that is commonly used an anonymous unique identifier. These are sent to your browser from the website that you visit and are stored on your computer's hard drive.
                     Our website uses these “cookies” to collection information and to improve our Service. We also want to inform you that your login session is handled by Google, and thus more cookies might be generated. If you do not consent to the use of cookies, do NOT use our Service.
 
-                </Typography>            <Typography variant="h5" gutterBottom>
+                </Typography>            
+                <Typography variant="h5" gutterBottom>
                     Service Providers
                 </Typography>
                 <Typography variant="body1" gutterBottom>

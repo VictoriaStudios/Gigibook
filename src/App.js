@@ -2,12 +2,6 @@ import React from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 import MainBody from "./components/MainBody";
 import Header from "./components/Header";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useCallback } from "react";
 import { addFriendEntry, deleteFriend, getDeleteRequests, getFriends, getFriendsAccepted, getUserData, removeFriendsAccepted } from "./utils/UserDataManager";
@@ -82,12 +76,9 @@ function App() {
 
   return (
     <>
-    <Router>
       <CssBaseline />
       <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends} />
       <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
-    </Router>
-
     </>
   )
 }
