@@ -1,6 +1,7 @@
 {
-  "name": "react-and-mui",
-  "version": "0.1.0",
+  "name": "gigibook",
+  "homepage": "https://victoriaStudios.github.io/christmascard",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
