@@ -6,7 +6,7 @@ import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useState, useEffect, useCallback } from "react";
 import { addFriendEntry, deleteFriend, getDeleteRequests, getFriends, getFriendsAccepted, getUserData, removeFriendsAccepted } from "./utils/UserDataManager";
 
-const homeURL = "http://localhost:3000"
+const homeURL = "https://victoriastudios.github.io/Gigibook/"
 const auth = getAuth()
 
 
