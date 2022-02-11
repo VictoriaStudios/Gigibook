@@ -131,7 +131,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
 
     return (
         <>
-            <Box sx={{ flexGrow: 1, width:"100vw" }} >
+            <Box sx={{ flexGrow: 1, width:"100%" }} >
                 <AppBar position="static" color="primary">
                     <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
                         <div style={{ display: "flex" }}>
@@ -195,7 +195,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                             aria-labelledby="modal-modal-title"
                             BackdropProps={{
                                 style: {
-                                    backgroundColor: "rgba(0, 0, 0, 0.8)"
+                                    backgroundColor: "rgba(0, 0, 0, 0.9)"
                                 }
                             }}
                         >
@@ -213,7 +213,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                             aria-labelledby="modal-modal-title"
                             BackdropProps={{
                                 style: {
-                                    backgroundColor: "rgba(0, 0, 0, 0.8)"
+                                    backgroundColor: "rgba(0, 0, 0, 0.9)"
                                 }
                             }}
                         >
