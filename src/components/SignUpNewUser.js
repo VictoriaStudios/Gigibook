@@ -194,7 +194,7 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler, openTerms, openPrivacy }) => 
         <div>
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <form autoComplete="off" onSubmit={handleSubmit}>
-                    <TextField className={classes.loginForm} required onChange={(e) => setEmail(e.target.value)}
+                    <TextField  className={classes.loginForm} required onChange={(e) => setEmail(e.target.value)}
                         id="filled-basic"
                         variant="outlined"
                         label="email"
@@ -208,18 +208,21 @@ const SignUpNewUser = ({ loggedIn, onCloseHandler, openTerms, openPrivacy }) => 
                         label="password"
                         color="primary"
                     />
+                    <div />
                     <TextField className={classes.loginForm} required type="password" onChange={(e) => setPasswordRepeat(e.target.value)}
                         id="filled-basic"
                         variant="outlined"
                         label="repeat password"
                         color="primary"
                     />
+                    <div />
                     <TextField className={classes.loginForm} required onChange={(e) => setFirstName(e.target.value)}
                         id="filled-basic"
                         variant="outlined"
                         label="first name"
                         color="primary"
                     />
+                    <div />
                     <TextField className={classes.loginForm} required onChange={(e) => setFamilyName(e.target.value)}
                         id="filled-basic"
                         variant="outlined"
