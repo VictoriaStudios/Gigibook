@@ -27,10 +27,14 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     const [searchWidth, setSearchWidth] = useState("227px")
     const [anchorTerms, setAnchorTerms] = useState(null)
     const [termsOpen, setTermsOpen] = useState(false)
-    const termsRef = document.getElementById("termsRef")
     const [anchorPrivacy, setAnchorPrivacy] = useState(null)
     const [privacyOpen, setPrivacyOpen] = useState(false)
+    const [mobile, setMobile] = useState (window.matchMedia("(max-width: 900px)").matches)
+    const termsRef = document.getElementById("termsRef")
     const privavyRef = document.getElementById("privacyRef")
+
+
+
     const handleOpenLogin = () => setLoginOpen(true)
     const handleCloseLogin = () => setLoginOpen(false)
     const handleNewUserOpen = () => setNewUserOpen(true)
@@ -65,7 +69,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     }
 
     const handleTermsClose = () => {
-        console.log ("Closing terms")
+        console.log("Closing terms")
         setAnchorTerms(null)
         setTermsOpen(false)
     }
@@ -121,9 +125,15 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
         setSearchWidth(searchRef.offsetWidth + "px")
     }
 
+
     useEffect(() => {
         window.addEventListener('resize', handleFriendSearchClose)
         findTopLeft("#friendListIcon")
+        const mediaHandler = e => {
+            console.log ("Triggered")
+            setMobile (e.matches)
+        }
+        window.matchMedia("(max-width: 900px)").addEventListener('change', mediaHandler);
     }, [])
 
 
@@ -131,7 +141,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
 
     return (
         <>
-            <Box sx={{ flexGrow: 1, width:"100%" }} >
+            <Box sx={{ flexGrow: 1, width: "100%" }} >
                 <AppBar position="static" color="primary">
                     <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
                         <div style={{ display: "flex" }}>
@@ -221,7 +231,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                                 <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
                                     Sign up to Gigibook
                                 </Typography>
-                                <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose} openTerms={handleTermsOpen} openPrivacy={handlePrivacyOpen}/>
+                                <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose} openTerms={handleTermsOpen} openPrivacy={handlePrivacyOpen} />
                             </Box>
                         </Modal>
                     </Toolbar>
@@ -271,7 +281,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                 }}
             >
                 <Box>
-                    <Terms closeTerms={handleTermsClose} openPrivacy={handlePrivacyOpen}/>
+                    <Terms closeTerms={handleTermsClose} openPrivacy={handlePrivacyOpen} />
                 </Box>
             </Popover>
             <Popover
@@ -288,11 +298,11 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
                 }}
             >
                 <Box>
-                    <Privacy closePrivacy={handlePrivacyClose}/>
+                    <Privacy closePrivacy={handlePrivacyClose} />
                 </Box>
             </Popover>
-            <div className={classes.deadCenter} id="termsRef"/> 
-            <div className={classes.deadCenter} id="privacyRef"/> 
+            <div className={classes.deadCenter} id="termsRef" />
+            <div className={classes.deadCenter} id="privacyRef" />
         </>
 
     )
