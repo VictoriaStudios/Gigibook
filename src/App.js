@@ -15,6 +15,8 @@ function App() {
   const [uid, setUid] = useState('')
   const [userData, setUserData] = useState('')
   const [friends, setFriends] = useState([])
+  const [mobile, setMobile] = useState(window.matchMedia("(max-width: 900px)").matches)
+
 
 
   const updateFriends = useCallback((uid) => {
@@ -70,6 +72,11 @@ function App() {
         setUserData('')
       }
     })
+    const mediaHandler = e => {
+      setMobile(e.matches)
+    }
+    window.matchMedia("(max-width: 900px)").addEventListener('change', mediaHandler)
+
   }, [updateFriends])
 
 
@@ -77,8 +84,19 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends} />
-      <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
+      {!mobile ? (
+        <>
+          <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends} mobile={mobile} />
+          <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", width:"100vw" }}>
+            <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends} mobile={mobile} />
+            <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
+          </div>
+        </>
+      )}
     </>
   )
 }

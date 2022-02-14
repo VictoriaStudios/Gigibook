@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AppBar, Button, Box, Modal, Popover, TextField, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Box, Modal, Popover, SwipeableDrawer, TextField, Toolbar, Typography } from '@material-ui/core'
 import useStyles from './styles'
 import svgLogo from "../images/logo.svg"
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
@@ -11,10 +11,11 @@ import SearchResults from './SearchResults';
 import FriendRequests from './FriendRequests';
 import Terms from './Terms';
 import Privacy from './Privacy'
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
+const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
@@ -29,7 +30,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     const [termsOpen, setTermsOpen] = useState(false)
     const [anchorPrivacy, setAnchorPrivacy] = useState(null)
     const [privacyOpen, setPrivacyOpen] = useState(false)
-    const [mobile, setMobile] = useState (window.matchMedia("(max-width: 900px)").matches)
+    const [drawerOpen, setDrawerOpen] = useState(false)
     const termsRef = document.getElementById("termsRef")
     const privavyRef = document.getElementById("privacyRef")
 
@@ -129,11 +130,6 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
     useEffect(() => {
         window.addEventListener('resize', handleFriendSearchClose)
         findTopLeft("#friendListIcon")
-        const mediaHandler = e => {
-            console.log ("Triggered")
-            setMobile (e.matches)
-        }
-        window.matchMedia("(max-width: 900px)").addEventListener('change', mediaHandler);
     }, [])
 
 
@@ -141,102 +137,183 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends }) => {
 
     return (
         <>
-            <Box sx={{ flexGrow: 1, width: "100%" }} >
-                <AppBar position="static" color="primary">
-                    <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-                        <div style={{ display: "flex" }}>
+            {!mobile ? (
+                <Box sx={{ flexGrow: 1, width: "100%" }} >
+                    <AppBar position="static" color="primary">
+                        <Toolbar style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+                            <div style={{ display: "flex" }}>
+                                <Button
+                                    style={{ borderRadius: "50%" }}
+                                    className={classes.button}
+                                    href={homeURL}
+                                    color="inherit"
+                                >
+                                    <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
+                                </Button>
+                                {loggedIn === true ? (
+                                    <>
+                                        <form noValidate autoComplete="off" className={classes.searchField} onSubmit={handleSubmit}>
+                                            <TextField onChange={(e) => setSearchText(e.target.value)}
+                                                id="searchText"
+                                                variant="outlined"
+                                                label="Search Friends"
+                                                color="secondary"
+                                            />
+                                        </form>
+                                        <Button onClick={searchFriends} style={{ maxHeight: "36.5px", alignSelf: "center" }}>Find Friends</Button>
+                                    </>
+                                ) : ("")}
+                                <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                    Terms
+                                </Button>
+                                <Button onClick={handlePrivacyClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                    Privacy
+                                </Button>
+
+                            </div>
+                            <Box style={{ justifySelf: "flex-end" }}>
+
+                                {loggedIn === false ?
+                                    (<>
+                                        <Button onClick={handleOpenLogin}>
+                                            Login
+                                        </Button>
+                                        <Button onClick={handleNewUserOpen}>
+                                            Sing Up
+                                        </Button>
+                                    </>) : (
+                                        <>
+                                            <Button
+                                                id="friendListIcon"
+                                                className={classes.button}
+                                                color="inherit"
+                                                startIcon={<GroupRoundedIcon className={classes.mediumIcon}
+                                                    onClick={handleFriendRequestClick} />}
+                                            />
+                                            <Button onClick={handleLogOff}>
+                                                Logout
+                                            </Button>
+                                        </>)}
+
+                            </Box>
+
+                        </Toolbar>
+                    </AppBar>
+                </Box>
+            ) : (
+                <>
+                    <AppBar position="static" color="primary" style={{ width: "42px" }}>
+                        <Toolbar style={{ flexDirection: "column", justifyContent:"center" }}>
                             <Button
-                                style={{ borderRadius: "50%" }}
-                                className={classes.button}
+                                style={{ borderRadius: "50%", marginBottom: "1rem" }}
                                 href={homeURL}
                                 color="inherit"
                             >
                                 <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
                             </Button>
-                            {loggedIn === true ? (
-                                <>
-                                    <form noValidate autoComplete="off" className={classes.searchField} onSubmit={handleSubmit}>
-                                        <TextField onChange={(e) => setSearchText(e.target.value)}
-                                            id="searchText"
-                                            variant="outlined"
-                                            label="Search Friends"
-                                            color="secondary"
-                                        />
-                                    </form>
-                                    <Button onClick={searchFriends} style={{ maxHeight: "36.5px", alignSelf: "center" }}>Find Friends</Button>
-                                </>
+                            {!drawerOpen ? (
+                                <Button
+                                    style={{ borderRadius: "50%", marginBottom: "1rem", color:"white" }}
+                                >
+                                    <MoreHorizRoundedIcon/>
+                                </Button>
                             ) : ("")}
-                            <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
-                                Terms
-                            </Button>
-                            <Button onClick={handlePrivacyClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
-                                Privacy
-                            </Button>
 
-                        </div>
-                        <Box style={{ justifySelf: "flex-end" }}>
-
-                            {loggedIn === false ?
-                                (<>
-                                    <Button onClick={handleOpenLogin}>
-                                        Login
-                                    </Button>
-                                    <Button onClick={handleNewUserOpen}>
-                                        Sing Up
-                                    </Button>
-                                </>) : (
+                            {/* <div style={{ display: "flex", flexDirection:"column" }}>
+                                <Button
+                                    style={{ borderRadius: "50%" }}
+                                    className={classes.button}
+                                    href={homeURL}
+                                    color="inherit"
+                                >
+                                    <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
+                                </Button>
+                                {loggedIn === true ? (
                                     <>
-                                        <Button
-                                            id="friendListIcon"
-                                            className={classes.button}
-                                            color="inherit"
-                                            startIcon={<GroupRoundedIcon className={classes.mediumIcon}
-                                                onClick={handleFriendRequestClick} />}
-                                        />
-                                        <Button onClick={handleLogOff}>
-                                            Logout
+                                        <form noValidate autoComplete="off" className={classes.searchField} onSubmit={handleSubmit}>
+                                            <TextField onChange={(e) => setSearchText(e.target.value)}
+                                                id="searchText"
+                                                variant="outlined"
+                                                label="Search Friends"
+                                                color="secondary"
+                                            />
+                                        </form>
+                                        <Button onClick={searchFriends} style={{ maxHeight: "36.5px", alignSelf: "center" }}>Find Friends</Button>
+                                    </>
+                                ) : ("")}
+                                <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                    Terms
+                                </Button>
+                                <Button onClick={handlePrivacyClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                    Privacy
+                                </Button>
+
+                            </div>
+                            <Box style={{ justifySelf: "flex-end" }}>
+
+                                {loggedIn === false ?
+                                    (<>
+                                        <Button onClick={handleOpenLogin}>
+                                            Login
                                         </Button>
-                                    </>)}
+                                        <Button onClick={handleNewUserOpen}>
+                                            Sing Up
+                                        </Button>
+                                    </>) : (
+                                        <>
+                                            <Button
+                                                id="friendListIcon"
+                                                className={classes.button}
+                                                color="inherit"
+                                                startIcon={<GroupRoundedIcon className={classes.mediumIcon}
+                                                    onClick={handleFriendRequestClick} />}
+                                            />
+                                            <Button onClick={handleLogOff}>
+                                                Logout
+                                            </Button>
+                                        </>)}
 
-                        </Box>
-                        <Modal
-                            open={loginOpen}
-                            onClose={handleCloseLogin}
-                            aria-labelledby="modal-modal-title"
-                            BackdropProps={{
-                                style: {
-                                    backgroundColor: "rgba(0, 0, 0, 0.9)"
-                                }
-                            }}
-                        >
-                            <Box className={classes.modal}>
-                                <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
-                                    Login to Gigibook
-                                </Typography>
-                                <Login onCloseHandler={handleCloseLogin} />
-                            </Box>
-                        </Modal>
+                            </Box> */}
+                        </Toolbar>
+                    </AppBar>
+                </>
+            )}
 
-                        <Modal
-                            open={newUserOpen}
-                            onClose={handleNewUserClose}
-                            aria-labelledby="modal-modal-title"
-                            BackdropProps={{
-                                style: {
-                                    backgroundColor: "rgba(0, 0, 0, 0.9)"
-                                }
-                            }}
-                        >
-                            <Box className={classes.modal}>
-                                <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
-                                    Sign up to Gigibook
-                                </Typography>
-                                <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose} openTerms={handleTermsOpen} openPrivacy={handlePrivacyOpen} />
-                            </Box>
-                        </Modal>
-                    </Toolbar>
-                </AppBar>
-            </Box>
+            <Modal
+                open={loginOpen}
+                onClose={handleCloseLogin}
+                aria-labelledby="modal-modal-title"
+                BackdropProps={{
+                    style: {
+                        backgroundColor: "rgba(0, 0, 0, 0.9)"
+                    }
+                }}
+            >
+                <Box className={classes.modal}>
+                    <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
+                        Login to Gigibook
+                    </Typography>
+                    <Login onCloseHandler={handleCloseLogin} />
+                </Box>
+            </Modal>
+
+            <Modal
+                open={newUserOpen}
+                onClose={handleNewUserClose}
+                aria-labelledby="modal-modal-title"
+                BackdropProps={{
+                    style: {
+                        backgroundColor: "rgba(0, 0, 0, 0.9)"
+                    }
+                }}
+            >
+                <Box className={classes.modal}>
+                    <Typography style={{ marginTop: "2rem", marginBottom: "2rem", fontWeight: "bold" }} align="center" variant="h4" component="h2">
+                        Sign up to Gigibook
+                    </Typography>
+                    <SignUpNewUser loggedIn={loggedIn} onCloseHandler={handleNewUserClose} openTerms={handleTermsOpen} openPrivacy={handlePrivacyOpen} />
+                </Box>
+            </Modal>
             <Popover
                 open={friendRequestOpen}
                 anchorEl={anchorEl}
