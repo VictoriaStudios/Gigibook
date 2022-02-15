@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/Gigibook/static/js/main.73bc27a9.js",
+    "main.js": "/Gigibook/static/js/main.e3347fe3.js",
     "static/media/logo.svg": "/Gigibook/static/media/logo.ea72a2b70fb72a850eac81a3bca878a8.svg",
     "index.html": "/Gigibook/index.html",
-    "main.73bc27a9.js.map": "/Gigibook/static/js/main.73bc27a9.js.map"
+    "main.e3347fe3.js.map": "/Gigibook/static/js/main.e3347fe3.js.map"
   },
   "entrypoints": [
-    "static/js/main.73bc27a9.js"
+    "static/js/main.e3347fe3.js"
   ]
 }

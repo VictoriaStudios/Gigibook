@@ -57,8 +57,8 @@ const MainBody = ({ loggedIn, uid, userData }) => {
             ) : (
                 <Container maxWidth="md" className={classes.container}>
                     <div style={{ textAlign:"center"}}>
-                    <Typography variant='h1'>Welcome to Gigibook</Typography>
-                    <Typography variant='h2'>a demo social media website</Typography>
+                    <Typography variant='h2'>Welcome to Gigibook</Typography>
+                    <Typography variant='h3'>a demo social media website</Typography>
                     </div>
                 </Container>
             )}
