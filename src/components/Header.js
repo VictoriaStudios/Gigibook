@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AppBar, Button, Box, Modal, Popover, SwipeableDrawer, TextField, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Box, Drawer, Modal, Popover, TextField, Toolbar, Typography } from '@material-ui/core'
 import useStyles from './styles'
 import svgLogo from "../images/logo.svg"
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
@@ -203,79 +203,89 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
             ) : (
                 <>
                     <AppBar position="static" color="primary" style={{ width: "42px" }}>
-                        <Toolbar style={{ flexDirection: "column", justifyContent:"center" }}>
+                        <Toolbar style={{ flexDirection: "column", justifyContent: "center" }}>
                             <Button
-                                style={{ borderRadius: "50%", marginBottom: "1rem" }}
+                                style={{ borderRadius: "50%", marginBottom: "1rem", marginTop:"1rem" }}
                                 href={homeURL}
                                 color="inherit"
                             >
                                 <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
                             </Button>
-                            {!drawerOpen ? (
-                                <Button
-                                    style={{ borderRadius: "50%", marginBottom: "1rem", color:"white" }}
-                                >
-                                    <MoreHorizRoundedIcon/>
-                                </Button>
-                            ) : ("")}
-
-                            {/* <div style={{ display: "flex", flexDirection:"column" }}>
-                                <Button
-                                    style={{ borderRadius: "50%" }}
-                                    className={classes.button}
-                                    href={homeURL}
-                                    color="inherit"
-                                >
-                                    <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
-                                </Button>
-                                {loggedIn === true ? (
-                                    <>
-                                        <form noValidate autoComplete="off" className={classes.searchField} onSubmit={handleSubmit}>
-                                            <TextField onChange={(e) => setSearchText(e.target.value)}
-                                                id="searchText"
-                                                variant="outlined"
-                                                label="Search Friends"
-                                                color="secondary"
-                                            />
-                                        </form>
-                                        <Button onClick={searchFriends} style={{ maxHeight: "36.5px", alignSelf: "center" }}>Find Friends</Button>
-                                    </>
-                                ) : ("")}
-                                <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
-                                    Terms
-                                </Button>
-                                <Button onClick={handlePrivacyClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
-                                    Privacy
-                                </Button>
-
-                            </div>
-                            <Box style={{ justifySelf: "flex-end" }}>
-
-                                {loggedIn === false ?
-                                    (<>
-                                        <Button onClick={handleOpenLogin}>
-                                            Login
-                                        </Button>
-                                        <Button onClick={handleNewUserOpen}>
-                                            Sing Up
-                                        </Button>
-                                    </>) : (
-                                        <>
-                                            <Button
-                                                id="friendListIcon"
-                                                className={classes.button}
-                                                color="inherit"
-                                                startIcon={<GroupRoundedIcon className={classes.mediumIcon}
-                                                    onClick={handleFriendRequestClick} />}
-                                            />
-                                            <Button onClick={handleLogOff}>
-                                                Logout
-                                            </Button>
-                                        </>)}
-
-                            </Box> */}
+                            <Button
+                                style={{ borderRadius: "50%", marginBottom: "1rem", color: "white" }}
+                            >
+                                <MoreHorizRoundedIcon onClick={() => setDrawerOpen(true)} />
+                            </Button>
                         </Toolbar>
                     </AppBar>
+
+                    <Drawer
+                        open={drawerOpen}
+                        anchor="left"
+                        onClose={() => setDrawerOpen(false)}
+                    >
+                        <AppBar position="static" color="primary" style={{height:"100%"}} >
+                            <Toolbar style={{ flexDirection: "column" }}>
+                                <div style={{ display: "flex", flexDirection: "column", height:"70vh" ,justifyContent:"space-evenly" }}>
+                                    <Button
+                                        style={{ borderRadius: "50%" }}
+                                        className={classes.button}
+                                        href={homeURL}
+                                        color="inherit"
+                                    >
+                                        <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
+                                    </Button>
+                                    {loggedIn === true ? (
+                                        <>
+                                            <form noValidate autoComplete="off" className={classes.searchField} onSubmit={handleSubmit}>
+                                                <TextField onChange={(e) => setSearchText(e.target.value)}
+                                                    id="searchText"
+                                                    variant="outlined"
+                                                    label="Search Friends"
+                                                    color="secondary"
+                                                />
+                                            </form>
+                                            <Button onClick={searchFriends} style={{ maxHeight: "36.5px", alignSelf: "center" }}>Find Friends</Button>
+                                        </>
+                                    ) : ("")}
+                                    <Button onClick={handleTermsClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                        Terms
+                                    </Button>
+                                    <Button onClick={handlePrivacyClick} style={{ maxHeight: "36.5px", alignSelf: "center" }}>
+                                        Privacy
+                                    </Button>
+
+                                </div>
+                                <Box style={{ justifySelf: "flex-end" }}>
+
+                                    {loggedIn === false ?
+                                        (<>
+                                            <Button onClick={handleOpenLogin}>
+                                                Login
+                                            </Button>
+                                            <Button onClick={handleNewUserOpen}>
+                                                Sing Up
+                                            </Button>
+                                        </>) : (
+                                            <>
+                                                <Button
+                                                    id="friendListIcon"
+                                                    className={classes.button}
+                                                    color="inherit"
+                                                    startIcon={<GroupRoundedIcon className={classes.mediumIcon}
+                                                        onClick={handleFriendRequestClick} />}
+                                                />
+                                                <Button onClick={handleLogOff}>
+                                                    Logout
+                                                </Button>
+                                            </>)}
+
+                                </Box>
+                            </Toolbar>
+                        </AppBar>
+
+                    </Drawer>
+
                 </>
             )}
 
