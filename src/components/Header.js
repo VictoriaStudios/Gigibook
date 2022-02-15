@@ -126,6 +126,10 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
         setSearchWidth(searchRef.offsetWidth + "px")
     }
 
+    const handleMoreClick = () => {
+        setDrawerOpen(!drawerOpen)
+    }
+
 
     useEffect(() => {
         window.addEventListener('resize', handleFriendSearchClose)
@@ -202,10 +206,27 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
                 </Box>
             ) : (
                 <>
-                    <AppBar position="static" color="primary" style={{ width: "42px" }}>
+                    {loggedIn ? (
+                        <AppBar position="static" color="primary" style={{ width: "42px", flex: "1" }}>
+                            <Toolbar style={{ flexDirection: "column", justifyContent: "center" }}>
+                                <Button
+                                    style={{ borderRadius: "50%", marginBottom: "1rem", marginTop: "1rem" }}
+                                    href={homeURL}
+                                    color="inherit"
+                                >
+                                    <img className={classes.mediumIcon} src={svgLogo} alt="Gigibook Logo" width="24" height="24" />
+                                </Button>
+                                <Button
+                                    style={{ borderRadius: "50%", marginBottom: "1rem", color: "white" }}
+                                >
+                                    <MoreHorizRoundedIcon onClick={handleMoreClick} />
+                                </Button>
+                            </Toolbar>
+                        </AppBar>
+                    ) : (<AppBar position="static" color="primary" style={{ width: "42px", height: "100vh" }}>
                         <Toolbar style={{ flexDirection: "column", justifyContent: "center" }}>
                             <Button
-                                style={{ borderRadius: "50%", marginBottom: "1rem", marginTop:"1rem" }}
+                                style={{ borderRadius: "50%", marginBottom: "1rem", marginTop: "1rem" }}
                                 href={homeURL}
                                 color="inherit"
                             >
@@ -214,19 +235,20 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
                             <Button
                                 style={{ borderRadius: "50%", marginBottom: "1rem", color: "white" }}
                             >
-                                <MoreHorizRoundedIcon onClick={() => setDrawerOpen(true)} />
+                                <MoreHorizRoundedIcon onClick={handleMoreClick} />
                             </Button>
                         </Toolbar>
-                    </AppBar>
+                    </AppBar>)}
+
 
                     <Drawer
                         open={drawerOpen}
                         anchor="left"
                         onClose={() => setDrawerOpen(false)}
                     >
-                        <AppBar position="static" color="primary" style={{height:"100%"}} >
+                        <AppBar position="static" color="primary" style={{ height: "100%" }} >
                             <Toolbar style={{ flexDirection: "column" }}>
-                                <div style={{ display: "flex", flexDirection: "column", height:"70vh" ,justifyContent:"space-evenly" }}>
+                                <div style={{ display: "flex", flexDirection: "column", height: "70vh", justifyContent: "space-evenly" }}>
                                     <Button
                                         style={{ borderRadius: "50%" }}
                                         className={classes.button}
@@ -283,9 +305,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
                                 </Box>
                             </Toolbar>
                         </AppBar>
-
                     </Drawer>
-
                 </>
             )}
 

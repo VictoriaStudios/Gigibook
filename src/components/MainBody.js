@@ -56,7 +56,7 @@ const MainBody = ({ loggedIn, uid, userData }) => {
                 </Container>
             ) : (
                 <Container maxWidth="md" className={classes.container}>
-                    <div className={classes.deadCenter} style={{ textAlign:"center"}}>
+                    <div style={{ textAlign:"center"}}>
                     <Typography variant='h1'>Welcome to Gigibook</Typography>
                     <Typography variant='h2'>a demo social media website</Typography>
                     </div>
