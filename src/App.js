@@ -54,7 +54,6 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("App: Logged in")
-        console.log("App: uid is " + user.uid)
         setUid(user.uid)
         setLoggedIn(true)
         getUserData(user.uid)

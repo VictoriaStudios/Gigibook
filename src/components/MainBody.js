@@ -16,13 +16,22 @@ const MainBody = ({ loggedIn, uid, userData }) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
 
+    const guestUid = "oLqj5KQ4IJYtKN9PKNaU1XGifD33"
+
+
     const updateFeedCards = useCallback(() => {
         setFeedCards([])
         if (loggedIn) {
-            getAllPosts(uid)
+            getAllPosts(uid, true)
                 .then((cards) => {
                     setFeedCards(cards)
                 })
+        }
+        else {
+            getAllPosts (guestUid, false)
+            .then((cards) => {
+                setFeedCards(cards)
+            })
         }
     }, [uid, loggedIn])
 
@@ -58,8 +67,9 @@ const MainBody = ({ loggedIn, uid, userData }) => {
                 <Container maxWidth="md" className={classes.container}>
                     <div style={{ textAlign:"center"}}>
                     <Typography variant='h2'>Welcome to Gigibook</Typography>
-                    <Typography variant='h3'>a demo social media website</Typography>
+                    <Typography variant='h3'>Sign up to post and comment</Typography>
                     </div>
+                    <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards} />
                 </Container>
             )}
             <Typography variant='h6' style={{

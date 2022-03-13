@@ -46,7 +46,8 @@ export const changePost = (uid, postObject, cardData) => {
 
 
 
-export function getAllPosts(uid) {
+export function getAllPosts(uid, loggedIn) {
+  console.log ("GAP:" +uid)
   return new Promise((resolve, reject) => {
     let publicDone = false
     let personalDone = false
@@ -71,8 +72,9 @@ export function getAllPosts(uid) {
       return card
     }
 
-    //get all public posts 
+    //get all public posts
     get(child(dbRef, '/public/posts/')).then((snapshot) => {
+      console.log ("1") 
       if (snapshot.exists()) {
         snapshot.forEach((child) => {
           child.forEach((post) => {
@@ -84,12 +86,17 @@ export function getAllPosts(uid) {
       }
       publicDone = true
       checkIfDone()
-
+    })
+    .catch((error) => {
+      console.log (error.message)
+      reject (error)
     })
 
+    if (loggedIn)  {
     //get all personal posts
     get(child(dbRef, `/users/${uid}/posts/private/`)).then((snapshot) => {
       if (snapshot.exists()) {
+        console.log ("2") 
         snapshot.forEach((post) => {
           const card = prepareCard(post)
           card.public = false
@@ -99,15 +106,16 @@ export function getAllPosts(uid) {
       personalDone = true
       checkIfDone()
     }).catch((error) => {
+      console.log (error.message)
       reject (error)
     })
-
 
     //get all friends' posts
     //first, get all friends' uids
     const friendUids = []
     get(child(dbRef, `/users/${uid}/friends/`)).then((snapshot) => {
       if (snapshot.exists()) {
+        console.log ("3") 
         snapshot.forEach((child) => {
           friendUids.push(child.key)
         })
@@ -132,9 +140,17 @@ export function getAllPosts(uid) {
             friendsDone = true
             checkIfDone()
           }).catch((error) => {
+            console.log (error.message)
           })
         })
       })
+    }
+    else {
+      personalDone = true
+      friendsDone = true
+      checkIfDone()
+    }
+
   })
 
 
