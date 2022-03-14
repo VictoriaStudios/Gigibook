@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
         transform: "Translate(-50%, -50%)",
         backgroundColor: "rgba(255,255,255,0.8)",
         width: "80vw",
+        maxWidth:"800px"
     },
 
     postbar: {

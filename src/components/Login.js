@@ -52,7 +52,7 @@ const Login = ({onCloseHandler}) => {
     }
 
     return (
-        <div style={{ display: "flex" ,justifyContent: "center", alignItems: "center" }}>
+        <div style={{ display: "flex" ,justifyContent: "center", alignItems: "center"}}>
             {formVisible ? (
 
                 <form noValidate autoComplete="off" onSubmit={handleSubmit}>

@@ -74,7 +74,6 @@ export function getAllPosts(uid, loggedIn) {
 
     //get all public posts
     get(child(dbRef, '/public/posts/')).then((snapshot) => {
-      console.log ("1") 
       if (snapshot.exists()) {
         snapshot.forEach((child) => {
           child.forEach((post) => {
