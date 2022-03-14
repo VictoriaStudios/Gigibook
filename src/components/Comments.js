@@ -6,7 +6,7 @@ import Comment from "./Comment";
 
 
 
-const Comments = ({ cardData, uid, userData, getCommentsCount }) => {
+const Comments = ({ cardData, uid, loggedIn, userData, getCommentsCount }) => {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState ("")
   
@@ -21,6 +21,7 @@ const Comments = ({ cardData, uid, userData, getCommentsCount }) => {
 
 
   function handleSubmit() {
+    if (!loggedIn) return
     if (!commentBusy) {
       commentBusy = true
       addComment (cardData, uid, userData, commentText)
@@ -59,7 +60,7 @@ const Comments = ({ cardData, uid, userData, getCommentsCount }) => {
     <Box>
       {comments.map((commentData, index) => (
         <div key = {`comment ${index}`}>
-          <Comment commentData = {commentData} uid={uid} getComments={getComments} getCommentsCount={getCommentsCount} />
+          <Comment commentData = {commentData} uid={uid} loggedIn={loggedIn} getComments={getComments} getCommentsCount={getCommentsCount} />
         </div>
       ))}
     </Box>

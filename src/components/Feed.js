@@ -25,11 +25,11 @@ const Feed = ({ feedCards, loggedIn, uid, userData, updateFeedCards }) => {
         <>
             {sortFeedCards()}
             {limitFeedCards()}
-            {loggedIn === true ? (feedCardsMod.map((card, index) => (
+            {feedCardsMod.map((card, index) => (
                 <div key={index}>
                     <FeedCard cardData={card} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards}/>
                 </div>
-            ))) : ('')}
+            ))}
         </>
     )
 }

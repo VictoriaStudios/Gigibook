@@ -22,7 +22,7 @@ import Comments from './Comments';
 import { getAllComments } from '../utils/FeedUpdater';
 
 
-const FeedCard = ({ cardData, uid, userData, updateFeedCards }) => {
+const FeedCard = ({ cardData, loggedIn, uid, userData, updateFeedCards }) => {
     const [postLiked, setPostLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
     const [avatarVal, setAvatarVal] = useState("")
@@ -78,6 +78,7 @@ const FeedCard = ({ cardData, uid, userData, updateFeedCards }) => {
     }
 
     const handleLike = (e) => {
+        if (!loggedIn) return
         if (!likeUpdating) {
             likeUpdating = true
             if (!postLiked) {
@@ -220,7 +221,7 @@ const FeedCard = ({ cardData, uid, userData, updateFeedCards }) => {
                 </CardActions>
                 {commentsOpen ? (
                         <>
-                            <Comments cardData={cardData} uid={uid} userData={userData} getCommentsCount={getCommentsCount}/>
+                            <Comments cardData={cardData} loggedIn={loggedIn} uid={uid} userData={userData} getCommentsCount={getCommentsCount}/>
                         </>
                     ) : ("")}
                 <Popover
