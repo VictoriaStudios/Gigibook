@@ -1,20 +1,24 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Typography, Container } from '@material-ui/core'
+import {useState, useEffect, useCallback} from 'react'
+import {Typography, Container} from '@material-ui/core'
 import useStyles from './styles'
 import PostBar from './PostBar'
 import Feed from './Feed'
-import { getAllPosts } from '../utils/FeedUpdater'
+import {getAllPosts} from '../utils/FeedUpdater'
+import {useSelector, useDispatch} from 'react-redux';
+import {decrement, increment} from '../utils/userDataSlice'
 
 
 export function updateFeedCardsWithId() {
     MainBody.updateFeedCardsWithId()
 }
 
-const MainBody = ({ loggedIn, uid, userData }) => {
+const MainBody = ({loggedIn, uid, userData}) => {
     const [feedCards, setFeedCards] = useState([])
     const addFeedCards = (newFeedCard) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
+    const test = useSelector((state) => state.userData.value)
+    const dispatch = useDispatch()
 
     const guestUid = "oLqj5KQ4IJYtKN9PKNaU1XGifD33"
 
@@ -28,10 +32,10 @@ const MainBody = ({ loggedIn, uid, userData }) => {
                 })
         }
         else {
-            getAllPosts (guestUid, false)
-            .then((cards) => {
-                setFeedCards(cards)
-            })
+            getAllPosts(guestUid, false)
+                .then((cards) => {
+                    setFeedCards(cards)
+                })
         }
     }, [uid, loggedIn])
 
@@ -65,19 +69,21 @@ const MainBody = ({ loggedIn, uid, userData }) => {
                 </Container>
             ) : (
                 <Container maxWidth="md" className={classes.container}>
-                    <div style={{ textAlign:"center"}}>
-                    <Typography variant='h2'>Welcome to Gigibook</Typography>
-                    <Typography variant='h3'>Sign up to post and comment</Typography>
+                    <div style={{textAlign: "center"}}>
+                <h1>Test: {test}</h1>
+                <button onClick={() => {dispatch (increment()) }}></button>
+                        <Typography variant='h2'>Welcome to Gigibook</Typography>
+                        <Typography variant='h3'>Sign up to post and comment</Typography>
                     </div>
                     <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards} />
                 </Container>
             )}
             <Typography variant='h6' style={{
-                position:"fixed",
-                bottom:"1%",
-                right:"1%",
-                fontSize:".75rem",
-                opacity:".75"
+                position: "fixed",
+                bottom: "1%",
+                right: "1%",
+                fontSize: ".75rem",
+                opacity: ".75"
             }}>© Marcel Bruna 2022</Typography>
 
         </>
