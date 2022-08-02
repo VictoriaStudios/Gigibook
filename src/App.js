@@ -6,6 +6,7 @@ import {getAuth, onAuthStateChanged} from "@firebase/auth";
 import {useState, useEffect, useCallback} from "react";
 import {addFriendEntry, deleteFriend, getDeleteRequests, getFriends, getFriendsAccepted, getUserData, removeFriendsAccepted} from "./utils/UserDataManager";
 import {setUid, setUserData, setFriends, setLoggedIn} from './utils/userDataSlice'
+import { useDispatch } from "react-redux";
 
 const homeURL = "https://victoriastudios.github.io/Gigibook/"
 const auth = getAuth()
@@ -14,13 +15,14 @@ const auth = getAuth()
 
 function App() {
     const [mobile, setMobile] = useState(window.matchMedia("(max-width: 900px)").matches)
+    const dispatch = useDispatch()
 
     useEffect(() => {
       onAuthStateChanged(auth, (user) => {
           if (user) {
               console.log("App: Logged in")
-              setUid(user.uid)
-              setLoggedIn(true)
+              dispatch (setUid(user.uid))
+              dispatch (setLoggedIn(true))
               getUserData(user.uid)
                   .then((data) => {
                       setUserData(data)
@@ -32,8 +34,8 @@ function App() {
           }
           else {
               console.log("App: Logged out")
-              setLoggedIn(false)
-              setUserData('')
+              dispatch (setLoggedIn(false))
+              dispatch (setUserData(''))
           }
       })
       const mediaHandler = e => {
@@ -67,7 +69,7 @@ function App() {
 
     function updateFriendList(uid) {
         getFriends(uid).then((results) => {
-            setFriends(results)
+            dispatch (setFriends(results))
         })
     }
 
@@ -83,14 +85,14 @@ function App() {
             <CssBaseline />
             {!mobile ? (
                 <>
-                    <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends} mobile={mobile} />
-                    <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
+                    <Header homeURL={homeURL} updateFriends={updateFriends} mobile={mobile} />
+                    <MainBody/>
                 </>
             ) : (
                 <>
                     <div style={{display: "flex", width: "100vw"}}>
                         <Header homeURL={homeURL} updateFriends={updateFriends} mobile={mobile} />
-                        <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
+                        <MainBody />
                     </div>
                 </>
             )}

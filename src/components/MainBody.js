@@ -11,13 +11,16 @@ export function updateFeedCardsWithId() {
     MainBody.updateFeedCardsWithId()
 }
 
-const MainBody = ({loggedIn, uid, userData}) => {
+const MainBody = () => {
     const [feedCards, setFeedCards] = useState([])
+    const loggedIn = useSelector ((state) => state.loggedIn)
+    const uid = useSelector ((state) => state.userData.uid)
+    const userData = useSelector ((state) => state.userData.userData)
+
     const addFeedCards = (newFeedCard) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
     const dispatch = useDispatch()
-
     const guestUid = "oLqj5KQ4IJYtKN9PKNaU1XGifD33"
 
 
