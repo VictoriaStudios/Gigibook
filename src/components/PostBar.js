@@ -3,15 +3,18 @@ import { Avatar, Box, Button, Card, CardContent, Modal } from '@material-ui/core
 import useStyles from './styles'
 import NewPost from './NewPost'
 import { getProfileImageLink } from '../utils/UserDataManager'
+import {useSelector} from 'react-redux';
 
 export function updateAvatar(userId) {
     console.log ("updateAvatar called")
     PostBar.getAvatar(userId)
 }
 
-const PostBar = ({ loggedIn, uid, userData, updateFeedCards }) => {
+const PostBar = ({  updateFeedCards }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const [avatarVal, setAvatarVal] = useState("")
+    const loggedIn = useSelector ((state) => state.loggedIn)
+    const uid = useSelector ((state) => state.userData.uid)
     const getAvatar = (userId) => {
         getProfileImageLink(userId)
             .then((url) => {
@@ -70,7 +73,7 @@ const PostBar = ({ loggedIn, uid, userData, updateFeedCards }) => {
                         }}
                     >
                         <Box className={classes.modal}>
-                            <NewPost uid={uid} userData={userData} onCloseHandler={handleCloseNewPost} updateFeedCards={updateFeedCards}/>
+                            <NewPost onCloseHandler={handleCloseNewPost} updateFeedCards={updateFeedCards}/>
                         </Box>
                     </Modal>
                 </>

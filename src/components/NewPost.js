@@ -4,14 +4,17 @@ import { pushPost } from "../utils/FeedUpdater";
 import useStyles from "./styles";
 import { getImageURL, saveImage } from "../utils/StorageManager";
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
+import {useSelector} from 'react-redux';
 
 
-const NewPost = ({ uid, userData, onCloseHandler, updateFeedCards }) => {
+const NewPost = ({ onCloseHandler, updateFeedCards }) => {
     const [postContent, setPostContent] = useState("")
     const [friendsOnly, setFriendsOnly] = useState(false)
     const [image, setImage] = useState("")
     const [wrongFile, setWrongFile] = useState(false)
     const [uploadErrorMessage, setUploadErrorMessage] = useState("")
+    const uid = useSelector ((state) => state.userData.uid)
+    const userData = useSelector ((state) => state.userData.userData)
     const handleImageChange = (e) => {
         checkImage(e.target.files[0])
             .then(() => {

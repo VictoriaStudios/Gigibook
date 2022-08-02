@@ -65,7 +65,7 @@ const MainBody = () => {
         <>
             {loggedIn ? (
                 <Container maxWidth="md" className={classes.container}>
-                    <PostBar addFeedCard={addFeedCards} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards} />
+                    <PostBar updateFeedCards={updateFeedCards} />
                     <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards} />
                 </Container>
             ) : (
