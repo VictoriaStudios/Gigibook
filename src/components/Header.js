@@ -12,7 +12,7 @@ import FriendRequests from './FriendRequests';
 import Terms from './Terms';
 import Privacy from './Privacy'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const auth = getAuth()
 
@@ -36,7 +36,6 @@ const Header = ({ homeURL, updateFriends, mobile }) => {
     const privavyRef = document.getElementById("privacyRef")
     const loggedIn = useSelector ((state) => state.loggedIn)
     const uid = useSelector ((state) => state.userData.uid)
-    const friends = useSelector ((state) => state.userData.friends)
 
     const handleOpenLogin = () => setLoginOpen(true)
     const handleCloseLogin = () => setLoginOpen(false)
