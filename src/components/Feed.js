@@ -1,9 +1,10 @@
 import FeedCard from './FeedCard'
 import { differenceInSeconds } from 'date-fns'
+import { useSelector } from 'react-redux'
 
+const Feed = ({ feedCards, updateFeedCards }) => {
 
-const Feed = ({ feedCards, loggedIn, uid, userData, updateFeedCards }) => {
-
+    const userData = useSelector ((state) => state.userData.userData)
     var feedCardsMod = []
     //a function to sort all feed cards in descending time order
     const sortFeedCards = () => {
