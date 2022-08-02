@@ -4,10 +4,12 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded'
 import { checkIfFriend, checkIfFriendRequest, removeFriendRequest, setFriendRequest } from "../utils/UserDataManager"
+import { useSelector } from "react-redux"
 
-
-const SearchResults = ({ results, uid }) => {
+const SearchResults = ({ results }) => {
     const [updatedResults, setUpdatedResults] = useState([])
+    const uid = useSelector ((state) => state.userData.uid)
+
     
     const updateIconStates = useCallback (() => {
     function doAllIconUpdates () {

@@ -16,7 +16,6 @@ const MainBody = ({loggedIn, uid, userData}) => {
     const addFeedCards = (newFeedCard) => {
         setFeedCards(feedCards => [...feedCards, newFeedCard])
     }
-    const test = useSelector((state) => state.userData.value)
     const dispatch = useDispatch()
 
     const guestUid = "oLqj5KQ4IJYtKN9PKNaU1XGifD33"

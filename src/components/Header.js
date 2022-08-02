@@ -12,10 +12,11 @@ import FriendRequests from './FriendRequests';
 import Terms from './Terms';
 import Privacy from './Privacy'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import {useSelector, useDispatch} from 'react-redux';
 
 const auth = getAuth()
 
-const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
+const Header = ({ homeURL, updateFriends, mobile }) => {
     const [searchText, setSearchText] = useState("")
     const [loginOpen, setLoginOpen] = useState(false)
     const [newUserOpen, setNewUserOpen] = useState(false)
@@ -33,8 +34,9 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const termsRef = document.getElementById("termsRef")
     const privavyRef = document.getElementById("privacyRef")
-
-
+    const loggedIn = useSelector ((state) => state.loggedIn)
+    const uid = useSelector ((state) => state.userData.uid)
+    const friends = useSelector ((state) => state.userData.friends)
 
     const handleOpenLogin = () => setLoginOpen(true)
     const handleCloseLogin = () => setLoginOpen(false)
@@ -357,7 +359,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
                     horizontal: 'right',
                 }}
             >
-                <FriendRequests uid={uid} friends={friends} updateFriends={updateFriends} />
+                <FriendRequests updateFriends={updateFriends} />
             </Popover>
             <Popover
                 open={friendSearchOpen}
@@ -370,7 +372,7 @@ const Header = ({ homeURL, loggedIn, uid, friends, updateFriends, mobile }) => {
             >
                 <Box style={{ width: searchWidth }}>
                     <div>
-                        <SearchResults results={searchResults} uid={uid}> </SearchResults>
+                        <SearchResults results={searchResults} > </SearchResults>
                     </div>
                 </Box>
             </Popover>

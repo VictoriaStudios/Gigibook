@@ -89,7 +89,7 @@ function App() {
             ) : (
                 <>
                     <div style={{display: "flex", width: "100vw"}}>
-                        <Header homeURL={homeURL} loggedIn={loggedIn} uid={uid} friends={friends} updateFriends={updateFriends} mobile={mobile} />
+                        <Header homeURL={homeURL} updateFriends={updateFriends} mobile={mobile} />
                         <MainBody loggedIn={loggedIn} uid={uid} userData={userData} />
                     </div>
                 </>

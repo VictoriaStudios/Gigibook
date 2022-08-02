@@ -5,9 +5,12 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded'
 import useStyles from './styles'
 import Friend from "./Friend"
+import {useSelector} from 'react-redux';
 
-const FriendRequests = ({ uid, friends, updateFriends }) => {
+const FriendRequests = ({ updateFriends }) => {
     const [requests, setRequests] = useState([])
+    const uid = useSelector ((state) => state.userData.uid)
+    const friends = useSelector ((state) => state.userData.frinds)
 
     const updateFriendRequests = useCallback (() => {
              var requestIds = []
