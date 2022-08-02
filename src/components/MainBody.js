@@ -5,7 +5,6 @@ import PostBar from './PostBar'
 import Feed from './Feed'
 import {getAllPosts} from '../utils/FeedUpdater'
 import {useSelector, useDispatch} from 'react-redux';
-import {decrement, increment} from '../utils/userDataSlice'
 
 
 export function updateFeedCardsWithId() {
@@ -70,8 +69,6 @@ const MainBody = ({loggedIn, uid, userData}) => {
             ) : (
                 <Container maxWidth="md" className={classes.container}>
                     <div style={{textAlign: "center"}}>
-                <h1>Test: {test}</h1>
-                <button onClick={() => {dispatch (increment()) }}></button>
                         <Typography variant='h2'>Welcome to Gigibook</Typography>
                         <Typography variant='h3'>Sign up to post and comment</Typography>
                     </div>

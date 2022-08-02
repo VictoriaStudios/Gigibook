@@ -2,25 +2,31 @@ import { createSlice } from '@reduxjs/toolkit'
 
 
 const initialState = {
-  value: 0,
+  uid: null,
+  loggedIn: false,
+  userData: '',
+  friends: [] 
 }
 
 export const userDataSlice = createSlice({
   name: 'userData',
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1
+    setUid: (state, action) => {
+      state.uid = action. payload
     },
-    decrement: (state) => {
-      state.value -= 1
+    setLoggedIn: (state, action) => {
+      state.loggedIn = action.payload
     },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload
+    setUserData: (state, action) => {
+      state.userData = action.payload
+    },
+    setFriends: (state, action) => {
+      state.friends += action.payload
     },
   },
 })
 
-export const { increment, decrement, incrementByAmount } = userDataSlice.actions
+export const { setUid, setUserData, setFriends, setLoggedIn } = userDataSlice.actions
 
 export default userDataSlice.reducer
