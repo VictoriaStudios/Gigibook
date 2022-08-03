@@ -4,7 +4,7 @@ import useStyles from './styles'
 import PostBar from './PostBar'
 import Feed from './Feed'
 import {getAllPosts} from '../utils/FeedUpdater'
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 
 export function updateFeedCardsWithId() {
@@ -16,11 +16,6 @@ const MainBody = () => {
     const loggedIn = useSelector ((state) => state.userData.loggedIn)
     const uid = useSelector ((state) => state.userData.uid)
     const userData = useSelector ((state) => state.userData.userData)
-
-    const addFeedCards = (newFeedCard) => {
-        setFeedCards(feedCards => [...feedCards, newFeedCard])
-    }
-    const dispatch = useDispatch()
     const guestUid = "oLqj5KQ4IJYtKN9PKNaU1XGifD33"
 
 
