@@ -47,7 +47,7 @@ function App() {
                 dispatch(setLoggedIn(true))
                 getUserData(user.uid)
                     .then((data) => {
-                        setUserData(data)
+                        dispatch(setUserData(data))
                         updateFriends(user.uid)
                     })
                     .catch((error) => {
