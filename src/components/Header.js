@@ -34,7 +34,7 @@ const Header = ({ homeURL, updateFriends, mobile }) => {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const termsRef = document.getElementById("termsRef")
     const privavyRef = document.getElementById("privacyRef")
-    const loggedIn = useSelector ((state) => state.loggedIn)
+    const loggedIn = useSelector ((state) => state.userData.loggedIn)
     const uid = useSelector ((state) => state.userData.uid)
 
     const handleOpenLogin = () => setLoginOpen(true)
