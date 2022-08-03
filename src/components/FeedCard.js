@@ -20,9 +20,10 @@ import { likePost, removePost, unLikePost } from '../utils/FeedUpdater';
 import ModifyPost from './ModifyPost';
 import Comments from './Comments';
 import { getAllComments } from '../utils/FeedUpdater';
+import { useSelector } from 'react-redux';
 
 
-const FeedCard = ({ cardData, loggedIn, uid, userData, updateFeedCards }) => {
+const FeedCard = ({ cardData, updateFeedCards }) => {
     const [postLiked, setPostLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
     const [avatarVal, setAvatarVal] = useState("")

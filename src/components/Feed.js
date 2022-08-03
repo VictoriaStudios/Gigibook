@@ -28,7 +28,7 @@ const Feed = ({ feedCards, updateFeedCards }) => {
             {limitFeedCards()}
             {feedCardsMod.map((card, index) => (
                 <div key={index}>
-                    <FeedCard cardData={card} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards}/>
+                    <FeedCard cardData={card} updateFeedCards={updateFeedCards}/>
                 </div>
             ))}
         </>
