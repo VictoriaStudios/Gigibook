@@ -224,7 +224,7 @@ const Header = ({ homeURL, updateFriends, mobile }) => {
                                 </Button>
                             </Toolbar>
                         </AppBar>
-                    ) : (<AppBar position="static" color="primary" style={{ width: "42px", height: "100vh" }}>
+                    ) : (<AppBar position="static" color="primary" style={{ width: "42px", flex: '1'}}>
                         <Toolbar style={{ flexDirection: "column", justifyContent: "center" }}>
                             <Button
                                 style={{ borderRadius: "50%", marginBottom: "1rem", marginTop: "1rem" }}
