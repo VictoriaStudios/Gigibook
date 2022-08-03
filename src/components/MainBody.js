@@ -61,7 +61,7 @@ const MainBody = () => {
             {loggedIn ? (
                 <Container maxWidth="md" className={classes.container}>
                     <PostBar updateFeedCards={updateFeedCards} />
-                    <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards} />
+                    <Feed feedCards={feedCards}  updateFeedCards={updateFeedCards} />
                 </Container>
             ) : (
                 <Container maxWidth="md" className={classes.container}>
@@ -69,7 +69,7 @@ const MainBody = () => {
                         <Typography variant='h2'>Welcome to Gigibook</Typography>
                         <Typography variant='h3'>Sign up to post and comment</Typography>
                     </div>
-                    <Feed feedCards={feedCards} loggedIn={loggedIn} uid={uid} userData={userData} updateFeedCards={updateFeedCards} />
+                    <Feed feedCards={feedCards} updateFeedCards={updateFeedCards} />
                 </Container>
             )}
             <Typography variant='h6' style={{
