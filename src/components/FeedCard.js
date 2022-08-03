@@ -34,7 +34,7 @@ const FeedCard = ({ cardData, updateFeedCards }) => {
     const [commentsOpen, setCommentsOpen] = useState(false)
     const [commentsCount, setCommentsCount] = useState (0)
     var likeUpdating = false
-    const loggedIn = useSelector ((state) => state.loggedIn)
+    const loggedIn = useSelector ((state) => state.userData.loggedIn)
     const uid = useSelector ((state) => state.userData.uid)
     const userData = useSelector ((state) => state.userData.userData)
 

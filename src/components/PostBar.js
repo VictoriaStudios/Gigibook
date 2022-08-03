@@ -13,7 +13,7 @@ export function updateAvatar(userId) {
 const PostBar = ({  updateFeedCards }) => {
     const [newPostOpen, setNewPostOpen] = useState(false)
     const [avatarVal, setAvatarVal] = useState("")
-    const loggedIn = useSelector ((state) => state.loggedIn)
+    const loggedIn = useSelector ((state) => state.userData.loggedIn)
     const uid = useSelector ((state) => state.userData.uid)
     const getAvatar = (userId) => {
         getProfileImageLink(userId)
